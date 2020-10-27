@@ -6,11 +6,17 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import air.foi.hr.core.database.dao.KorisnikDAO;
+
+
 @Database(entities = {},version=MyDatabase.VERSION,exportSchema = false)
 public abstract class MyDatabase extends RoomDatabase {
     public static final int VERSION=1;
     public static final String NAME="MoneyMaker";
     private static MyDatabase INSTANCE=null;
+
+    public abstract KorisnikDAO getKorisnikDAO();
+
     public static synchronized MyDatabase getInstance(final Context context){
         if(INSTANCE==null){
             synchronized (MyDatabase.class){
