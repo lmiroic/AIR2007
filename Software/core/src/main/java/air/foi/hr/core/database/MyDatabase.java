@@ -15,10 +15,19 @@ import air.foi.hr.core.database.dao.RacunDAO;
 import air.foi.hr.core.database.dao.RadnjaDnevnikaDAO;
 import air.foi.hr.core.database.dao.TransakcijaDAO;
 import air.foi.hr.core.database.dao.ValutaDAO;
+import air.foi.hr.core.entiteti.DnevnikRada;
+import air.foi.hr.core.entiteti.KategorijaTransakcije;
+import air.foi.hr.core.entiteti.Korisnik;
+import air.foi.hr.core.entiteti.KorisnikoveValute;
+import air.foi.hr.core.entiteti.Podsjetnik;
+import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.RadnjaDnevnika;
+import air.foi.hr.core.entiteti.Transakcija;
+import air.foi.hr.core.entiteti.Valuta;
 
 
-@Database(entities = {},version=MyDatabase.VERSION,exportSchema = false)
+@Database(entities = {DnevnikRada.class, KategorijaTransakcije.class, Korisnik.class, KorisnikoveValute.class, Podsjetnik.class, Racun.class,RadnjaDnevnika.class,
+        Transakcija.class, Valuta.class},version=MyDatabase.VERSION,exportSchema = false)
 public abstract class MyDatabase extends RoomDatabase {
     public static final int VERSION=1;
     public static final String NAME="MoneyMaker";

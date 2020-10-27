@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
 
 @Entity(tableName = "transakcija")
 public class Transakcija {
@@ -12,7 +11,7 @@ public class Transakcija {
     private int id;
 
     private float iznos;
-    private Date datum;
+    private String datum;
     @ForeignKey(entity = Racun.class,parentColumns ="id",childColumns = "racun")
     private int racunTerecenja;
     @ForeignKey(entity=Racun.class,parentColumns = "id",childColumns = "racun")
@@ -25,7 +24,7 @@ public class Transakcija {
     private String boja;
     @ForeignKey(entity = Korisnik.class,parentColumns = "id",childColumns = "korisnik")
     private int korisnik;
-    private Date doDatuma;
+    private String doDatuma;
     private int intervalPonavljanja;
     @ForeignKey(entity = KategorijaTransakcije.class,parentColumns = "id",childColumns = "kategorijaTransakcije")
     private int kategorijaTransakcije;
@@ -49,11 +48,11 @@ public class Transakcija {
         this.iznos = iznos;
     }
 
-    public Date getDatum() {
+    public String getDatum() {
         return datum;
     }
 
-    public void setDatum(Date datum) {
+    public void setDatum(String datum) {
         this.datum = datum;
     }
 
@@ -129,11 +128,11 @@ public class Transakcija {
         this.korisnik = korisnik;
     }
 
-    public Date getDoDatuma() {
+    public String getDoDatuma() {
         return doDatuma;
     }
 
-    public void setDoDatuma(Date doDatuma) {
+    public void setDoDatuma(String doDatuma) {
         this.doDatuma = doDatuma;
     }
 
