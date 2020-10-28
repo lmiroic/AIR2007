@@ -39,6 +39,11 @@ dependencies {
     implementation ("androidx.room:room-runtime:$room_version")
     annotationProcessor ("androidx.room:room-compiler:$room_version")
 
+    //Retrofit
+    def retrofit_version="2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+
     implementation project(':core')
+
 
 }
