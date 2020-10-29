@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prikaziSplashScreen() {
-        ShowFragment(FragmentName.SPLASH_SCREEN);
+        FragmentSwitcher.ShowFragment(FragmentName.SPLASH_SCREEN, this);
     }
 
     @Override
@@ -59,16 +60,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private void ShowFragment(FragmentName fragmentName){
-        Fragment fragment=null;
-        switch (fragmentName){
-            case PRIJAVA:
-                break;
-            case SPLASH_SCREEN:
-                fragment = new SplashScreenFragment();
-                break;
-        }
-        FragmentManager fm= getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
-    }
+
 }
