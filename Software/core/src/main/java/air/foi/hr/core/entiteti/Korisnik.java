@@ -3,14 +3,22 @@ package air.foi.hr.core.entiteti;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity (tableName = "korisnik")
 public class Korisnik {
+    @SerializedName("id")
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @SerializedName("ime")
     private String ime;
+    @SerializedName("prezime")
     private String prezime;
+    @SerializedName("email")
     private String email;
+    @SerializedName("lozinka")
     private String lozinka;
+    @SerializedName("google_ID")
     private String google_ID;
 
     public Korisnik()  {}

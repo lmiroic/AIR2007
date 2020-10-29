@@ -3,6 +3,7 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_splash_screen, container, false);
         InicijalizacijaVarijabli();
+        viewModel.DohvatiSveKorisnike();
         return view;
     }
 
