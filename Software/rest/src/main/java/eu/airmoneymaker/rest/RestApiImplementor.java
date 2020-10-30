@@ -6,6 +6,7 @@ import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -30,8 +31,8 @@ public interface RestApiImplementor {
     @Multipart
     @POST("korisnik/index.php?query=update")
     Call<Void> AzurirajKorisnika (@Part("id") int id,
-                               @Part("atribut") String atribut,
-                               @Part("vrijednost") String vrijednost
+                               @Part("atribut") RequestBody atribut,
+                               @Part("vrijednost") RequestBody vrijednost
     );
     @Multipart
     @POST("korisnik/index.php?query=delete")
@@ -54,8 +55,8 @@ public interface RestApiImplementor {
     @Multipart
     @POST("racun/index.php?query=update")
     Call<Void> AzurirajRacun (@Part("id") int id,
-                                  @Part("atribut") String atribut,
-                                  @Part("vrijednost") String vrijednost
+                                  @Part("atribut") RequestBody atribut,
+                                  @Part("vrijednost") RequestBody vrijednost
     );
     @Multipart
     @POST("racun/index.php?query=delete")
