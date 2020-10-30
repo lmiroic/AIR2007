@@ -4,11 +4,16 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "kategorijaTransakcije")
 public class KategorijaTransakcije {
+    @SerializedName("id")
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @SerializedName("naziv")
     private String naziv;
+    @SerializedName("tipTransakcije")
     private int tipTransakcije;
 
     public KategorijaTransakcije() {

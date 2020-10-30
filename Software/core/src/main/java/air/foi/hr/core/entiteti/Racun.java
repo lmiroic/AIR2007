@@ -4,17 +4,25 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity (tableName = "racun")
 public class Racun {
+    @SerializedName("id")
     @PrimaryKey(autoGenerate =true)
     private int id;
-
+    @SerializedName("naziv")
     private String naziv;
+    @SerializedName("pocetno_stanje")
     private float pocetno_stanje;
+    @SerializedName("valuta")
     @ForeignKey(entity =Valuta.class,parentColumns ="id",childColumns = "valuta")
     private String valuta;
+    @SerializedName("boja")
     private String boja;
+    @SerializedName("ikona")
     private String ikona;
+    @SerializedName("korisnik_id")
     @ForeignKey(entity = Korisnik.class,parentColumns = "id",childColumns = "korisnik_id")
     private int korisnik_id;
 
