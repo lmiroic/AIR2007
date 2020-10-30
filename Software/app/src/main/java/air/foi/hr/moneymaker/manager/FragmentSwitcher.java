@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.fragmenti.PrijavaFragment;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
 
 public class FragmentSwitcher {
@@ -16,6 +17,7 @@ public class FragmentSwitcher {
         Fragment fragment=null;
         switch (fragmentName){
             case PRIJAVA:
+                fragment= new PrijavaFragment();
                 break;
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();
@@ -28,6 +30,7 @@ public class FragmentSwitcher {
         Fragment fragment=null;
         switch (fragmentName){
             case PRIJAVA:
+                fragment= new PrijavaFragment();
                 break;
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();

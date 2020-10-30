@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.SplashScreenViewModel;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
 public class SplashScreenFragment extends Fragment {
 
@@ -33,7 +35,9 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_splash_screen, container, false);
         InicijalizacijaVarijabli();
-        viewModel.DohvatiSveKorisnike();
+
+
+        FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
         return view;
     }
 
