@@ -36,7 +36,8 @@ if(isset($_GET["query"])&&$_GET["query"]=="insert"&&provjeriPostojanostPodatakaN
 {        
     $korisnik = kreirajKorisnikovRedak();
     $k = new Korisnik($korisnik);
-    $upit = "INSERT INTO korisnik(ime,prezime,email,lozinka,google_ID) VALUES ('$k->ime','$k->prezime','$k->email','$k->lozinka','$k->google_ID')";
+    $upit = "INSERT INTO korisnik(ime,prezime,email,lozinka,google_ID) VALUES (TRIM(BOTH '"' FROM '$k->ime'),TRIM(BOTH '"' FROM '$k->prezime'),TRIM(BOTH '"' FROM '$k->email'),TRIM(BOTH '"' FROM '$k->lozinka'),
+    TRIM(BOTH '"' FROM '$k->google_ID'))";
     $rezultatObrade = $baza->updateDB($upit);
 }
 if(isset($_GET["query"])&&$_GET["query"]=="update"&&provjeriPostojanostPodatakaAzuriranogKorisnika()){
