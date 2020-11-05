@@ -8,6 +8,7 @@ import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -40,8 +41,8 @@ public interface RestApiImplementor {
     Call<Void> ObrisiKorisnika (@Part("id") int id);
     @Multipart
 
-    @POST("korisnik/index.php?query=selectOneUserEmail")
-    Call<Korisnik>DohvatiKorisnikaLogin(@Part("email") String email,
+    @POST("korisnik/index.php?query=selectOneUserLogin")
+    Call<List<Korisnik>>DohvatiKorisnikaLogin(@Part("email") String email,
                               @Part("lozinka") String lozinka
     );
 

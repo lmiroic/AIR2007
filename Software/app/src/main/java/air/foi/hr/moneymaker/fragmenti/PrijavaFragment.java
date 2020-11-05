@@ -45,9 +45,6 @@ import retrofit2.Retrofit;
 
 public class PrijavaFragment extends Fragment {
 
-    EditText email, lozinka;
-    Button default_login;
-
     private View view;
     private PrijavaViewModel viewModel;
 
@@ -75,20 +72,6 @@ public class PrijavaFragment extends Fragment {
         return view;
     }
     private void InicijalizacijaVarijabli() {
-        email=(EditText) view.findViewById(R.id.editTextTextEmailAddress);
-        lozinka=(EditText) view.findViewById(R.id.editTextTextPassword);
-        default_login=(Button) view.findViewById(R.id.btnLogin);
-        default_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()){
-                    case R.id.btnLogin:
-                        login();
-                        break;
-                }
-            }
-        });
-
         signin=view.findViewById(R.id.sign_in_button);
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,63 +120,4 @@ public class PrijavaFragment extends Fragment {
         }
     }
 
-    //default login
-    public void login(){
-        Retrofit r= RetrofitInstance.getInstance();
-        RestApiImplementor api=r.create(RestApiImplementor.class);
-
-        final String emailS = email.getText().toString();
-        final String lozinkaS = lozinka.getText().toString();
-
-        if (emailS.equals("")){
-            email.setError("Unesite email");
-        }
-        if (emailS.equals("")){
-            lozinka.setError("Unesite lozinku");
-        }
-        /*
-        TODO:
-          kriptiranje lozinke,
-          poželjno lokalno kriptiranje prije slanja na rest a u bazi se sprema kriptirana
-          rest odrađiva autentikaciju
-          dohvat samo jednog korisnika a ne svih preko emaila i unesene lozinke
-          (osposobit DohvatiKorisnikaLogin() )
-          za sad ostaviti ovo ispod, uspješna prijava se može provjeriti u logu
-         */
-        Call<List<Korisnik>>pozivUnosa = api.DohvatiSveKorisnike();
-        pozivUnosa.enqueue(new Callback<List<Korisnik>>() {
-            @Override
-            public void onResponse(Call<List<Korisnik>> call, final Response<List<Korisnik>> response) {
-                List<Korisnik> loginResponse = response.body();
-
-                if(response.isSuccessful() && loginResponse != null){
-                    for (int i = 0; i< loginResponse.size(); i++){
-                        Korisnik korisnik = loginResponse.get(i);
-
-                        if(korisnik.getEmail().equals(emailS) && korisnik.getLozinka().equals(lozinkaS)){
-                            Log.e("Korisnik","getId -- > " + korisnik.getId());
-                            Log.e("Korisnik","getIme -- > " + korisnik.getIme());
-                            Log.e("Korisnik","getPrezime -- > " + korisnik.getPrezime());
-                            Log.e("Korisnik","getEmail -- > " + korisnik.getEmail());
-                            //Log.e("Korisnik","getLozinka -- > " + korisnik.getLozinka());
-                            Log.e("Korisnik","getGoogle_ID -- > " + korisnik.getGoogle_ID());
-                            Log.e("Korisnik", "Uspješna prijava!");
-                            break;
-
-                        }
-                        else {
-                            Log.e("Korisnik", "Neuspješna prijava, korisnik ne postoji.");
-                        }
-                    }
-                    //prebacit se na drugi fragment
-                    FragmentSwitcher.ShowFragment(FragmentName.SPLASH_SCREEN, getFragmentManager());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Korisnik>> call, Throwable t) {
-                Log.e("Korisnik",t.getMessage());
-            }
-        });
-    }
 }

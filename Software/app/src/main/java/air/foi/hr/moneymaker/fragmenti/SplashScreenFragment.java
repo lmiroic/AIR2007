@@ -37,7 +37,9 @@ public class SplashScreenFragment extends Fragment {
         InicijalizacijaVarijabli();
 
 
-        FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
+        //FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
+        //test
+        FragmentSwitcher.ShowFragment(FragmentName.KLASICNA_PRIJAVA, getFragmentManager());
         return view;
     }
 
