@@ -1,0 +1,4 @@
+include ':rest'
+include ':core'
+include ':app'
+rootProject.name = "MoneyMaker"
