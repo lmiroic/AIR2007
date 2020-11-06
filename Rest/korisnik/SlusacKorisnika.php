@@ -52,4 +52,19 @@ if(isset($_GET["query"])&&$_GET["query"]=="delete"&&provjeriID()){
     $upit = "DELETE FROM korisnik WHERE id=$identifikator";
     $baza->updateDB($upit);
 }
+if(isset($_GET["query"])&&$_GET["query"]=="selectOneUserLogin"&&provjeriPostojanostPodatakaKorisnikaZaLogin())
+{
+    $korisnikovRedak=array();
+    $email=$_POST["email"];
+    $lozinka=$_POST["lozinka"];
+    $DohvatIzBaze=$baza->selectDB("SELECT * from korisnik where email='$email' && lozinka='$lozinka'");
+    while($redak=mysqli_fetch_array($DohvatIzBaze))
+    {
+        $k=new Korisnik($redak,true);
+        array_push($korisnikovRedak,$k->getJson());
+    }
+    header('Content-type: application/json');
+    http_response_code(200); 
+    echo json_encode($korisnikovRedak);
+} 
 ?>
