@@ -20,6 +20,9 @@ public interface KorisnikDAO {
     @Query("SELECT * from korisnik WHERE id=:id")
     Korisnik DohvatiKorisnika(int id);
 
+    @Query("SELECT * from korisnik WHERE email=:email AND lozinka=:lozinka")
+    Korisnik DohvatiKorisnikaLogin(String email, String lozinka);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] UnosKorisnika(Korisnik... korisnici);
 

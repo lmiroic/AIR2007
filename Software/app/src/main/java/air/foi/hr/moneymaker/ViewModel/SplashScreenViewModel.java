@@ -11,6 +11,8 @@ import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,7 +29,7 @@ public class SplashScreenViewModel extends ViewModel {
     public void DohvatiSveKorisnike(){
         Retrofit r= RetrofitInstance.getInstance();
         RestApiImplementor api=r.create(RestApiImplementor.class);
-        Call<Void>pozivUnosa=api.UnesiKorisnika("Luka","Miroic","1234562627","luka.miroic@sada","lMiroic");
+        Call<Void>pozivUnosa=api.UnesiKorisnika("Antonio","Hip","1231313131","aHip@gmail.com","aHip");
         pozivUnosa.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -41,6 +43,7 @@ public class SplashScreenViewModel extends ViewModel {
                 Log.e("Korisnik",t.getMessage());
             }
         });
+
 
 
 

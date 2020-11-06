@@ -23,15 +23,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="88dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <com.agrawalsuneet.dotsloader.loaders.TashieLoader
+            android:layout_width="278dp"
+            android:layout_height="127dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ivLogo"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.853"
+            app:tashieloader_animDelay="100"
+            app:tashieloader_animDur="600"
+            app:tashieloader_dotsColor="#089BF4"
+            app:tashieloader_dotsDist="5dp"
+            app:tashieloader_dotsRadius="10dp"
+            app:tashieloader_interpolator="@android:anim/accelerate_interpolator"
+            app:tashieloader_noOfDots="6" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
