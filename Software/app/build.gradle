@@ -48,6 +48,7 @@ dependencies {
     implementation project(':core')
     implementation project(':rest')
 
+    implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
 
 
 

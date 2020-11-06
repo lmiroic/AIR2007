@@ -42,8 +42,8 @@ public interface RestApiImplementor {
     @Multipart
 
     @POST("korisnik/index.php?query=selectOneUserLogin")
-    Call<List<Korisnik>>DohvatiKorisnikaLogin(@Part("email") String email,
-                              @Part("lozinka") String lozinka
+    Call<List<Korisnik>>DohvatiKorisnikaLogin(@Part("email") RequestBody email,
+                              @Part("lozinka") RequestBody lozinka
     );
 
     //Racun

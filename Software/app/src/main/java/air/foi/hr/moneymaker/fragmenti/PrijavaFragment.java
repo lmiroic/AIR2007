@@ -35,6 +35,9 @@ import air.foi.hr.moneymaker.SecondFragment;
 import air.foi.hr.moneymaker.ViewModel.PrijavaViewModel;
 import air.foi.hr.moneymaker.ViewModel.SplashScreenViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.modul.prijava.AbstractionPrijava;
+import air.foi.hr.moneymaker.modul.prijava.IPrijava;
+import air.foi.hr.moneymaker.modul.prijava.KlasicnaPrijava;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import retrofit2.Call;
@@ -47,6 +50,11 @@ public class PrijavaFragment extends Fragment {
 
     private View view;
     private PrijavaViewModel viewModel;
+    private AbstractionPrijava abstractionPrijava;
+    private Button btnKlasicnaPrijava;
+    private EditText etEmail;
+    private EditText etLozinka;
+
 
     public PrijavaFragment() {
     }
@@ -73,15 +81,27 @@ public class PrijavaFragment extends Fragment {
     }
     private void InicijalizacijaVarijabli() {
         signin=view.findViewById(R.id.sign_in_button);
+        etEmail=view.findViewById(R.id.editTextTextEmailAddress);
+        etLozinka=view.findViewById(R.id.editTextTextPassword);
+        btnKlasicnaPrijava=view.findViewById(R.id.btnLogin);
+        final Fragment fragmentZaProslijedivanje=this;
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.sign_in_button:
-                        signIn();
+                        abstractionPrijava=new AbstractionPrijava(new air.foi.hr.moneymaker.modul.prijava.GoogleSignIn(mGoogleSignInClient.getSignInIntent(),fragmentZaProslijedivanje,getContext()));
+                        abstractionPrijava.PrijaviKorisnika(getFragmentManager());
                         break;
 
                 }
+            }
+        });
+        btnKlasicnaPrijava.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abstractionPrijava=new AbstractionPrijava(new KlasicnaPrijava(etEmail.getText().toString(),etLozinka.getText().toString(),getContext()));
+                abstractionPrijava.PrijaviKorisnika(getFragmentManager());
             }
         });
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
@@ -112,12 +132,11 @@ public class PrijavaFragment extends Fragment {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            FragmentSwitcher.ShowFragment(FragmentName.SPLASH_SCREEN, getFragmentManager());
+            FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
 
         }
     }
-
 }

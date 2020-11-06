@@ -1,17 +1,15 @@
 package air.foi.hr.moneymaker.manager;
 
-import android.app.Activity;
-import android.content.Context;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.fragmenti.HomeFragment;
 import air.foi.hr.moneymaker.fragmenti.PrijavaFragment;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
-import air.foi.hr.moneymaker.fragmenti.KlasicnaPrijavaFragment;
+
 public class FragmentSwitcher {
     public static void ShowFragment(FragmentName fragmentName, AppCompatActivity activity){
         Fragment fragment=null;
@@ -22,8 +20,8 @@ public class FragmentSwitcher {
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();
                 break;
-            case KLASICNA_PRIJAVA:
-                fragment= new KlasicnaPrijavaFragment();
+            case HOME:
+                fragment=new HomeFragment();
                 break;
         }
         FragmentManager fm= activity.getSupportFragmentManager();
@@ -38,8 +36,8 @@ public class FragmentSwitcher {
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();
                 break;
-            case KLASICNA_PRIJAVA:
-                fragment= new KlasicnaPrijavaFragment();
+            case HOME:
+                fragment=new HomeFragment();
                 break;
         }
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
