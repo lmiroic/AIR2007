@@ -3,6 +3,7 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Message;
 import android.util.Log;
@@ -25,6 +26,8 @@ import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.manager.HashiranjeLozinke;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.ViewModel.RegistracijaFragmentViewModel;
+import air.foi.hr.moneymaker.ViewModel.SplashScreenViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.prijava.GoogleSignIn;
 import eu.airmoneymaker.rest.RestApiImplementor;
@@ -44,7 +47,7 @@ public class RegistracijaFragment extends Fragment {
     private EditText Email;
     private EditText Lozinka;
     private Button btnRegistracija;
-    private static GoogleSignInAccount account;
+    private RegistracijaFragmentViewModel viewModel;
     public RegistracijaFragment() {
     }
 
@@ -62,40 +65,13 @@ public class RegistracijaFragment extends Fragment {
         InicijalizacijaVarijabli();
         return view;
     }
-    private void RegistrirajKorisnika(String ime, String prezime, String email, String lozinka){
-        if(ime!=""&&prezime!=""&&email!=""&&lozinka!=""){
-            String google_ID="";
-            String hashLozinka;
-            try {
-                hashLozinka= HashiranjeLozinke.HashirajLozinku(lozinka);
-            }
-            catch (Exception e){
-                return;
-            }
-            Retrofit r= RetrofitInstance.getInstance();
-            RestApiImplementor api=r.create(RestApiImplementor.class);
-            Call<Void> pozivUnosa = api.UnesiKorisnika(RequestBody.create(MediaType.parse("text/plain"), ime),RequestBody.create(MediaType.parse("text/plain"), prezime),RequestBody.create(MediaType.parse("text/plain"), google_ID),RequestBody.create(MediaType.parse("text/plain"), email),RequestBody.create(MediaType.parse("text/plain"), hashLozinka));
-            pozivUnosa.enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.e("Korisnik","Uspjesna registracija");
-                    PrikaziObavijest("Uspješna registracija!");
-                    FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA,getFragmentManager());
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("Korisnik","Neuspjesna registracija");
-                }
-            });
-        }
-        else{
-            PrikaziObavijest("Niste unijeli sve parametre!");
-        }
 
-    }
 
     private void InicijalizacijaVarijabli(){
+        ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
+        viewModel=new ViewModelProvider(this,factory).get(RegistracijaFragmentViewModel.class);
+        viewModel.konstruktor(getContext());
         Ime=view.findViewById(R.id.editTextIme);
         Prezime=view.findViewById(R.id.editTextPrezime);
         Email=view.findViewById(R.id.editTextEmail);
@@ -104,11 +80,8 @@ public class RegistracijaFragment extends Fragment {
         btnRegistracija.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegistrirajKorisnika(Ime.getText().toString(),Prezime.getText().toString(),Email.getText().toString(),Lozinka.getText().toString());
+                viewModel.RegistrirajKorisnika(Ime.getText().toString(),Prezime.getText().toString(),Email.getText().toString(),Lozinka.getText().toString(),getFragmentManager());
             }
         });
-    }
-    private void PrikaziObavijest(String poruka){
-        Toast.makeText(getContext(),poruka,Toast.LENGTH_LONG).show();
     }
 }
