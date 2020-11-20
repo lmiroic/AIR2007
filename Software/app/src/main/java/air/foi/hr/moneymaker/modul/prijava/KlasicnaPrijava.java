@@ -40,16 +40,22 @@ public class KlasicnaPrijava implements IPrijava {
         pozivUnosa.enqueue(new Callback<List<Korisnik>>() {
             @Override
             public void onResponse(Call<List<Korisnik>> call, final Response<List<Korisnik>> response) {
-                Korisnik DohvacenKorisnik = response.body().get(0);
+                try {
+                    Korisnik DohvacenKorisnik = response.body().get(0);
 
-                if(response.isSuccessful() && DohvacenKorisnik != null){
+                    if(response.isSuccessful() && DohvacenKorisnik != null){
                         if (DohvacenKorisnik.getEmail().equals(email) && DohvacenKorisnik.getLozinka().equals(HashiranjeLozinke.HashirajLozinku(lozinka))) {
                             Log.e("Korisnik", "Uspješna prijava!");
                             UpravljanjeKorisnikomULokalnojBazi(DohvacenKorisnik,fragmentManager);
                         } else {
                             Log.e("Korisnik", "Neuspješna prijava, korisnik ne postoji.");
                         }
+                    }
                 }
+                catch (Exception e){
+                    return;
+                }
+
             }
 
             @Override

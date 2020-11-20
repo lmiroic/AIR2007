@@ -33,6 +33,7 @@ import air.foi.hr.moneymaker.MainActivity;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.SecondFragment;
 import air.foi.hr.moneymaker.ViewModel.PrijavaViewModel;
+import air.foi.hr.moneymaker.ViewModel.RegistracijaFragmentViewModel;
 import air.foi.hr.moneymaker.ViewModel.SplashScreenViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.prijava.AbstractionPrijava;
@@ -139,6 +140,7 @@ public class PrijavaFragment extends Fragment {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
+            viewModel.ProvjeraPostojanostiKorisnika(account,getFragmentManager());
             FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
