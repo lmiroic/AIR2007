@@ -10,6 +10,7 @@ import java.util.List;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.manager.FragmentName;
+import air.foi.hr.core.manager.HashiranjeLozinke;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
@@ -35,14 +36,14 @@ public class KlasicnaPrijava implements IPrijava {
     public void PrijaviKorisnika(final FragmentManager fragmentManager) {
         Retrofit r= RetrofitInstance.getInstance();
         RestApiImplementor api=r.create(RestApiImplementor.class);
-        Call<List<Korisnik>> pozivUnosa = api.DohvatiKorisnikaLogin(RequestBody.create(MediaType.parse("text/plain"), email),RequestBody.create(MediaType.parse("text/plain"), lozinka));
+        Call<List<Korisnik>> pozivUnosa = api.DohvatiKorisnikaLogin(RequestBody.create(MediaType.parse("text/plain"), email),RequestBody.create(MediaType.parse("text/plain"), HashiranjeLozinke.HashirajLozinku(lozinka)));
         pozivUnosa.enqueue(new Callback<List<Korisnik>>() {
             @Override
             public void onResponse(Call<List<Korisnik>> call, final Response<List<Korisnik>> response) {
                 Korisnik DohvacenKorisnik = response.body().get(0);
 
                 if(response.isSuccessful() && DohvacenKorisnik != null){
-                        if (DohvacenKorisnik.getEmail().equals(email) && DohvacenKorisnik.getLozinka().equals(lozinka)) {
+                        if (DohvacenKorisnik.getEmail().equals(email) && DohvacenKorisnik.getLozinka().equals(HashiranjeLozinke.HashirajLozinku(lozinka))) {
                             Log.e("Korisnik", "Uspješna prijava!");
                             UpravljanjeKorisnikomULokalnojBazi(DohvacenKorisnik,fragmentManager);
                         } else {
