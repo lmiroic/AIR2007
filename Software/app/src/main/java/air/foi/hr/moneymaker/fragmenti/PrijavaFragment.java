@@ -52,6 +52,7 @@ public class PrijavaFragment extends Fragment {
     private PrijavaViewModel viewModel;
     private AbstractionPrijava abstractionPrijava;
     private Button btnKlasicnaPrijava;
+    private Button btnRegistrirajSe;
     private EditText etEmail;
     private EditText etLozinka;
 
@@ -84,6 +85,7 @@ public class PrijavaFragment extends Fragment {
         etEmail=view.findViewById(R.id.editTextTextEmailAddress);
         etLozinka=view.findViewById(R.id.editTextTextPassword);
         btnKlasicnaPrijava=view.findViewById(R.id.btnLogin);
+        btnRegistrirajSe = view.findViewById(R.id.btnRegistrirajSe);
         final Fragment fragmentZaProslijedivanje=this;
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +95,6 @@ public class PrijavaFragment extends Fragment {
                         abstractionPrijava=new AbstractionPrijava(new air.foi.hr.moneymaker.modul.prijava.GoogleSignIn(mGoogleSignInClient.getSignInIntent(),fragmentZaProslijedivanje,getContext()));
                         abstractionPrijava.PrijaviKorisnika(getFragmentManager());
                         break;
-
                 }
             }
         });
@@ -102,6 +103,12 @@ public class PrijavaFragment extends Fragment {
             public void onClick(View v) {
                 abstractionPrijava=new AbstractionPrijava(new KlasicnaPrijava(etEmail.getText().toString(),etLozinka.getText().toString(),getContext()));
                 abstractionPrijava.PrijaviKorisnika(getFragmentManager());
+            }
+        });
+        btnRegistrirajSe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.REGISTRACIJA,getFragmentManager());
             }
         });
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());

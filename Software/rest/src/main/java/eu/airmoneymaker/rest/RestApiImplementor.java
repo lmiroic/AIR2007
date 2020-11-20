@@ -24,11 +24,11 @@ public interface RestApiImplementor {
     Call<List<Korisnik>>DohvatiKorisnika(@Query("id")int id);
     @Multipart
     @POST("korisnik/index.php?query=insert")
-    Call<Void> UnesiKorisnika (@Part("ime") String ime,
-            @Part("prezime") String prezime,
-            @Part("google_ID") String googleId,
-            @Part("email") String email,
-            @Part("lozinka") String lozinka
+    Call<Void> UnesiKorisnika (@Part("ime") RequestBody ime,
+            @Part("prezime") RequestBody prezime,
+            @Part("google_ID") RequestBody google_ID,
+            @Part("email") RequestBody email,
+            @Part("lozinka") RequestBody lozinka
     );
     @Multipart
     @POST("korisnik/index.php?query=update")

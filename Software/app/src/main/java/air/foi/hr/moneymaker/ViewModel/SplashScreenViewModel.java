@@ -26,27 +26,4 @@ public class SplashScreenViewModel extends ViewModel {
         this.context=context;
         this.baza=MyDatabase.getInstance(this.context);
     }
-    public void DohvatiSveKorisnike(){
-        Retrofit r= RetrofitInstance.getInstance();
-        RestApiImplementor api=r.create(RestApiImplementor.class);
-        Call<Void>pozivUnosa=api.UnesiKorisnika("Antonio","Hip","1231313131","aHip@gmail.com","aHip");
-        pozivUnosa.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful()){
-                    Log.e("Korisnik","Korisnik unesen");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("Korisnik",t.getMessage());
-            }
-        });
-
-
-
-
-    }
-
 }
