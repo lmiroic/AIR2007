@@ -68,7 +68,7 @@ public class PrijavaViewModel extends ViewModel {
     private boolean ProvjeraPostojanostiKorisnikaLokalno(GoogleSignInAccount account){
         List<Korisnik>Korisnici=MyDatabase.getInstance(context).getKorisnikDAO().DohvatiSveKorisnike();
         for (Korisnik k:Korisnici){
-            if (k.getGoogle_ID()==account.getId()){
+            if (k.getGoogle_ID().equals(account.getId().toString().trim())){
                 return true;
             }
         }
@@ -92,9 +92,8 @@ public class PrijavaViewModel extends ViewModel {
                     RegistracijaKorisnikaPutemGoogleAccounta(account,fragmentManager);
                 }
                 else if (ProvjeraPostojanostiKorisnikaLokalno(account)){
-                    //TODO
-                    // Zapisi korisnika u sesiju iz lokalne baze
-                    // Promjeni fragment
+                    Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
+                    FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
                 }
                 else{
                     Call<List<Korisnik>>korisnik=api.DohvatiSveKorisnike();
@@ -104,9 +103,8 @@ public class PrijavaViewModel extends ViewModel {
                             for(Korisnik k:response.body()){
                                 if(k.getGoogle_ID().equals(account.getId().toString().trim())){
                                     ZapisiKorisnikaULokalnuBazu(k);
-                                    //TODO
-                                    // Zapisi korisnika u sesiju iz lokalne baze
-                                    // Promjeni fragment
+                                    Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
+                                    FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
                                     break;
                                 }
                             }
@@ -118,7 +116,6 @@ public class PrijavaViewModel extends ViewModel {
                         }
                     });
                 }
-
             }
 
             @Override
