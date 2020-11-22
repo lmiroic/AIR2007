@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this,"No Internet connection. Connect to an available network and try again.",Toast.LENGTH_LONG).show();
             finish(); //Calling this method to close this activity when internet is not available.
         }
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         prikaziSplashScreen();
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+         */
     }
 
     private void prikaziSplashScreen() {
@@ -65,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.bottomNav) {
             return true;
         }
 

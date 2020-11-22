@@ -3,8 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="air.foi.hr.moneymaker.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/racuni"
+        android:title="Računi"
+        android:icon="@drawable/ic_racuni"/>
+    <item
+        android:id="@+id/kategorije"
+        android:title="Kategorije"
+        android:icon="@drawable/ic_noun_category"/>
+    <item
+        android:id="@+id/transakcije"
+        android:title="Transakcije"
+        android:icon="@drawable/ic_transakcije"/>
+    <item
+        android:id="@+id/analiza"
+        android:title="Analiza"
+        android:icon="@drawable/ic_analiza"/>
+
 </menu>
