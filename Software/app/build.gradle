@@ -51,5 +51,4 @@ dependencies {
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
 
 
-
 }

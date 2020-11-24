@@ -41,7 +41,6 @@ public class SplashScreenFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_splash_screen, container, false);
         InicijalizacijaVarijabli();
-        //viewModel.DohvatiSveKorisnike();
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
@@ -49,8 +48,6 @@ public class SplashScreenFragment extends Fragment {
             }
         }, 3500);
 
-        //test
-        //FragmentSwitcher.ShowFragment(FragmentName.KLASICNA_PRIJAVA, getFragmentManager());
         return view;
     }
 
@@ -58,5 +55,6 @@ public class SplashScreenFragment extends Fragment {
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(SplashScreenViewModel.class);
         viewModel.konstruktor(getContext());
+        viewModel.NapuniBazu();
     }
 }
