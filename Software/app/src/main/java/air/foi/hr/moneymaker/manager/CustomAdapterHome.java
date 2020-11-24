@@ -1,6 +1,7 @@
 package air.foi.hr.moneymaker.manager;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,12 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
     public void onBindViewHolder(final CustomAdapterHome.viewHolder viewHolder, final int position) {
         if(arrayList.get(position) instanceof KategorijaTransakcije){
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
-            viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon());
+            try {
+                viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon());
+            }
+            catch(Exception e){
+                Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon());
+            }
             viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum()));
         }
         else{
@@ -46,8 +52,6 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
                 }
             });
         }
-
-
     }
 
     @Override

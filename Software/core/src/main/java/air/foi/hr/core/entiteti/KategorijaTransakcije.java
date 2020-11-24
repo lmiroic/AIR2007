@@ -28,7 +28,7 @@ public class KategorijaTransakcije implements CategoryImplementor {
     public void setIkonaKategorije(int ikonaKategorije) {
         this.ikonaKategorije = ikonaKategorije;
     }
-
+    @SerializedName("drawable")
     private int ikonaKategorije;
 
     public KategorijaTransakcije() {
