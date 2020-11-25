@@ -22,7 +22,7 @@
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recycler_view"
         android:layout_width="411dp"
         android:layout_height="557dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
@@ -103,7 +103,6 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="kn"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toStartOf="@+id/btnPrethodnoRazdbolje"
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toEndOf="@+id/btnSljedeceRazdoblje"

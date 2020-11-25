@@ -1,13 +1,18 @@
 package air.foi.hr.core.entiteti;
 
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import air.foi.hr.core.modul.kategorije.CategoryImplementor;
+
 @Entity(tableName = "kategorijaTransakcije")
-public class KategorijaTransakcije {
+public class KategorijaTransakcije implements CategoryImplementor {
     @SerializedName("id")
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -15,6 +20,16 @@ public class KategorijaTransakcije {
     private String naziv;
     @SerializedName("tipTransakcije")
     private int tipTransakcije;
+
+    public int getIkonaKategorije() {
+        return ikonaKategorije;
+    }
+
+    public void setIkonaKategorije(int ikonaKategorije) {
+        this.ikonaKategorije = ikonaKategorije;
+    }
+    @SerializedName("drawable")
+    private int ikonaKategorije;
 
     public KategorijaTransakcije() {
     }
@@ -41,5 +56,25 @@ public class KategorijaTransakcije {
 
     public void setTipTransakcije(int tipTransakcije) {
         this.tipTransakcije = tipTransakcije;
+    }
+
+    @Override
+    public String getCategoryName() {
+        return getNaziv();
+    }
+
+    @Override
+    public int getCategoryIcon() {
+        return getIkonaKategorije();
+    }
+
+    @Override
+    public float getCategorySum() {
+        return 1111;
+    }
+
+    @Override
+    public void executeAction() {
+
     }
 }
