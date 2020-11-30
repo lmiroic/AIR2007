@@ -7,16 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".fragmenti.AnalizaFragment">
 
-    <TextView
-        android:id="@+id/textView5"
+
+    <Button
+        android:id="@+id/buttonTrosak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="352dp"
-        android:text="Analiza"
+        android:text="Trošak"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="35dp"
+        tools:layout_editor_absoluteY="114dp" />
+
+    <Button
+        android:id="@+id/buttonPrihod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prihod"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="114dp" />
+
+    <Button
+        android:id="@+id/buttonUK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Godišnji"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.653"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="114dp" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chart"
+        android:layout_width="346dp"
+        android:layout_height="381dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
@@ -29,8 +63,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_main">
-
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
