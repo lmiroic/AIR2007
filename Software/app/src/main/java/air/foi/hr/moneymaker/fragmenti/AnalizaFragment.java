@@ -51,7 +51,7 @@ public class AnalizaFragment extends Fragment {
     float ukNovac;
 
     PieChart pieChart;
-    Spinner racuniDrop;
+
 
     private Button buttonTrošak;
     private Button buttonPrihod;
@@ -69,6 +69,7 @@ public class AnalizaFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
         mockData();
         InicijalizacijaVarijabli();
+        //dohvatiRacune();
         setUpPieChart(2);
         ukNovac=0;
         return view;
@@ -117,6 +118,8 @@ public class AnalizaFragment extends Fragment {
         pieChart.animateY(1000);
         pieChart.setDrawEntryLabels(false);
         pieChart.setEntryLabelColor(Color.parseColor("Red"));
+        pieChart.getDescription().setEnabled(false);
+
 
 
         final List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
@@ -126,7 +129,6 @@ public class AnalizaFragment extends Fragment {
                 transakcijeTroškova.add(t);
             }
         }
-
 
         dodajDataSet(transakcijeTroškova,broj);
 
@@ -142,40 +144,13 @@ public class AnalizaFragment extends Fragment {
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                // Log.d("ucitaj", "onValueSelected: "+ e.toString());
-                // Log.d("ucitaj", "onValueSelected: "+ h.toString());
-
+                String nazivKat = "";
+                PieEntry pe = (PieEntry) e;
                 int pos1= e.toString().indexOf("y: ");
+
                 String iznos = e.toString().substring(pos1+3);
-                Log.d("ucitaj", "onValueSelected: "+ iznos);
 
-                float brojac=0;
-                //String naziv=null;
-
-                for (Transakcija i: transakcijeTroškova){
-                    if(i.getIznos()==Float.parseFloat(iznos)){
-                        pos1=i.getKategorijaTransakcije();
-
-
-                        //String naziv=null;
-                        for (KategorijaTransakcije k: kategorijaTransakcijes){
-                            if(pos1==k.getId()){
-                                //int katID=pos1;
-                                //Log.d("ucitajN3", "onValueSelected: "+ katID);
-                                brojac+=i.getIznos();
-                                //Log.d("ucitaj", "onValueSelected: "+ k.getNaziv());
-                                //Toast.makeText(getActivity(), "Kategorija:"+ k.getNaziv() +"\n"+"Novac: " + iznos + "HRK", Toast.LENGTH_SHORT).show();
-                                //Log.d("ucitajN3", "onValueSelected: "+ pos1);
-                            }
-
-                            //Log.d("ucitajN3", "onValueSelected: "+ k.getNaziv());
-
-                        }
-                        //Log.d("ucitajN", "onValueSelected: "+ naziv);
-                        break;
-                    }
-                }
-                Log.d("ucitaj", "onValueSelected: " + " " + brojac);
+                Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel().toString() +"\n"+"Novac: " + iznos + "HRK", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -223,8 +198,9 @@ public class AnalizaFragment extends Fragment {
         dataSet.setColors(colors);
 
         //zapis
-        Legend legend = pieChart.getLegend();
-        legend.setForm(Legend.LegendForm.CIRCLE);
+        //Legend legend = pieChart.getLegend();
+        //legend.setForm(Legend.LegendForm.CIRCLE);
+        pieChart.getLegend().setEnabled(false);
 
         PieData pieData = new PieData(dataSet);
         pieChart.setData(pieData);
