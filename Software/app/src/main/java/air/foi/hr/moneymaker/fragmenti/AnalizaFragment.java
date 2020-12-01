@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -29,7 +31,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import air.foi.hr.core.database.MockData;
@@ -44,18 +48,23 @@ public class AnalizaFragment extends Fragment {
     private AnalizaViewModel viewModel;
     private View view;
     private Context context;
+
     public static MyDatabase database;
     List <Transakcija> transakcijas = database.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije();
     List<KategorijaTransakcije> kategorijaTransakcijes = database.getInstance(context).getKategorijaTransakcijeDAO().DohvatiSveKategorijeTransakcije();
     List<Racun> racuns = database.getInstance(context).getRacunDAO().DohvatiSveRacune();
+
     float ukNovac;
+    String sve;
+
+    Boolean pritisnut=false;
 
     PieChart pieChart;
-
 
     private Button buttonTrošak;
     private Button buttonPrihod;
     private Button buttonOboje;
+    private TextView ukupanTP;
 
 
 
@@ -76,19 +85,20 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-
-
-
     private void InicijalizacijaVarijabli() {
         buttonTrošak = view.findViewById(R.id.buttonTrosak);
         buttonPrihod= view.findViewById(R.id.buttonPrihod);
         buttonOboje = view.findViewById(R.id.buttonUK);
+        pocetnaBoja(buttonTrošak,buttonPrihod,buttonOboje);
 
+        ukupanTP = view.findViewById(R.id.iznosTP);
+        sveVrijednost(transakcijas);
 
 
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje);
                 setUpPieChart(2);
                 ukNovac=0;
             }
@@ -97,16 +107,44 @@ public class AnalizaFragment extends Fragment {
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje);
                 setUpPieChart(1);
                 ukNovac=0;
             }
         });
 
-
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(AnalizaViewModel.class);
         viewModel.konstruktor(getContext(), (BottomNavigationView) view.findViewById(R.id.bottomNav));
         viewModel.UpravljanjeNavigacijom(getFragmentManager());
+
+    }
+
+    private void pocetnaBoja (Button btn, Button btn2, Button btn3){
+
+        List<Button> buttons = new ArrayList<>();
+        Collections.addAll(buttons,btn,btn2,btn3);
+
+        for (Button but: buttons){
+            but.setBackgroundColor(Color.parseColor("#7c5295"));
+        }
+    }
+
+    private void bojeIzmjena(Button btn, Button btn2, Button btn3){
+        pritisnut=true;
+        List<Button> buttons = new ArrayList<>();
+        Collections.addAll(buttons,btn2,btn3);
+
+
+        if (pritisnut==true){
+            btn.setBackgroundColor(Color.parseColor("#3c1361"));
+            for (Button but: buttons){
+                but.setBackgroundColor(Color.parseColor("#7c5295"));
+            }
+        }
+
+        pritisnut=false;
+
 
     }
 
@@ -150,7 +188,9 @@ public class AnalizaFragment extends Fragment {
 
                 String iznos = e.toString().substring(pos1+3);
 
-                Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel().toString() +"\n"+"Novac: " + iznos + "HRK", Toast.LENGTH_SHORT).show();
+                Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel().toString() +"\n"+"Novac: " + iznos + " HRK", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
+                toast.show();
             }
 
             @Override
@@ -158,6 +198,23 @@ public class AnalizaFragment extends Fragment {
 
             }
         });
+
+    }
+
+    private void sveVrijednost(List<Transakcija> potrebneTransakcije){
+        float prihod=0;
+        float trosak=0;
+
+        for (Transakcija t: potrebneTransakcije){
+            if(t.getTipTransakcije()==1){
+                prihod+=t.getIznos();
+            }
+            if(t.getTipTransakcije()==2){
+                trosak+=t.getIznos();
+            }
+        }
+        sve=String.valueOf(prihod-trosak);
+        ukupanTP.setText(sve);
 
     }
 
