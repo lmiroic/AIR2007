@@ -71,7 +71,7 @@ public class HomeScreenViewModel extends ViewModel {
 
     private List<CategoryImplementor> VratiKategorijeIzBaze() {
         List<KategorijaTransakcije> kategorijaTransakcije=MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().DohvatiSveKategorijeTransakcije();
-        ConcreteCategory dodajTransakciju=new ConcreteCategory("Add",R.drawable.ic_add);
+        ConcreteCategory dodajTransakciju=new ConcreteCategory("Add","ic_add");
         List<CategoryImplementor>listaZaAdapter=new ArrayList<>();
         for(KategorijaTransakcije kt: kategorijaTransakcije)
             listaZaAdapter.add(kt);

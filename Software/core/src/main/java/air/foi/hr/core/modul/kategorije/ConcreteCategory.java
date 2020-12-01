@@ -1,17 +1,19 @@
 package air.foi.hr.core.modul.kategorije;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ConcreteCategory implements CategoryImplementor {
     private String naziv;
-    private int Ikona;
+    private String Ikona;
+
 
     public ConcreteCategory() {
     }
 
-    public ConcreteCategory(String naziv, int ikona) {
+    public ConcreteCategory(String naziv, String ikona) {
         this.naziv = naziv;
         Ikona = ikona;
     }
@@ -24,11 +26,11 @@ public class ConcreteCategory implements CategoryImplementor {
         this.naziv = naziv;
     }
 
-    public int getIkona() {
+    public String getIkona() {
         return Ikona;
     }
 
-    public void setIkona(int ikona) {
+    public void setIkona(String ikona) {
         Ikona = ikona;
     }
 
@@ -38,8 +40,8 @@ public class ConcreteCategory implements CategoryImplementor {
     }
 
     @Override
-    public int getCategoryIcon() {
-        return getIkona();
+    public int getCategoryIcon(Context context) {
+        return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
     }
 
     @Override
