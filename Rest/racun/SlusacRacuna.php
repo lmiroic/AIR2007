@@ -20,7 +20,7 @@ if(isset($_GET["query"])&&$_GET["query"]=="insert"&&provjeriPostojanostPodatakaN
 {        
     $racun = kreirajRedakRacuna();
     $r = new Racun($racun);
-    $upit = "INSERT INTO racun(naziv,pocetno_stanje,valuta,boja,ikona,korisnik_id) VALUES (TRIM(BOTH '\"' FROM '$r->naziv'),TRIM(BOTH '\"' FROM '$r->pocetno_stanje'),TRIM(BOTH '\"' FROM '$r->valuta'),TRIM(BOTH '\"' FROM '$r->boja'),TRIM(BOTH '\"' FROM '$r->ikona'),TRIM(BOTH '\"' FROM '$k->korisnik_id'))";
+    $upit = "INSERT INTO racun(naziv,pocetno_stanje,valuta,ikona) VALUES (TRIM(BOTH '\"' FROM '$r->naziv'),TRIM(BOTH '\"' FROM '$r->pocetno_stanje'),TRIM(BOTH '\"' FROM '$r->valuta'),TRIM(BOTH '\"' FROM '$r->ikona'))";
     $rezultatObrade = $baza->updateDB($upit);
 }
 if(isset($_GET["query"])&&$_GET["query"]=="selectOneRacun"&&isset($_GET["id"]))
