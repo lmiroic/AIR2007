@@ -35,16 +35,16 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
         if(arrayList.get(position) instanceof KategorijaTransakcije){
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
             try {
-                viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon());
+                viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon(context));
             }
             catch(Exception e){
-                Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon());
+                Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon(context));
             }
             viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum()));
         }
         else{
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
-            viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon());
+            viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon(context));
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
