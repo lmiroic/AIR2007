@@ -2,6 +2,7 @@ package air.foi.hr.moneymaker.ViewModel;
 
 import android.content.Context;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;

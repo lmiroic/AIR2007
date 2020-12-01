@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -43,6 +44,7 @@ public class RacunFragment extends Fragment {
         viewModel=new ViewModelProvider(this,factory).get(RacunViewModel.class);
         viewModel.konstruktor(getContext(), (BottomNavigationView) view.findViewById(R.id.bottomNav));
         viewModel.UpravljanjeNavigacijom(getFragmentManager());
+
 
     }
 
