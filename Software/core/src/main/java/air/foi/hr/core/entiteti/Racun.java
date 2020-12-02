@@ -1,13 +1,17 @@
 package air.foi.hr.core.entiteti;
 
+import android.content.Context;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import air.foi.hr.core.modul.racuni.RacuniImplementor;
+
 @Entity (tableName = "racun")
-public class Racun {
+public class Racun implements RacuniImplementor {
     @SerializedName("id")
     @PrimaryKey(autoGenerate =true)
     private int id;
@@ -18,11 +22,8 @@ public class Racun {
     @SerializedName("valuta")
     @ForeignKey(entity =Valuta.class,parentColumns ="id",childColumns = "valuta")
     private String valuta;
-    @SerializedName("boja")
-    private String boja;
     @SerializedName("ikona")
     private String ikona;
-    @SerializedName("korisnik_id")
     @ForeignKey(entity = Korisnik.class,parentColumns = "id",childColumns = "korisnik_id")
     private int korisnik_id;
 
@@ -61,14 +62,6 @@ public class Racun {
         this.valuta = valuta;
     }
 
-    public String getBoja() {
-        return boja;
-    }
-
-    public void setBoja(String boja) {
-        this.boja = boja;
-    }
-
     public String getIkona() {
         return ikona;
     }
@@ -83,5 +76,25 @@ public class Racun {
 
     public void setKorisnik_id(int korisnik_id) {
         this.korisnik_id = korisnik_id;
+    }
+
+    @Override
+    public String getImeRacuna() {
+        return getNaziv();
+    }
+
+    @Override
+    public int getIkonaRacuna(Context context) {
+        return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
+    }
+
+    @Override
+    public float getStanjeRacuna() {
+        return getPocetno_stanje();
+    }
+
+    @Override
+    public void executeAction() {
+
     }
 }

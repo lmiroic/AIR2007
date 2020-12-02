@@ -1,25 +1,73 @@
 package air.foi.hr.core.modul.racuni;
 
+import android.content.Context;
+
 public class ConcreteRacun implements RacuniImplementor{
 
-    public String naziv;
-    public float pocetnoStanje;
-    public String valuta;
+    private String naziv;
+    private float pocetnoStanje;
+    private String ikona;
+    private String valuta;
 
+    public ConcreteRacun() {
+    }
 
-    @Override
-    public String getImeRacuna() {
-        return null;
+    public ConcreteRacun(String naziv, float pocetnoStanje, String ikona, String valuta ) {
+        this.naziv = naziv;
+        this.ikona=ikona;
+        this.pocetnoStanje=pocetnoStanje;
+        this.valuta=valuta;
+    }
+
+    public ConcreteRacun(String ikona) {
+        this.ikona = ikona;
+    }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public float getPocetnoStanje() {
+        return pocetnoStanje;
+    }
+
+    public void setPocetnoStanje(float pocetnoStanje) {
+        this.pocetnoStanje = pocetnoStanje;
+    }
+
+    public String getIkona() {
+        return ikona;
+    }
+
+    public void setIkona(String ikona) {
+        this.ikona = ikona;
+    }
+
+    public String getValuta() {
+        return valuta;
+    }
+
+    public void setValuta(String valuta) {
+        this.valuta = valuta;
     }
 
     @Override
-    public int getIkonaRacuna() {
-        return 0;
+    public String getImeRacuna() {
+        return getNaziv();
+    }
+
+    @Override
+    public int getIkonaRacuna(Context context) {
+        return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
     }
 
     @Override
     public float getStanjeRacuna() {
-        return 0;
+        return getPocetnoStanje();
     }
 
     @Override
