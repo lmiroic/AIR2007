@@ -5,18 +5,7 @@
     android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmenti.TransakcijaFragment" >
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="201dp"
-        android:text="Transakcija"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    tools:context=".fragmenti.TransakcijaFragment">
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -25,13 +14,195 @@
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_main">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
+    <TextView
+        android:id="@+id/txtViewStanjeRacuna"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:ems="10"
+        android:text="1500kn"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/lblRazdoblje"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SelectOdabiRacuna" />
 
+    <ImageButton
+        android:id="@+id/imgBtnFilter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        android:background="#FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/SelectOdabiRacuna"
+        android:layout_width="127dp"
+        android:layout_height="21dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtViewStanjeRacuna"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnFilter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imgBtnPostavke"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.222" />
+
+    <ImageButton
+        android:id="@+id/imgBtnPostavke"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_options_1767904_1502157"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnPrethodnoRazdbolje"
+        android:layout_width="25dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="52dp"
+        android:background="#000000"
+        android:backgroundTint="#00350E0E"
+        android:rotation="90"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/arrow_up_float"
+        android:tint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/lblRazdoblje"
+        android:layout_width="185dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="kn"
+        app:layout_constraintEnd_toStartOf="@+id/btnPrethodnoRazdbolje"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toEndOf="@+id/btnSljedeceRazdoblje"
+        app:layout_constraintTop_toBottomOf="@+id/txtViewStanjeRacuna" />
+
+    <ImageButton
+        android:id="@+id/btnSljedeceRazdoblje"
+        android:layout_width="25dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="84dp"
+        android:background="#000000"
+        android:backgroundTint="#00350E0E"
+        android:rotation="270"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/arrow_up_float"
+        android:tint="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="560dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblRazdoblje"
+        app:layout_constraintVertical_bias="1.0">
+
+
+        <TextView
+            android:id="@+id/txtPocetnoStanje"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="11dp"
+            android:text="Početno stanje:"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/lbl_DatumTransakcije"
+            app:layout_constraintEnd_toStartOf="@+id/txtZavrsnoStanje"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtZavrsnoStanje"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:text="Završno stanje:"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/lblUkupniIznos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/txtPocetnoStanje"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/lbl_DatumTransakcije"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintEnd_toStartOf="@+id/lblUkupniIznos"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtPocetnoStanje" />
+
+        <EditText
+            android:id="@+id/lblUkupniIznos"
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginBottom="1dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lbl_DatumTransakcije"
+            app:layout_constraintTop_toBottomOf="@+id/txtZavrsnoStanje" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="409dp"
+            android:layout_height="483dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lblUkupniIznos">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTransakcije"
+                android:layout_width="411dp"
+                android:layout_height="486dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="76dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.145" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
