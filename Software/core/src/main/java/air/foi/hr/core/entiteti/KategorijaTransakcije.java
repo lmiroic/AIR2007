@@ -75,7 +75,7 @@ public class KategorijaTransakcije implements CategoryImplementor {
     }
 
     @Override
-    public void executeAction() {
+    public void executeAction(Context context) {
 
     }
 }

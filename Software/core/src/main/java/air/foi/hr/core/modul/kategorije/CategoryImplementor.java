@@ -7,6 +7,5 @@ public interface CategoryImplementor {
     public String getCategoryName();
     public int getCategoryIcon(Context context);
     public float getCategorySum();
-    public void executeAction();
-
+    public void executeAction(Context context);
 }
