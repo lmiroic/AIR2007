@@ -15,7 +15,9 @@ import java.util.List;
 
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
+import air.foi.hr.core.modul.kategorije.OnDialogCategoryResult;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.modul.kategorije.CategoryAddDialog;
 import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
 
 public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.viewHolder> {
@@ -59,6 +61,15 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    CategoryAddDialog categoryAddDialog=new CategoryAddDialog(context,((KategorijaTransakcije) arrayList.get(position)));
+                    categoryAddDialog.setOnDialogCategoryResult(new OnDialogCategoryResult() {
+                        @Override
+                        public void finish() {
+
+                        }
+                    });
+                    categoryAddDialog.show();
                 }
             });
         }

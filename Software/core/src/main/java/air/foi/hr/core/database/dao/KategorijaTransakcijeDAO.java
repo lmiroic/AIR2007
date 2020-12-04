@@ -20,6 +20,9 @@ public interface KategorijaTransakcijeDAO {
     @Query("SELECT * from kategorijaTransakcije WHERE id=:id")
     KategorijaTransakcije DohvatiKategorijuTransakcije(int id);
 
+    @Query("SELECT * from kategorijaTransakcije WHERE naziv=:naziv")
+    KategorijaTransakcije DohvatiKategorijuTransakcijePremaNazivu(String naziv);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] UnosKategorijeTransakcije(KategorijaTransakcije... kategorijeTransakcija);
 
