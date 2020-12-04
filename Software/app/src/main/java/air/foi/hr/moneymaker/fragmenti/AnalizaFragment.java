@@ -88,7 +88,8 @@ public class AnalizaFragment extends Fragment {
     private ImageButton buttonLijevo;
 
     private TextView ukupanTP;
-    private String odabrani;
+    String odabrani="Svi računi";
+
     private String odabranoVrijeme;
 
     private TextView textProsDan;
@@ -108,15 +109,14 @@ public class AnalizaFragment extends Fragment {
         mockData();
         InicijalizacijaVarijabli();
         spinnerTime(2);
-        setUpPieChart(2,odabrani);
+        spinnerRacun(2);
         ukNovac=0;
         return view;
     }
 
-
     private void InicijalizacijaVarijabli() {
         dropRac=view.findViewById(R.id.racunDrop);
-        spinnerRacun();
+        spinnerRacun(2);
 
         dropTime=view.findViewById(R.id.spinnerMjeseci);
 
@@ -145,7 +145,7 @@ public class AnalizaFragment extends Fragment {
             public void onClick(View v) {
                 spinnerTime(2);
                 bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
-                setUpPieChart(2,odabrani);
+                spinnerRacun(2);
                 ukNovac=0;
 
             }
@@ -154,9 +154,9 @@ public class AnalizaFragment extends Fragment {
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spinnerTime(2);
+                spinnerTime(1);
                 bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
-                setUpPieChart(1,odabrani);
+                spinnerRacun(1);
                 ukNovac=0;
             }
         });
@@ -248,7 +248,7 @@ public class AnalizaFragment extends Fragment {
         btn2.setVisibility(View.VISIBLE);
     }
 
-    private void spinnerRacun(){
+    private void spinnerRacun(final int brojP){
 
         List<String> items = new ArrayList<>();
         items.add("Svi računi");
@@ -262,7 +262,9 @@ public class AnalizaFragment extends Fragment {
         dropRac.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                odabrani = adapterView.getItemAtPosition(i).toString();
+               odabrani = adapterView.getItemAtPosition(i).toString();
+               setUpPieChart(brojP,odabrani);
+               ukNovac=0;
             }
 
             @Override
@@ -306,15 +308,7 @@ public class AnalizaFragment extends Fragment {
         pieChart.setDrawEntryLabels(false);
         pieChart.getDescription().setEnabled(false);
 
-        final List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
-
-        for (Transakcija t:transakcijas){
-            if (t.getTipTransakcije()==broj){
-                transakcijeTroškova.add(t);
-            }
-        }
-
-        dodajDataSet(transakcijeTroškova,broj);
+        filtracijaPoRačunima(broj,odabrani);
 
         if (broj == 2){
             pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");}
@@ -408,6 +402,37 @@ public class AnalizaFragment extends Fragment {
         PieData pieData = new PieData(dataSet);
         pieChart.setData(pieData);
         pieChart.invalidate();
+    }
+
+    private void filtracijaPoRačunima (int broj, String odabrani){
+
+        List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
+        List<Transakcija> transakcijeRačuna = new ArrayList<Transakcija>();
+
+        int id_rac=0;
+        for (Transakcija t:transakcijas){
+            if (t.getTipTransakcije()==broj){
+                transakcijeTroškova.add(t);
+            }
+        }
+
+
+        if (odabrani.equals("Svi računi")){
+            dodajDataSet(transakcijeTroškova,broj);
+        }
+        else{
+            for (Racun rac:racuns){
+                if(rac.getNaziv().equals(odabrani)){
+                    id_rac=rac.getId();
+                }
+            }
+            for (Transakcija tranRac:transakcijeTroškova){
+                if(tranRac.getRacunTerecenja()==id_rac){
+                    transakcijeRačuna.add(tranRac);
+                }
+            }
+            dodajDataSet(transakcijeRačuna,broj);
+        }
     }
 
     private void mockData(){
