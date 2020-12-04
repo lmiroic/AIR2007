@@ -11,18 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
 
 public class HomeFragment extends Fragment {
     private View view;
     private HomeScreenViewModel viewModel;
     RecyclerView recyclerView;
+    private ImageButton btnPostavke;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -50,6 +55,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void InicijalizacijaVarijabli() {
+        btnPostavke=view.findViewById(R.id.btnPostavke);
+        btnPostavke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+            }
+        });
 
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(HomeScreenViewModel.class);
