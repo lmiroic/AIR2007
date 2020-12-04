@@ -67,6 +67,8 @@ public class AnalizaFragment extends Fragment {
 
     String sve;
     int month;
+    String currentYear;
+    String lastYear;
 
     Boolean pritisnut=false;
 
@@ -194,7 +196,7 @@ public class AnalizaFragment extends Fragment {
         textTrenutDan.setText("Danas"+"\n"+ String.valueOf(trenDan)+" kn");
     }
 
-    private void spinnerTime(int broj) {
+    private void spinnerTime(final int broj) {
         ArrayAdapter<String> adapter = null;
 
         if (broj==1||broj==2){
@@ -209,29 +211,32 @@ public class AnalizaFragment extends Fragment {
 
         else if (broj==3){
             vidljivostTime(dropTime,buttonLijevo,buttonDesno);
-            int year= Calendar.getInstance().get(Calendar.YEAR);
+            currentYear = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+            int parse = Integer.parseInt(currentYear);
             List<String> items = new ArrayList<String>();
             for (int i=0; i<6 ; i++){
-                items.add(String.valueOf(year));
-                year-=1;
+                items.add(String.valueOf(parse));
+                parse-=1;
             }
+
+            lastYear = items.get(items.size()-1);
 
             adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
             dropTime.setAdapter(adapter);
         }
+
         else{
             dropTime.setVisibility(View.INVISIBLE);
             buttonLijevo.setVisibility(View.INVISIBLE);
             buttonDesno.setVisibility(View.INVISIBLE);
         }
 
-
-
-
         dropTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 odabranoVrijeme = adapterView.getItemAtPosition(i).toString();
+                if (broj==1||broj==2){strelice("Siječanj","Prosinac", odabranoVrijeme);}
+                else if(broj==3){strelice (lastYear,currentYear, odabranoVrijeme);}
             }
 
             @Override
@@ -246,6 +251,25 @@ public class AnalizaFragment extends Fragment {
         spinner.setVisibility(View.VISIBLE);
         btn.setVisibility(View.VISIBLE);
         btn2.setVisibility(View.VISIBLE);
+    }
+
+    private void strelice(String first, String last, String odabrani){
+        if (first.equals(odabrani)) {
+            buttonLijevo.setVisibility(View.INVISIBLE);
+            buttonDesno.setVisibility(View.VISIBLE);
+        }
+
+        else if(last.equals(odabrani)){
+            buttonLijevo.setVisibility(View.VISIBLE);
+            buttonDesno.setVisibility(View.INVISIBLE);
+
+        }
+
+        else{
+            buttonLijevo.setVisibility(View.VISIBLE);
+            buttonDesno.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void spinnerRacun(final int brojP){
