@@ -11,6 +11,7 @@ import air.foi.hr.moneymaker.fragmenti.AnalizaFragment;
 import air.foi.hr.moneymaker.fragmenti.HomeFragment;
 import air.foi.hr.moneymaker.fragmenti.KorisnikPostavkeFragment;
 import air.foi.hr.moneymaker.fragmenti.PrijavaFragment;
+import air.foi.hr.moneymaker.fragmenti.PromjenaLozinkeFragment;
 import air.foi.hr.moneymaker.fragmenti.RacunFragment;
 import air.foi.hr.moneymaker.fragmenti.RegistracijaFragment;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
@@ -44,6 +45,9 @@ public class FragmentSwitcher {
             case POSTAVKE:
                 fragment=new KorisnikPostavkeFragment();
                 break;
+            case PROMJENA_LOZINKE:
+                fragment=new PromjenaLozinkeFragment();
+                break;
         }
         FragmentManager fm= activity.getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
@@ -74,6 +78,9 @@ public class FragmentSwitcher {
                 break;
             case POSTAVKE:
                 fragment=new KorisnikPostavkeFragment();
+                break;
+            case PROMJENA_LOZINKE:
+                fragment=new PromjenaLozinkeFragment();
                 break;
         }
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();

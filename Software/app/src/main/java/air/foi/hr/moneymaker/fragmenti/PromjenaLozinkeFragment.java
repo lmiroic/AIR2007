@@ -5,22 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
-import air.foi.hr.moneymaker.ViewModel.KorisnikPostavkeViewModel;
+import air.foi.hr.moneymaker.ViewModel.PromjenaLozinkeViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
-public class KorisnikPostavkeFragment extends Fragment {
-    private KorisnikPostavkeViewModel viewModel;
-    private Button btnPromjeniLozinku;
-    private ImageButton btnBack;
+public class PromjenaLozinkeFragment extends Fragment {
+    private PromjenaLozinkeViewModel viewModel;
+    private Button btnSpremiLozinku;
+    private Button btnOdustani;
 
     private View view;
 
@@ -33,31 +30,23 @@ public class KorisnikPostavkeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_korisnik_postavke, container, false);
+        view=inflater.inflate(R.layout.fragment_promjeni_lozinku, container, false);
         InicijalizacijaVarijabli();
         return view;
 
     }
     private void InicijalizacijaVarijabli() {
 
-        btnPromjeniLozinku=view.findViewById(R.id.btnPromjeniLozinku);
-        btnPromjeniLozinku.setOnClickListener(new View.OnClickListener() {
+        btnOdustani=view.findViewById(R.id.btnOdustani);
+        btnOdustani.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_LOZINKE,getFragmentManager());
-            }
-        });
-
-        btnBack=view.findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.HOME,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
             }
         });
 
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
-        viewModel=new ViewModelProvider(this,factory).get(KorisnikPostavkeViewModel.class);
+        viewModel=new ViewModelProvider(this,factory).get(PromjenaLozinkeViewModel.class);
         viewModel.konstruktor(getContext());
 
     }
