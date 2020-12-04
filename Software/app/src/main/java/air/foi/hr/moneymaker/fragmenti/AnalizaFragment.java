@@ -66,12 +66,13 @@ public class AnalizaFragment extends Fragment {
     float tjedan=0;
 
     String sve;
+    int month;
 
     Boolean pritisnut=false;
 
     PieChart pieChart;
-    LineChart lineChart;
-    BarChart barChart;
+    //LineChart lineChart;
+    //BarChart barChart;
 
     Spinner dropRac;
     Spinner dropTime;
@@ -110,7 +111,6 @@ public class AnalizaFragment extends Fragment {
         setUpPieChart(2,odabrani);
         ukNovac=0;
         return view;
-
     }
 
 
@@ -166,7 +166,7 @@ public class AnalizaFragment extends Fragment {
             public void onClick(View v) {
                 spinnerTime(3);
                 bojeIzmjena(buttonOboje,buttonTrošak,buttonPrihod,buttonNedavno);
-                setUpLineChart();
+                //setUpBarChart();
                 ukNovac=0;
             }
         });
@@ -176,7 +176,7 @@ public class AnalizaFragment extends Fragment {
             public void onClick(View v) {
                 spinnerTime(4);
                 bojeIzmjena(buttonNedavno,buttonTrošak,buttonPrihod,buttonOboje);
-                setUpBarChart();
+                //setUpLineChart();
                 ukNovac=0;
             }
         });
@@ -201,6 +201,10 @@ public class AnalizaFragment extends Fragment {
             vidljivostTime(dropTime,buttonLijevo,buttonDesno);
             List<String> items = new ArrayList<String>(Arrays.asList("Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"));
             adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+            dropTime.setAdapter(adapter);
+            month=Calendar.getInstance().get(Calendar.MONTH);
+            dropTime.setSelection(month);
+
         }
 
         else if (broj==3){
@@ -213,6 +217,7 @@ public class AnalizaFragment extends Fragment {
             }
 
             adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+            dropTime.setAdapter(adapter);
         }
         else{
             dropTime.setVisibility(View.INVISIBLE);
@@ -222,7 +227,7 @@ public class AnalizaFragment extends Fragment {
 
 
 
-        dropTime.setAdapter(adapter);
+
         dropTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -338,13 +343,13 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-    private void setUpLineChart(){
-        lineChart=(LineChart) view.findViewById(R.id.chartLine);
-    }
+   // private void setUpLineChart(){
+    //    lineChart=(LineChart) view.findViewById(R.id.chartLine);
+  //  }
 
-    private void setUpBarChart(){
-        barChart=(BarChart) view.findViewById(R.id.chartBar);
-    }
+  //  private void setUpBarChart(){
+       // barChart=(BarChart) view.findViewById(R.id.chartBar);
+    //}
 
     private void sveVrijednost(List<Transakcija> potrebneTransakcije){
         float prihod=0;
@@ -433,9 +438,5 @@ public class AnalizaFragment extends Fragment {
 
 
     }
-
-
-
-
 
 }
