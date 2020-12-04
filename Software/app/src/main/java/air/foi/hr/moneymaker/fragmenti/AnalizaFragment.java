@@ -17,22 +17,28 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,16 +61,38 @@ public class AnalizaFragment extends Fragment {
     List<Racun> racuns = database.getInstance(context).getRacunDAO().DohvatiSveRacune();
 
     float ukNovac;
+    float prosDan=0;
+    float trenDan=0;
+    float tjedan=0;
+
     String sve;
 
     Boolean pritisnut=false;
 
     PieChart pieChart;
+    LineChart lineChart;
+    BarChart barChart;
+
+    Spinner dropRac;
+    Spinner dropTime;
 
     private Button buttonTrošak;
     private Button buttonPrihod;
     private Button buttonOboje;
+    private Button buttonNedavno;
+
+    private ImageButton buttonPostavke;
+    private ImageButton buttonInfo;
+    private ImageButton buttonDesno;
+    private ImageButton buttonLijevo;
+
     private TextView ukupanTP;
+    private String odabrani;
+    private String odabranoVrijeme;
+
+    private TextView textProsDan;
+    private TextView textTrenutDan;
+    private TextView textTjedan;
 
 
 
@@ -78,37 +106,77 @@ public class AnalizaFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
         mockData();
         InicijalizacijaVarijabli();
-        //dohvatiRacune();
-        setUpPieChart(2);
+        spinnerTime(2);
+        setUpPieChart(2,odabrani);
         ukNovac=0;
         return view;
 
     }
 
+
     private void InicijalizacijaVarijabli() {
+        dropRac=view.findViewById(R.id.racunDrop);
+        spinnerRacun();
+
+        dropTime=view.findViewById(R.id.spinnerMjeseci);
+
+        buttonDesno = view.findViewById(R.id.buttonDesno);
+        buttonLijevo= view.findViewById(R.id.buttonLijevo);
+
+        buttonPostavke = view.findViewById(R.id.buttonPostavke);
+        buttonInfo= view.findViewById(R.id.buttonInfo);
+
         buttonTrošak = view.findViewById(R.id.buttonTrosak);
         buttonPrihod= view.findViewById(R.id.buttonPrihod);
         buttonOboje = view.findViewById(R.id.buttonUK);
-        pocetnaBoja(buttonTrošak,buttonPrihod,buttonOboje);
+        buttonNedavno = view.findViewById(R.id.buttonNedavnaPotrosnja);
+        pocetnaBoja(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
+
+        textProsDan = view.findViewById(R.id.prosDan);
+        textTrenutDan = view.findViewById(R.id.trenDan);
+        textTjedan = view.findViewById(R.id.tjedan);
+        unesiDanTjedan();
 
         ukupanTP = view.findViewById(R.id.iznosTP);
         sveVrijednost(transakcijas);
 
-
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje);
-                setUpPieChart(2);
+                spinnerTime(2);
+                bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
+                setUpPieChart(2,odabrani);
                 ukNovac=0;
+
             }
         });
 
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje);
-                setUpPieChart(1);
+                spinnerTime(2);
+                bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
+                setUpPieChart(1,odabrani);
+                ukNovac=0;
+            }
+        });
+
+        buttonOboje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerTime(3);
+                bojeIzmjena(buttonOboje,buttonTrošak,buttonPrihod,buttonNedavno);
+                setUpLineChart();
+                ukNovac=0;
+            }
+        });
+
+        buttonNedavno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerTime(4);
+                bojeIzmjena(buttonNedavno,buttonTrošak,buttonPrihod,buttonOboje);
+                setUpBarChart();
                 ukNovac=0;
             }
         });
@@ -120,21 +188,100 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-    private void pocetnaBoja (Button btn, Button btn2, Button btn3){
+    private void unesiDanTjedan() {
+        textTjedan.setText("Tjedan"+"\n"+ String.valueOf(tjedan)+" kn");
+        textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(prosDan)+" kn");
+        textTrenutDan.setText("Danas"+"\n"+ String.valueOf(trenDan)+" kn");
+    }
 
+    private void spinnerTime(int broj) {
+        ArrayAdapter<String> adapter = null;
+
+        if (broj==1||broj==2){
+            vidljivostTime(dropTime,buttonLijevo,buttonDesno);
+            List<String> items = new ArrayList<String>(Arrays.asList("Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"));
+            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+        }
+
+        else if (broj==3){
+            vidljivostTime(dropTime,buttonLijevo,buttonDesno);
+            int year= Calendar.getInstance().get(Calendar.YEAR);
+            List<String> items = new ArrayList<String>();
+            for (int i=0; i<6 ; i++){
+                items.add(String.valueOf(year));
+                year-=1;
+            }
+
+            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+        }
+        else{
+            dropTime.setVisibility(View.INVISIBLE);
+            buttonLijevo.setVisibility(View.INVISIBLE);
+            buttonDesno.setVisibility(View.INVISIBLE);
+        }
+
+
+
+        dropTime.setAdapter(adapter);
+        dropTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                odabranoVrijeme = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void vidljivostTime(Spinner spinner, ImageButton btn, ImageButton btn2){
+        spinner.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.VISIBLE);
+        btn2.setVisibility(View.VISIBLE);
+    }
+
+    private void spinnerRacun(){
+
+        List<String> items = new ArrayList<>();
+        items.add("Svi računi");
+        for (Racun rac:racuns){
+            items.add(rac.getNaziv());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+
+        dropRac.setAdapter(adapter);
+        dropRac.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                odabrani = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+    }
+
+    private void pocetnaBoja (Button btn, Button btn2, Button btn3, Button btn4){
         List<Button> buttons = new ArrayList<>();
-        Collections.addAll(buttons,btn,btn2,btn3);
+        Collections.addAll(buttons,btn,btn2,btn3,btn4);
 
         for (Button but: buttons){
             but.setBackgroundColor(Color.parseColor("#7c5295"));
         }
     }
 
-    private void bojeIzmjena(Button btn, Button btn2, Button btn3){
+    private void bojeIzmjena(Button btn, Button btn2, Button btn3, Button btn4){
         pritisnut=true;
         List<Button> buttons = new ArrayList<>();
-        Collections.addAll(buttons,btn2,btn3);
-
+        Collections.addAll(buttons,btn2,btn3,btn4);
 
         if (pritisnut==true){
             btn.setBackgroundColor(Color.parseColor("#3c1361"));
@@ -142,23 +289,17 @@ public class AnalizaFragment extends Fragment {
                 but.setBackgroundColor(Color.parseColor("#7c5295"));
             }
         }
-
         pritisnut=false;
-
-
     }
 
-    private void setUpPieChart(int broj) {
+    private void setUpPieChart(int broj, String odabrani) {
         pieChart = (PieChart) view.findViewById(R.id.chart);
         pieChart.setHoleRadius(35f);
         pieChart.setTransparentCircleRadius(45f);
         pieChart.setCenterTextSize(15);
         pieChart.animateY(1000);
         pieChart.setDrawEntryLabels(false);
-        pieChart.setEntryLabelColor(Color.parseColor("Red"));
         pieChart.getDescription().setEnabled(false);
-
-
 
         final List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
 
@@ -171,18 +312,14 @@ public class AnalizaFragment extends Fragment {
         dodajDataSet(transakcijeTroškova,broj);
 
         if (broj == 2){
-            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");
-        }
+            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");}
 
         else if (broj==1){
-            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " HRK");
-
-        }
+            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " HRK");}
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                String nazivKat = "";
                 PieEntry pe = (PieEntry) e;
                 int pos1= e.toString().indexOf("y: ");
 
@@ -201,6 +338,14 @@ public class AnalizaFragment extends Fragment {
 
     }
 
+    private void setUpLineChart(){
+        lineChart=(LineChart) view.findViewById(R.id.chartLine);
+    }
+
+    private void setUpBarChart(){
+        barChart=(BarChart) view.findViewById(R.id.chartBar);
+    }
+
     private void sveVrijednost(List<Transakcija> potrebneTransakcije){
         float prihod=0;
         float trosak=0;
@@ -214,8 +359,7 @@ public class AnalizaFragment extends Fragment {
             }
         }
         sve=String.valueOf(prihod-trosak);
-        ukupanTP.setText(sve);
-
+        ukupanTP.setText(sve + " kn");
     }
 
     private void dodajDataSet(List<Transakcija> potrebneTransakcije, int broj) {
@@ -230,19 +374,19 @@ public class AnalizaFragment extends Fragment {
                 }
             }
 
-            //Log.d("ucitaj","Transakcije"+ukIznos + " "+ kat2.getCategoryName());
-
             if (ukIznos!=0){
+
                 yEntries.add(new PieEntry(ukIznos,kat2.getCategoryName()));
                 ukIznos=0;
             }
         }
 
-
-
         PieDataSet dataSet= new PieDataSet(yEntries, "Kategorije");
         dataSet.setSliceSpace(1);
         dataSet.setValueTextSize(12);
+
+        dataSet.setValueFormatter(new PercentFormatter(pieChart));
+        pieChart.setUsePercentValues(true);
 
         //boje
         ArrayList<Integer> colors= new ArrayList<>();
@@ -254,9 +398,6 @@ public class AnalizaFragment extends Fragment {
         colors.add(Color.YELLOW);
         dataSet.setColors(colors);
 
-        //zapis
-        //Legend legend = pieChart.getLegend();
-        //legend.setForm(Legend.LegendForm.CIRCLE);
         pieChart.getLegend().setEnabled(false);
 
         PieData pieData = new PieData(dataSet);
