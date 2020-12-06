@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.core.modul.racuni.RacuniImplementor;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.ViewModel.RacunViewModel;
 
 public class CustomAdapterRacun extends RecyclerView.Adapter<CustomAdapterRacun.viewHolder> {
 
@@ -29,6 +31,9 @@ public class CustomAdapterRacun extends RecyclerView.Adapter<CustomAdapterRacun.
         this.arrayList = arrayList;
     }
 
+    public CustomAdapterRacun(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -47,35 +52,40 @@ public class CustomAdapterRacun extends RecyclerView.Adapter<CustomAdapterRacun.
             catch(Exception e){
                 Log.e("Racun",arrayList.get(position).getImeRacuna()+" "+arrayList.get(position).getIkonaRacuna(context));
             }
-            viewHolder.txtViewRacunStanje.setText(String.valueOf(arrayList.get(position).getStanjeRacuna()));
+            viewHolder.txtViewRacunStanje.setText(String.valueOf(arrayList.get(position).getStanjeRacuna())+ " "+String.valueOf(((Racun) arrayList.get(position)).getValuta()));
         }
         else{
             viewHolder.txtViewImeRacuna.setText(arrayList.get(position).getImeRacuna());
             viewHolder.imgViewIkonaRacuna.setImageResource(arrayList.get(position).getIkonaRacuna(context));
-            viewHolder.imgViewIkonaRacuna.setOnClickListener(new View.OnClickListener() {
+            viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    arrayList.get(position).executeAction();
+                    arrayList.get(position).executeAction(context);
+
                 }
             });
         }
     }
+
 
     @Override
     public int getItemCount() {
         return arrayList.size();
     }
 
+
     public class viewHolder extends RecyclerView.ViewHolder{
         ImageView imgViewIkonaRacuna;
         TextView txtViewImeRacuna;
         TextView txtViewRacunStanje;
+        CardView cardView;
 
         public viewHolder(View itemView){
             super(itemView);
             imgViewIkonaRacuna=(ImageView) itemView.findViewById(R.id.imgViewIkonaRacuna);
             txtViewImeRacuna=(TextView) itemView.findViewById(R.id.txtViewImeRacuna);
             txtViewRacunStanje=(TextView) itemView.findViewById(R.id.txtViewRacunStanje);
+            cardView=(CardView) itemView.findViewById(R.id.cardViewRacuni);
         }
     }
 }

@@ -20,7 +20,7 @@ public class Racun implements RacuniImplementor {
     @SerializedName("pocetno_stanje")
     private float pocetno_stanje;
     @SerializedName("valuta")
-    @ForeignKey(entity =Valuta.class,parentColumns ="id",childColumns = "valuta")
+    @ForeignKey(entity =Valuta.class,parentColumns ="naziv",childColumns = "valuta")
     private String valuta;
     @SerializedName("ikona")
     private String ikona;
@@ -94,7 +94,7 @@ public class Racun implements RacuniImplementor {
     }
 
     @Override
-    public void executeAction() {
+    public void executeAction(Context context) {
 
     }
 }

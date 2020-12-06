@@ -1,8 +1,14 @@
-package air.foi.hr.core.modul.racuni;
+package air.foi.hr.moneymaker.modul.racun;
 
 import android.content.Context;
+import android.util.Log;
 
-public class ConcreteRacun implements RacuniImplementor{
+import androidx.fragment.app.FragmentManager;
+
+import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
+import air.foi.hr.core.modul.racuni.RacuniImplementor;
+
+public class ConcreteRacun implements RacuniImplementor {
 
     private String naziv;
     private float pocetnoStanje;
@@ -55,6 +61,8 @@ public class ConcreteRacun implements RacuniImplementor{
         this.valuta = valuta;
     }
 
+
+
     @Override
     public String getImeRacuna() {
         return getNaziv();
@@ -71,7 +79,14 @@ public class ConcreteRacun implements RacuniImplementor{
     }
 
     @Override
-    public void executeAction() {
+    public void executeAction(Context context) {
+        RacunAddDialog racunAddDialog=new RacunAddDialog(context);
+        racunAddDialog.setOnDialogRacunResult(new OnDialogRacunResult() {
+            @Override
+            public void finish() {
 
+            }
+        });
+        racunAddDialog.show();
     }
 }

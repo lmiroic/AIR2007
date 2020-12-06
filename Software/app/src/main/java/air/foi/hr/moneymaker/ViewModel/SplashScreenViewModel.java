@@ -11,8 +11,10 @@ import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.core.modul.racuni.RacuniImplementor;
+import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import okhttp3.MediaType;
@@ -60,9 +62,7 @@ public class SplashScreenViewModel extends ViewModel {
                 @Override
                 public void onResponse(Call<List<Racun>> call, Response<List<Racun>> response) {
                     for(Racun racun: response.body()){
-                        Log.e("Racun",racun.getImeRacuna()+" "+racun.getIkona());
                         MyDatabase.getInstance(context).getRacunDAO().UnosRacuna(racun);
-
                     }
                 }
 
@@ -72,9 +72,25 @@ public class SplashScreenViewModel extends ViewModel {
                 }
             });
         }
+        if(!ProvjeraPostojanostiValuteUBazi()){
+            Valuta valuta = new Valuta();
+            valuta.setNaziv("HRK");
+            valuta.setTecaj(Float.parseFloat("1.00"));
+            Valuta valuta1 = new Valuta();
+            valuta1.setNaziv("EUR");
+            valuta1.setTecaj(Float.parseFloat("7.50"));
+            Valuta valuta2 = new Valuta();
+            valuta2.setNaziv("USD");
+            valuta2.setTecaj(Float.parseFloat("6.12"));
+            MyDatabase.getInstance(context).getValutaDAO().UnosValute(valuta,valuta1,valuta2);
+
+        }
     }
 
     private boolean ProvjeraPostojanostiRacunaUBazi() {
         return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
+    }
+    private boolean ProvjeraPostojanostiValuteUBazi(){
+        return MyDatabase.getInstance(context).getValutaDAO().DohvatiSveValute().size()>0?true:false;
     }
 }

@@ -6,5 +6,6 @@ public interface RacuniImplementor {
     public String getImeRacuna();
     public int getIkonaRacuna(Context context);
     public float getStanjeRacuna();
-    public void executeAction();
+    public void executeAction(Context context);
+
 }

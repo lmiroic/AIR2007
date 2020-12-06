@@ -16,8 +16,8 @@ public interface ValutaDAO {
     @Query("SELECT * from valuta")
     List<Valuta> DohvatiSveValute();
 
-    @Query("SELECT * from valuta WHERE id=:id")
-    Valuta DohvatiValutu(int id);
+    @Query("SELECT * from valuta WHERE naziv=:naziv")
+    Valuta DohvatiValutu(String naziv);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] UnosValute(Valuta... valute);
