@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +26,25 @@ import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
 import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
+=======
+import air.foi.hr.core.manager.FragmentName;
+import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
+import air.foi.hr.moneymaker.manager.CustomAdapterHome;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+>>>>>>> feature/korisnik-postavke
 
 
 public class HomeFragment extends Fragment {
     private View view;
     private HomeScreenViewModel viewModel;
     RecyclerView recyclerView;
+<<<<<<< HEAD
     private CustomAdapterHome adapter;
+=======
+    private ImageButton btnPostavke;
+
+>>>>>>> feature/korisnik-postavke
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -64,6 +78,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void InicijalizacijaVarijabli() {
+<<<<<<< HEAD
+=======
+        btnPostavke=view.findViewById(R.id.btnPostavke);
+        btnPostavke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+            }
+        });
+
+>>>>>>> feature/korisnik-postavke
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(HomeScreenViewModel.class);
         viewModel.konstruktor(getContext(), (BottomNavigationView) view.findViewById(R.id.bottomNav));
