@@ -9,7 +9,8 @@ public enum FragmentName {
     TRANSAKCIJA(6),
     ANALIZA(7),
     POSTAVKE(8),
-    PROMJENA_LOZINKE(9);
+    PROMJENA_LOZINKE(9),
+    PROMJENA_VALUTE(10);
 
     private FragmentName(int i) {
 

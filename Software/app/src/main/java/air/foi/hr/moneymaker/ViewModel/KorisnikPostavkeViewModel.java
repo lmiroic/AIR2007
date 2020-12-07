@@ -7,8 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import air.foi.hr.moneymaker.session.Sesija;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;

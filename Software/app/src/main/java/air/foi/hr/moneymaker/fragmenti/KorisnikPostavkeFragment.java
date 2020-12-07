@@ -6,12 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.KorisnikPostavkeViewModel;
@@ -20,6 +16,7 @@ import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 public class KorisnikPostavkeFragment extends Fragment {
     private KorisnikPostavkeViewModel viewModel;
     private Button btnPromjeniLozinku;
+    private Button btnPromjeniValutu;
     private ImageButton btnBack;
 
     private View view;
@@ -45,6 +42,14 @@ public class KorisnikPostavkeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_LOZINKE,getFragmentManager());
+            }
+        });
+
+        btnPromjeniValutu=view.findViewById(R.id.btnPromijeniValutu);
+        btnPromjeniValutu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_VALUTE,getFragmentManager());
             }
         });
 

@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import air.foi.hr.core.database.MyDatabase;
 
-import air.foi.hr.core.manager.HashiranjeLozinke;
-import air.foi.hr.moneymaker.session.Sesija;
-
-public class PromjenaLozinkeViewModel extends ViewModel {
+public class PromjenaValuteViewModel extends ViewModel {
     private Context context;
     private MyDatabase baza;
 
@@ -19,3 +16,5 @@ public class PromjenaLozinkeViewModel extends ViewModel {
         this.baza=MyDatabase.getInstance(this.context);
     }
 }
+
+

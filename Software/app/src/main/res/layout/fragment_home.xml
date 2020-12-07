@@ -116,6 +116,7 @@
         android:id="@+id/btnPostavke"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="#00FFFFFF"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_options_1767904_1502157"
         app:layout_constraintStart_toStartOf="parent"
