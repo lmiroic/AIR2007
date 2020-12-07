@@ -1,25 +1,19 @@
 package air.foi.hr.core.entiteti;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity (tableName="valuta")
 public class Valuta {
-    @PrimaryKey(autoGenerate =true)
-    private int id;
+    @NonNull
+    @PrimaryKey(autoGenerate = false)
     private String naziv;
     private float tecaj;
 
     public Valuta() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNaziv() {
         return naziv;

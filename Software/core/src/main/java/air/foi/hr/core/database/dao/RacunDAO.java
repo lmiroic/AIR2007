@@ -1,5 +1,6 @@
 package air.foi.hr.core.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,6 +19,9 @@ public interface RacunDAO {
 
     @Query("SELECT * from racun WHERE id=:id")
     Racun DohvatiRacun(int id);
+
+    @Query("SELECT * from racun")
+    LiveData<List<Racun>> DohvatiSveRacuneLive();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] UnosRacuna(Racun... racuni);
