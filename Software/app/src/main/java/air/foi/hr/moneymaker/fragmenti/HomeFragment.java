@@ -3,6 +3,7 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,42 +17,39 @@ import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-<<<<<<< HEAD
+
 import java.util.ArrayList;
 import java.util.List;
 
+import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
+import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
 import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
-=======
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
->>>>>>> feature/korisnik-postavke
+import air.foi.hr.moneymaker.session.Sesija;
 
 
 public class HomeFragment extends Fragment {
+    private LiveData<List<KategorijaTransakcije>>sveKategorije;
     private View view;
     private HomeScreenViewModel viewModel;
     RecyclerView recyclerView;
-<<<<<<< HEAD
     private CustomAdapterHome adapter;
-=======
     private ImageButton btnPostavke;
-
->>>>>>> feature/korisnik-postavke
     public HomeFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -78,8 +76,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void InicijalizacijaVarijabli() {
-<<<<<<< HEAD
-=======
         btnPostavke=view.findViewById(R.id.btnPostavke);
         btnPostavke.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +84,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
->>>>>>> feature/korisnik-postavke
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(HomeScreenViewModel.class);
         viewModel.konstruktor(getContext(), (BottomNavigationView) view.findViewById(R.id.bottomNav));
         viewModel.UpravljanjeNavigacijom(getFragmentManager());
-
-
     }
+
 
 
 }
