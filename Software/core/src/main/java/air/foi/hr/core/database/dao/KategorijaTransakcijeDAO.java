@@ -1,5 +1,6 @@
 package air.foi.hr.core.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -19,6 +20,9 @@ public interface KategorijaTransakcijeDAO {
     @Query("SELECT * from kategorijaTransakcije WHERE id=:id")
     KategorijaTransakcije DohvatiKategorijuTransakcije(int id);
 
+    @Query("SELECT * from kategorijaTransakcije WHERE naziv=:naziv")
+    KategorijaTransakcije DohvatiKategorijuTransakcijePremaNazivu(String naziv);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] UnosKategorijeTransakcije(KategorijaTransakcije... kategorijeTransakcija);
 
@@ -27,4 +31,7 @@ public interface KategorijaTransakcijeDAO {
 
     @Delete
     public void IzbrisiKategorijuTransakcije(KategorijaTransakcije... kategorijeTransakcija);
+
+    @Query("SELECT * from kategorijaTransakcije")
+    LiveData<List<KategorijaTransakcije>> DohvatiSveKategorijeTransakcijeLIVE();
 }

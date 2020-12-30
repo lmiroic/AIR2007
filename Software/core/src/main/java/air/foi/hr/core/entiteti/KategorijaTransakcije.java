@@ -19,7 +19,7 @@ public class KategorijaTransakcije implements CategoryImplementor {
     private int id;
     @SerializedName("naziv")
     private String naziv;
-    @SerializedName("tipTransakcije")
+    @SerializedName("tip_transakcije")
     private int tipTransakcije;
 
     public String getIkonaKategorije() {
@@ -75,7 +75,7 @@ public class KategorijaTransakcije implements CategoryImplementor {
     }
 
     @Override
-    public void executeAction() {
+    public void executeAction(Context context) {
 
     }
 }

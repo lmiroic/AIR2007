@@ -10,11 +10,15 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
+import air.foi.hr.core.modul.kategorije.OnDialogCategoryResult;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.modul.kategorije.CategoryAddDialog;
+import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
 
 public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.viewHolder> {
     Context context;
@@ -22,6 +26,19 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
     public CustomAdapterHome(Context context, List<CategoryImplementor> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
+    }
+
+    public CustomAdapterHome(Context context) {
+        this.context = context;
+    }
+    public void SetKategorije(List<KategorijaTransakcije>kategorijaTransakcijes){
+        List<CategoryImplementor>sveKategorije=new ArrayList<>();
+        for(KategorijaTransakcije kt: kategorijaTransakcijes){
+            sveKategorije.add(kt);
+        }
+        ConcreteCategory dodajTransakciju=new ConcreteCategory("Add","ic_add");
+        sveKategorije.add(dodajTransakciju);
+        arrayList=sveKategorije;
     }
 
     @Override
@@ -41,6 +58,20 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
                 Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon(context));
             }
             viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum()));
+            viewHolder.icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    CategoryAddDialog categoryAddDialog=new CategoryAddDialog(context,((KategorijaTransakcije) arrayList.get(position)));
+                    categoryAddDialog.setOnDialogCategoryResult(new OnDialogCategoryResult() {
+                        @Override
+                        public void finish() {
+
+                        }
+                    });
+                    categoryAddDialog.show();
+                }
+            });
         }
         else{
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
@@ -48,7 +79,7 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    arrayList.get(position).executeAction();
+                    arrayList.get(position).executeAction(context);
                 }
             });
         }

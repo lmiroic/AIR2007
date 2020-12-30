@@ -1,0 +1,152 @@
+package air.foi.hr.moneymaker.modul.racun;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyboardShortcutGroup;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.Valuta;
+import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
+import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.manager.CustomAdapterAddRacun;
+import air.foi.hr.moneymaker.manager.RacunAddModel;
+import air.foi.hr.moneymaker.session.Sesija;
+
+public class RacunAddDialog extends Dialog implements View.OnClickListener {
+    private EditText imeRacuna, stanjeRacuna;
+    private Spinner valuta;
+    private ImageView ikona;
+    private RecyclerView recyclerView;
+    private Button unesi;
+    private OnDialogRacunResult onDialogRacunResult;
+    private String odabranaValuta="";
+    public String ikoneRacuna[]={"ic_money","ic_credit_card", "ic_maestro", "ic_visa","ic_mastercard","ic_paypal","ic_american", "ic_kasica"};
+    private ArrayList<RacunAddModel> arrayList;
+    private CustomAdapterAddRacun adapterAddRacun;
+
+    public RacunAddDialog(@NonNull Context context) {
+        super(context);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnDodajRacun:
+                new OkListenerAddRacun().onClick(v);
+                break;
+        }
+    }
+
+    @Override
+    public void onProvideKeyboardShortcuts(List<KeyboardShortcutGroup> data, @Nullable Menu menu, int deviceId) {
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.dialog_racun_add);
+        valuta=findViewById(R.id.spinerAddValuta);
+        unesi=findViewById(R.id.btnDodajRacun);
+        unesi.setOnClickListener(this);
+        imeRacuna=findViewById(R.id.txtAddImeRacuna);
+        stanjeRacuna=findViewById(R.id.txtAddStanje);
+        PostaviRecycleView();
+        PostaviSpinner();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+    public void setOnDialogRacunResult(OnDialogRacunResult onDialogRacunResult){
+        this.onDialogRacunResult = onDialogRacunResult;
+
+    }
+    private void PostaviSpinner(){
+        final List<Valuta> valute = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiSveValute();
+        final List<String> valutaZaSpinner = new ArrayList<>();
+        for(Valuta v:valute){
+            valutaZaSpinner.add(v.getNaziv());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),R.layout.spinner_valuta_racuna,valutaZaSpinner);
+        valuta.setAdapter(adapter);
+        valuta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                odabranaValuta=valutaZaSpinner.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private List<RacunAddModel> VratiListuIkona(){
+        arrayList=new ArrayList<>();
+        for(int i=0; i<ikoneRacuna.length; i++) {
+            RacunAddModel racunAddModel = new RacunAddModel();
+            racunAddModel.setIkonaRacuna(ikoneRacuna[i]);
+            arrayList.add(racunAddModel);
+        }
+        return arrayList;
+    }
+
+    private class OkListenerAddRacun implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            if(onDialogRacunResult!=null){
+                if(!odabranaValuta.equals("") && !imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("") && adapterAddRacun.focusedItemRacun>0){
+                    Racun noviRacun= new Racun();
+                    noviRacun.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
+                    noviRacun.setIkona(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna());
+                    noviRacun.setNaziv(imeRacuna.getText().toString());
+                    noviRacun.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
+                    noviRacun.setValuta(odabranaValuta);
+                    MyDatabase.getInstance(getContext()).getRacunDAO().UnosRacuna(noviRacun);
+                    Toast.makeText(getContext(), "Unijeli ste novi račun: " + noviRacun.getNaziv(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
+                }
+
+                onDialogRacunResult.finish();
+            }
+            RacunAddDialog.this.dismiss();
+        }
+    }
+    private void PostaviRecycleView(){
+        recyclerView= (RecyclerView) findViewById(R.id.recyclerViewAddRacun);
+        CustomAdapterAddRacun adapter = new CustomAdapterAddRacun(getContext(), VratiListuIkona());
+        adapterAddRacun = adapter;
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),4);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+}
