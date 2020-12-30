@@ -138,7 +138,6 @@ public class MockData {
         daoR=MyDatabase.getInstance(context).getRacunDAO();
         Racun racuni = new Racun();
         racuni.setId(1);
-        racuni.setBoja("Boja");
         racuni.setIkona("ikona");
         racuni.setNaziv("Racun1");
         racuni.setKorisnik_id(1);
@@ -148,7 +147,6 @@ public class MockData {
 
         Racun racuni2 = new Racun();
         racuni2.setId(2);
-        racuni2.setBoja("Boja");
         racuni2.setIkona("ikona");
         racuni2.setNaziv("Racun2");
         racuni2.setKorisnik_id(1);
