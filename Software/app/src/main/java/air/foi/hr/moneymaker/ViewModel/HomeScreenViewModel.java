@@ -1,11 +1,12 @@
 package air.foi.hr.moneymaker.ViewModel;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -17,25 +18,21 @@ import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
-import air.foi.hr.core.modul.kategorije.ConcreteCategory;
+import air.foi.hr.moneymaker.MainActivity;
+import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
-import eu.airmoneymaker.rest.RestApiImplementor;
-import eu.airmoneymaker.rest.RetrofitInstance;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class HomeScreenViewModel extends ViewModel {
     private BottomNavigationView bottomNavigationView;
     private Context context;
     private MyDatabase baza;
-
+    public List<CategoryImplementor>listaZaAdapter=new ArrayList<>();
     private void OznaciIndex(){
         bottomNavigationView.setSelectedItemId(R.id.kategorije);
     }
 
+    public LiveData<List<KategorijaTransakcije>>sveKategorije;
     public void konstruktor(Context context, BottomNavigationView bottomNavigationView){
         this.context=context;
         this.baza=MyDatabase.getInstance(this.context);
@@ -65,17 +62,16 @@ public class HomeScreenViewModel extends ViewModel {
             }
         });
     }
-    public List<CategoryImplementor> VratiCategoryImplementorList(){
-        return VratiKategorijeIzBaze();
+    public void VratiCategoryImplementorList(){
+        VratiKategorijeIzBaze();
     }
+    public LiveData<List<KategorijaTransakcije>>getKategorijeTransakcije(){
+        sveKategorije=MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().DohvatiSveKategorijeTransakcijeLIVE();
+        return sveKategorije;
+    }
+    private void VratiKategorijeIzBaze() {
 
-    private List<CategoryImplementor> VratiKategorijeIzBaze() {
-        List<KategorijaTransakcije> kategorijaTransakcije=MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().DohvatiSveKategorijeTransakcije();
-        ConcreteCategory dodajTransakciju=new ConcreteCategory("Add",R.drawable.ic_add);
-        List<CategoryImplementor>listaZaAdapter=new ArrayList<>();
-        for(KategorijaTransakcije kt: kategorijaTransakcije)
-            listaZaAdapter.add(kt);
-        listaZaAdapter.add(dodajTransakciju);
-        return listaZaAdapter;
+
+
     }
 }

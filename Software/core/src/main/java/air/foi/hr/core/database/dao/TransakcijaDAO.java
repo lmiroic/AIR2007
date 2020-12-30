@@ -1,5 +1,6 @@
 package air.foi.hr.core.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -27,4 +28,6 @@ public interface TransakcijaDAO {
 
     @Delete
     public void IzbrisiTransakciju(Transakcija... transakcije);
+    @Query("SELECT * from transakcija")
+    LiveData<List<Transakcija>> DohvatiSveTransakcijeLIVE();
 }

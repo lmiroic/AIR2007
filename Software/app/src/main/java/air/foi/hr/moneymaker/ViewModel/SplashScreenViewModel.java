@@ -44,7 +44,6 @@ public class SplashScreenViewModel extends ViewModel {
                 @Override
                 public void onResponse(Call<List<KategorijaTransakcije>> call, Response<List<KategorijaTransakcije>> response) {
                     for(KategorijaTransakcije kt: response.body()){
-                        Log.e("KategorijaUnso",kt.getCategoryName()+" "+kt.getCategoryIcon());
                         MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().UnosKategorijeTransakcije(kt);
                     }
                 }

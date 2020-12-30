@@ -7,16 +7,235 @@
     android:layout_height="match_parent"
     tools:context=".fragmenti.AnalizaFragment">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="352dp"
-        android:text="Analiza"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/layoutRac"
+        android:background="#dddddd"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/buttonPostavke"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_options_1767904_1502157"
+            android:layout_alignParentLeft="true"
+            />
+
+        <Spinner
+            android:id="@+id/racunDrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerInParent="true"
+            app:layout_constraintVertical_bias="0.222" />
+
+        <ImageButton
+            android:id="@+id/buttonInfo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_info_anja"
+            android:layout_alignParentRight="true"
+             />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/iznosTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:background="#dddddd"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/layoutRac"
+
+       />
+
+    <RelativeLayout
+        android:id="@+id/layoutRazdoblje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dddddd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iznosTP"
+        >
+
+        <ImageButton
+            android:id="@+id/buttonLijevo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_left_anja"
+            android:layout_toLeftOf="@id/spinnerMjeseci"
+
+            />
+
+        <Spinner
+            android:id="@+id/spinnerMjeseci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="#dddddd"
+            android:layout_centerInParent="true"
+
+            />
+
+        <ImageButton
+            android:id="@+id/buttonDesno"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_riht_anja"
+            android:layout_toRightOf="@id/spinnerMjeseci"
+
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutRazdoblje"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:weightSum="4"
+        >
+
+        <Button
+            android:id="@+id/buttonTrosak"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Trošak"
+            android:textColor="#ffffff"
+            />
+
+        <Button
+            android:id="@+id/buttonPrihod"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Prihod"
+            android:textColor="#ffffff"
+            />
+
+        <Button
+            android:id="@+id/buttonUK"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Godišnji"
+            android:textColor="#ffffff"
+            />
+
+        <Button
+            android:id="@+id/buttonNedavnaPotrosnja"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Nedavna\npotrošnja"
+            android:textColor="#ffffff"
+
+
+            />
+
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.PieChart
+     android:id="@+id/chart"
+     android:layout_width="339dp"
+     android:layout_height="292dp"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.492"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent"
+
+     />
+
+   <!-- <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chartLine"
+        android:layout_width="339dp"
+        android:layout_height="292dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chartBar"
+        android:layout_width="339dp"
+        android:layout_height="292dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:weightSum="3"
+        >
+
+        <TextView
+            android:id="@+id/prosDan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:background="@drawable/textview_border"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
+        <TextView
+            android:id="@+id/trenDan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:background="@drawable/textview_border"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
+        <TextView
+            android:id="@+id/tjedan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:background="@drawable/textview_border"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
@@ -29,8 +248,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_main">
-
     </com.google.android.material.bottomnavigation.BottomNavigationView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

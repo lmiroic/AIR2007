@@ -1,5 +1,6 @@
 package air.foi.hr.core.entiteti;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -18,18 +19,18 @@ public class KategorijaTransakcije implements CategoryImplementor {
     private int id;
     @SerializedName("naziv")
     private String naziv;
-    @SerializedName("tipTransakcije")
+    @SerializedName("tip_transakcije")
     private int tipTransakcije;
 
-    public int getIkonaKategorije() {
+    public String getIkonaKategorije() {
         return ikonaKategorije;
     }
 
-    public void setIkonaKategorije(int ikonaKategorije) {
+    public void setIkonaKategorije(String ikonaKategorije) {
         this.ikonaKategorije = ikonaKategorije;
     }
     @SerializedName("drawable")
-    private int ikonaKategorije;
+    private String ikonaKategorije;
 
     public KategorijaTransakcije() {
     }
@@ -64,8 +65,8 @@ public class KategorijaTransakcije implements CategoryImplementor {
     }
 
     @Override
-    public int getCategoryIcon() {
-        return getIkonaKategorije();
+    public int getCategoryIcon(Context context) {
+        return context.getResources().getIdentifier(ikonaKategorije,"drawable",context.getPackageName());
     }
 
     @Override
@@ -74,7 +75,7 @@ public class KategorijaTransakcije implements CategoryImplementor {
     }
 
     @Override
-    public void executeAction() {
+    public void executeAction(Context context) {
 
     }
 }

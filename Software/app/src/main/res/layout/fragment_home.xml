@@ -64,20 +64,9 @@
         android:layout_height="21dp"
         app:layout_constraintBottom_toTopOf="@+id/txtViewStanjeRacuna"
         app:layout_constraintEnd_toStartOf="@+id/imgBtnUnos"
-        app:layout_constraintStart_toEndOf="@+id/imgBtnPostavke"
         app:layout_constraintTop_toTopOf="parent"
 
         app:layout_constraintVertical_bias="0.222" />
-
-    <ImageButton
-        android:id="@+id/imgBtnPostavke"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="#FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_options_1767904_1502157"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btnPrethodnoRazdbolje"
@@ -120,6 +109,16 @@
         android:scaleType="fitCenter"
         android:src="@android:drawable/arrow_up_float"
         android:tint="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnPostavke"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_options_1767904_1502157"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
