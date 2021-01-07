@@ -170,6 +170,26 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                 }
                 RacunAddDialog.this.dismiss();
             }
+            else{
+                if (onDialogRacunResult != null) {
+                    if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
+                        Racun r=MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
+                        r.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
+                        r.setId(r.getId());
+                        r.setNaziv(imeRacuna.getText().toString());
+                        r.setIkona(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna());
+                        r.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
+                        r.setValuta(odabranaValuta);
+                        MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(r);
+                        Toast.makeText(getContext(), "Ažuriran račun " + r.getNaziv(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
+                    }
+
+                    onDialogRacunResult.finish();
+                }
+                RacunAddDialog.this.dismiss();
+            }
 
         }
     }
