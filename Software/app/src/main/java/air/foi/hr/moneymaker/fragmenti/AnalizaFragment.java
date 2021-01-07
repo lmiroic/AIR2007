@@ -36,11 +36,18 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import air.foi.hr.core.database.MockData;
 import air.foi.hr.core.database.MyDatabase;
@@ -191,9 +198,86 @@ public class AnalizaFragment extends Fragment {
     }
 
     private void unesiDanTjedan() {
-        textTjedan.setText("Tjedan"+"\n"+ String.valueOf(tjedan)+" kn");
-        textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(prosDan)+" kn");
-        textTrenutDan.setText("Danas"+"\n"+ String.valueOf(trenDan)+" kn");
+        List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
+        for (Transakcija t:transakcijas){
+            if (t.getTipTransakcije()==2){
+                transakcijeTroškova.add(t);}
+        }
+
+        danasnjiDatum(transakcijeTroškova);
+        prosjecniDatum(transakcijeTroškova);
+        ukupnoTjedan(transakcijeTroškova);
+        textTjedan.setText("Tjedan"+"\n"+ String.valueOf(Math.round(tjedan*100.0)/100.0)+" kn");
+        textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(Math.round(prosDan*100.0)/100.0)+" kn");
+        textTrenutDan.setText("Danas"+"\n"+ String.valueOf(Math.round(trenDan*100.0)/100.0)+" kn");
+    }
+
+    private void danasnjiDatum(List<Transakcija>potrebneTransakcije){
+        String danasDat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        Log.d("anjaaa",danasDat);
+        for (Transakcija tr:potrebneTransakcije){
+            if(danasDat.equals(tr.getDatum())){
+                trenDan+=tr.getIznos();}}
+    }
+
+    private void prosjecniDatum(List<Transakcija>potrebneTransakcije){
+        float avera=0;
+        YearMonth lastMonth = null;
+        String prethodniMjesec = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            lastMonth = YearMonth.now().minusMonths(1);
+            DateTimeFormatter montHFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            prethodniMjesec=lastMonth.format(montHFormatter);
+
+        }
+
+        for (Transakcija t: potrebneTransakcije){
+            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter2 =new SimpleDateFormat("yyyy-MM");
+            try {
+                Date datumTransakcije = formatter.parse(t.getDatum().toString());
+                Date datumMjeseca = formatter2.parse(prethodniMjesec);
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(datumTransakcije);
+                Calendar cal1=Calendar.getInstance();
+                cal1.setTime(datumMjeseca);
+
+                if(cal.get(Calendar.MONTH)==cal1.get(Calendar.MONTH)&&cal.get(Calendar.YEAR)==cal1.get(Calendar.YEAR)){
+                    avera+=t.getIznos(); }
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        prosDan=avera/30;
+
+    }
+
+    private void ukupnoTjedan (List<Transakcija>potrebneTransakcije){
+        String pocetniDatum;
+        String zavrsniDatum;
+        float zbr = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        pocetniDatum =df.format(calendar.getTime());
+        calendar.add(Calendar.DATE, 6);
+        zavrsniDatum = df.format(calendar.getTime());
+
+        for (Transakcija t:potrebneTransakcije){
+            if (t.getDatum().compareTo(pocetniDatum)>=0){
+                if (t.getDatum().compareTo(zavrsniDatum)<=0){
+                    zbr+=t.getIznos();
+                }
+            }
+        }
+        tjedan=zbr/7;
+
     }
 
     private void spinnerTime(final int broj) {
