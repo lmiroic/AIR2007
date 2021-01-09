@@ -22,8 +22,8 @@ public class MockData {
         transakcija.setId(1);
         transakcija.setIznos(1000);
         transakcija.setDatum("2020-12-03");
-        transakcija.setRacunTerecenja(2);
-        transakcija.setRacunPrijenosa(2);
+        transakcija.setRacunTerecenja(4);
+        transakcija.setRacunPrijenosa(4);
         transakcija.setTipTransakcije(2);
         transakcija.setMemo("memo");
         transakcija.setOpis("Opis");
@@ -40,8 +40,8 @@ public class MockData {
         transakcijaP.setId(505);
         transakcijaP.setIznos(500);
         transakcijaP.setDatum("2021-01-05");
-        transakcijaP.setRacunTerecenja(2);
-        transakcijaP.setRacunPrijenosa(2);
+        transakcijaP.setRacunTerecenja(4);
+        transakcijaP.setRacunPrijenosa(4);
         transakcijaP.setTipTransakcije(1);
         transakcijaP.setMemo("memo");
         transakcijaP.setOpis("Opis");
@@ -59,7 +59,7 @@ public class MockData {
         transakcija2.setIznos(2000);
         transakcija2.setDatum("2021-01-07");
         transakcija2.setRacunTerecenja(1);
-        transakcija2.setRacunPrijenosa(2);
+        transakcija2.setRacunPrijenosa(1);
         transakcija2.setTipTransakcije(2);
         transakcija2.setMemo("memo");
         transakcija2.setOpis("Opis");
@@ -93,7 +93,7 @@ public class MockData {
         transakcija4.setIznos(700);
         transakcija4.setDatum("2021-01-04");
         transakcija4.setRacunTerecenja(1);
-        transakcija4.setRacunPrijenosa(2);
+        transakcija4.setRacunPrijenosa(4);
         transakcija4.setTipTransakcije(2);
         transakcija4.setMemo("memo");
         transakcija4.setOpis("Opis");
@@ -110,7 +110,7 @@ public class MockData {
         transakcija5.setIznos(600);
         transakcija5.setDatum("2021-01-05");
         transakcija5.setRacunTerecenja(1);
-        transakcija5.setRacunPrijenosa(2);
+        transakcija5.setRacunPrijenosa(4);
         transakcija5.setTipTransakcije(2);
         transakcija5.setMemo("memo");
         transakcija5.setOpis("Opis");

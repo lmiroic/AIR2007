@@ -2,6 +2,7 @@ package air.foi.hr.moneymaker.fragmenti;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -33,6 +34,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Array;
@@ -46,6 +48,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,6 +65,7 @@ public class AnalizaFragment extends Fragment {
     private View view;
     private Context context;
 
+
     public static MyDatabase database;
     List <Transakcija> transakcijas = database.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije();
     List<KategorijaTransakcije> kategorijaTransakcijes = database.getInstance(context).getKategorijaTransakcijeDAO().DohvatiSveKategorijeTransakcije();
@@ -73,9 +77,8 @@ public class AnalizaFragment extends Fragment {
     float tjedan=0;
 
     String sve;
-    int month;
     String currentYear;
-    String lastYear;
+    String currentMonth;
 
     Boolean pritisnut=false;
 
@@ -84,7 +87,7 @@ public class AnalizaFragment extends Fragment {
     //BarChart barChart;
 
     Spinner dropRac;
-    Spinner dropTime;
+
 
     private Button buttonTrošak;
     private Button buttonPrihod;
@@ -96,14 +99,15 @@ public class AnalizaFragment extends Fragment {
     private ImageButton buttonDesno;
     private ImageButton buttonLijevo;
 
+
     private TextView ukupanTP;
     String odabrani="Svi računi";
 
-    private String odabranoVrijeme;
 
     private TextView textProsDan;
     private TextView textTrenutDan;
     private TextView textTjedan;
+    private TextView textVrijeme;
 
 
 
@@ -117,7 +121,7 @@ public class AnalizaFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
         mockData();
         InicijalizacijaVarijabli();
-        spinnerTime(2);
+        filtiranjePoMjesecu(2);
         spinnerRacun(2);
         ukNovac=0;
         return view;
@@ -127,8 +131,8 @@ public class AnalizaFragment extends Fragment {
         dropRac=view.findViewById(R.id.racunDrop);
         spinnerRacun(2);
 
-        dropTime=view.findViewById(R.id.spinnerMjeseci);
 
+        textVrijeme = view.findViewById(R.id.vrijemeFilter);
         buttonDesno = view.findViewById(R.id.buttonDesno);
         buttonLijevo= view.findViewById(R.id.buttonLijevo);
 
@@ -152,7 +156,7 @@ public class AnalizaFragment extends Fragment {
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spinnerTime(2);
+                filtiranjePoMjesecu(2);
                 bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
                 spinnerRacun(2);
                 ukNovac=0;
@@ -163,7 +167,7 @@ public class AnalizaFragment extends Fragment {
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spinnerTime(1);
+                filtiranjePoMjesecu(1);
                 bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
                 spinnerRacun(1);
                 ukNovac=0;
@@ -173,7 +177,7 @@ public class AnalizaFragment extends Fragment {
         buttonOboje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spinnerTime(3);
+                filtiranjePoMjesecu(3);
                 bojeIzmjena(buttonOboje,buttonTrošak,buttonPrihod,buttonNedavno);
                 //setUpBarChart();
                 ukNovac=0;
@@ -183,7 +187,7 @@ public class AnalizaFragment extends Fragment {
         buttonNedavno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spinnerTime(4);
+                filtiranjePoMjesecu(4);
                 bojeIzmjena(buttonNedavno,buttonTrošak,buttonPrihod,buttonOboje);
                 //setUpLineChart();
                 ukNovac=0;
@@ -214,7 +218,7 @@ public class AnalizaFragment extends Fragment {
 
     private void danasnjiDatum(List<Transakcija>potrebneTransakcije){
         String danasDat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        Log.d("anjaaa",danasDat);
+        //Log.d("anjaaa",danasDat);
         for (Transakcija tr:potrebneTransakcije){
             if(danasDat.equals(tr.getDatum())){
                 trenDan+=tr.getIznos();}}
@@ -280,73 +284,114 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-    private void spinnerTime(final int broj) {
+    private void filtiranjePoMjesecu(final int broj) {
         ArrayAdapter<String> adapter = null;
 
         if (broj==1||broj==2){
-            vidljivostTime(dropTime,buttonLijevo,buttonDesno);
-            List<String> items = new ArrayList<String>(Arrays.asList("Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"));
-            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
-            dropTime.setAdapter(adapter);
-            month=Calendar.getInstance().get(Calendar.MONTH);
-            dropTime.setSelection(month);
+            vidljivostTime(textVrijeme,buttonLijevo,buttonDesno);
+            final Calendar kalendar =Calendar.getInstance();
+            final SimpleDateFormat formater = new SimpleDateFormat("MMM yyyy");
+            currentMonth= formater.format(kalendar.getTime());
+            textVrijeme.setText(currentMonth);
+            strelice(true);
+
+            buttonLijevo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String vrijednost = textVrijeme.getText().toString();
+                    try {
+                        Date datum=formater.parse(vrijednost);
+                        kalendar.setTime(datum);
+                        kalendar.add(Calendar.MONTH,-1);
+                        textVrijeme.setText(formater.format(kalendar.getTime()));
+                        strelice(false);
+                        buttonDesno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                kalendar.add(Calendar.MONTH,1);
+                                textVrijeme.setText(formater.format(kalendar.getTime()));
+                                if(formater.format(kalendar.getTime()).equals(currentMonth)){
+                                    strelice(true);
+                                }
+                                else{
+                                    strelice(false);
+                                }
+
+                            }
+                        });
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
 
         }
 
         else if (broj==3){
-            vidljivostTime(dropTime,buttonLijevo,buttonDesno);
-            currentYear = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
-            int parse = Integer.parseInt(currentYear);
-            List<String> items = new ArrayList<String>();
-            for (int i=0; i<6 ; i++){
-                items.add(String.valueOf(parse));
-                parse-=1;
-            }
+            vidljivostTime(textVrijeme,buttonLijevo,buttonDesno);
+            final Calendar kalendar2 =Calendar.getInstance();
+            final SimpleDateFormat formater = new SimpleDateFormat("yyyy");
+            currentYear= formater.format(kalendar2.getTime());
+            textVrijeme.setText(currentYear);
+            strelice(true);
 
-            lastYear = items.get(items.size()-1);
+            buttonLijevo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String vrijednost = textVrijeme.getText().toString();
+                    try {
+                        Date datum=formater.parse(vrijednost);
+                        kalendar2.setTime(datum);
+                        kalendar2.add(Calendar.YEAR,-1);
+                        textVrijeme.setText(formater.format(kalendar2.getTime()));
 
-            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
-            dropTime.setAdapter(adapter);
+                        strelice(false);
+                        buttonDesno.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                kalendar2.add(Calendar.YEAR,1);
+                                textVrijeme.setText(formater.format(kalendar2.getTime()));
+                                if(formater.format(kalendar2.getTime()).equals(currentYear)){
+                                    strelice(true);
+                                }
+                                else{
+                                    strelice(false);
+                                }
+
+                            }
+                        });
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
         }
 
         else{
-            dropTime.setVisibility(View.INVISIBLE);
+            textVrijeme.setVisibility(View.INVISIBLE);
             buttonLijevo.setVisibility(View.INVISIBLE);
             buttonDesno.setVisibility(View.INVISIBLE);
         }
-
-        dropTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                odabranoVrijeme = adapterView.getItemAtPosition(i).toString();
-                if (broj==1||broj==2){strelice("Siječanj","Prosinac", odabranoVrijeme);}
-                else if(broj==3){strelice (lastYear,currentYear, odabranoVrijeme);}
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
     }
 
-    private void vidljivostTime(Spinner spinner, ImageButton btn, ImageButton btn2){
-        spinner.setVisibility(View.VISIBLE);
+    private void vidljivostTime(TextView text, ImageButton btn, ImageButton btn2){
+        text.setVisibility(View.VISIBLE);
         btn.setVisibility(View.VISIBLE);
         btn2.setVisibility(View.VISIBLE);
     }
 
-    private void strelice(String first, String last, String odabrani){
-        if (first.equals(odabrani)) {
-            buttonLijevo.setVisibility(View.INVISIBLE);
-            buttonDesno.setVisibility(View.VISIBLE);
-        }
+    private void strelice(Boolean first){
 
-        else if(last.equals(odabrani)){
+        if (first) {
             buttonLijevo.setVisibility(View.VISIBLE);
             buttonDesno.setVisibility(View.INVISIBLE);
-
         }
 
         else{
@@ -495,15 +540,8 @@ public class AnalizaFragment extends Fragment {
         dataSet.setValueFormatter(new PercentFormatter(pieChart));
         pieChart.setUsePercentValues(true);
 
-        //boje
-        ArrayList<Integer> colors= new ArrayList<>();
-        colors.add(Color.BLUE);
-        colors.add(Color.RED);
-        colors.add(Color.MAGENTA);
-        colors.add(Color.GREEN);
-        colors.add(Color.GRAY);
-        colors.add(Color.YELLOW);
-        dataSet.setColors(colors);
+
+        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
         pieChart.getLegend().setEnabled(false);
 
@@ -560,7 +598,7 @@ public class AnalizaFragment extends Fragment {
 
         if (!racuns.isEmpty()){
             for (Racun r:racuns){
-                Log.d("ucitaj","Rac:"+ r.getNaziv()+r.getId());
+                Log.d("ucitajR","Rac:"+ r.getNaziv()+r.getId());
             }
             //MockData.writeAllR(context);
 

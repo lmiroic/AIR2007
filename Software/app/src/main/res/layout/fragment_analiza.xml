@@ -64,7 +64,7 @@
         android:id="@+id/layoutRazdoblje"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#dddddd"
+        android:background="#C0C0C0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iznosTP"
         >
@@ -73,31 +73,37 @@
             android:id="@+id/buttonLijevo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_left_anja"
-            android:layout_toLeftOf="@id/spinnerMjeseci"
+            android:layout_toLeftOf="@id/vrijemeFilter"
 
             />
 
-        <Spinner
-            android:id="@+id/spinnerMjeseci"
+        <TextView
+            android:id="@+id/vrijemeFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#000000"
+
 
             />
+
+
 
         <ImageButton
             android:id="@+id/buttonDesno"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_riht_anja"
-            android:layout_toRightOf="@id/spinnerMjeseci"
+            android:layout_toRightOf="@id/vrijemeFilter"
 
             />
 
