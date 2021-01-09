@@ -121,7 +121,8 @@ public class AnalizaFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
         mockData();
         InicijalizacijaVarijabli();
-        filtiranjePoMjesecu(2);
+        //postavaFiltiranjePoMjesecu(2);
+        bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
         spinnerRacun(2);
         ukNovac=0;
         return view;
@@ -156,7 +157,7 @@ public class AnalizaFragment extends Fragment {
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filtiranjePoMjesecu(2);
+               // postavaFiltiranjePoMjesecu(2);
                 bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
                 spinnerRacun(2);
                 ukNovac=0;
@@ -167,7 +168,7 @@ public class AnalizaFragment extends Fragment {
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filtiranjePoMjesecu(1);
+             //  postavaFiltiranjePoMjesecu(1);
                 bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
                 spinnerRacun(1);
                 ukNovac=0;
@@ -177,7 +178,7 @@ public class AnalizaFragment extends Fragment {
         buttonOboje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filtiranjePoMjesecu(3);
+               // postavaFiltiranjePoMjesecu(3);
                 bojeIzmjena(buttonOboje,buttonTrošak,buttonPrihod,buttonNedavno);
                 //setUpBarChart();
                 ukNovac=0;
@@ -187,7 +188,7 @@ public class AnalizaFragment extends Fragment {
         buttonNedavno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filtiranjePoMjesecu(4);
+              //  postavaFiltiranjePoMjesecu(4);
                 bojeIzmjena(buttonNedavno,buttonTrošak,buttonPrihod,buttonOboje);
                 //setUpLineChart();
                 ukNovac=0;
@@ -284,8 +285,7 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-    private void filtiranjePoMjesecu(final int broj) {
-        ArrayAdapter<String> adapter = null;
+    private void postavaFiltiranjePoMjesecu(final List<Transakcija>potrebneTransakcije, final int broj) {
 
         if (broj==1||broj==2){
             vidljivostTime(textVrijeme,buttonLijevo,buttonDesno);
@@ -293,6 +293,8 @@ public class AnalizaFragment extends Fragment {
             final SimpleDateFormat formater = new SimpleDateFormat("MMM yyyy");
             currentMonth= formater.format(kalendar.getTime());
             textVrijeme.setText(currentMonth);
+            filtracijaVrijeme(potrebneTransakcije,broj, currentMonth);
+
             strelice(true);
 
             buttonLijevo.setOnClickListener(new View.OnClickListener() {
@@ -305,11 +307,13 @@ public class AnalizaFragment extends Fragment {
                         kalendar.add(Calendar.MONTH,-1);
                         textVrijeme.setText(formater.format(kalendar.getTime()));
                         strelice(false);
+                        filtracijaVrijeme(potrebneTransakcije,broj,formater.format(kalendar.getTime()));
                         buttonDesno.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 kalendar.add(Calendar.MONTH,1);
                                 textVrijeme.setText(formater.format(kalendar.getTime()));
+                                filtracijaVrijeme(potrebneTransakcije,broj,formater.format(kalendar.getTime()));
                                 if(formater.format(kalendar.getTime()).equals(currentMonth)){
                                     strelice(true);
                                 }
@@ -385,6 +389,31 @@ public class AnalizaFragment extends Fragment {
         text.setVisibility(View.VISIBLE);
         btn.setVisibility(View.VISIBLE);
         btn2.setVisibility(View.VISIBLE);
+    }
+
+    private void filtracijaVrijeme(List<Transakcija>potrebneTransakcije, int broj, String vrijeme){
+        SimpleDateFormat format = new SimpleDateFormat("MMM yyyy");
+        List<Transakcija> transakcijeVremena= new ArrayList<Transakcija>();
+        String zeljeniMjesec = null;
+
+        for(Transakcija t: potrebneTransakcije){
+            try {
+
+                Date datum = new SimpleDateFormat("yyyy-MM-dd").parse(t.getDatum());
+                zeljeniMjesec=format.format(datum);
+                if(zeljeniMjesec.equals(vrijeme)){
+                    transakcijeVremena.add(t);
+                }
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        dodajDataSet(transakcijeVremena,broj);
+
     }
 
     private void strelice(Boolean first){
@@ -564,7 +593,9 @@ public class AnalizaFragment extends Fragment {
 
 
         if (odabrani.equals("Svi računi")){
-            dodajDataSet(transakcijeTroškova,broj);
+            //dodajDataSet(transakcijeTroškova,broj);
+            postavaFiltiranjePoMjesecu(transakcijeTroškova,broj);
+
         }
         else{
             for (Racun rac:racuns){
@@ -577,7 +608,8 @@ public class AnalizaFragment extends Fragment {
                     transakcijeRačuna.add(tranRac);
                 }
             }
-            dodajDataSet(transakcijeRačuna,broj);
+            //dodajDataSet(transakcijeRačuna,broj);
+            postavaFiltiranjePoMjesecu(transakcijeRačuna,broj);
         }
     }
 
