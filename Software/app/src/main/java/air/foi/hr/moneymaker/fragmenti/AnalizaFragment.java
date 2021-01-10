@@ -41,6 +41,7 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -101,6 +102,8 @@ public class AnalizaFragment extends Fragment {
 
 
     private TextView ukupanTP;
+
+
     String odabrani="Svi računi";
 
 
@@ -121,7 +124,6 @@ public class AnalizaFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
         mockData();
         InicijalizacijaVarijabli();
-        //postavaFiltiranjePoMjesecu(2);
         bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
         spinnerRacun(2);
         ukNovac=0;
@@ -149,15 +151,14 @@ public class AnalizaFragment extends Fragment {
         textProsDan = view.findViewById(R.id.prosDan);
         textTrenutDan = view.findViewById(R.id.trenDan);
         textTjedan = view.findViewById(R.id.tjedan);
-        unesiDanTjedan();
+        //unesiDanTjedan();
 
         ukupanTP = view.findViewById(R.id.iznosTP);
-        sveVrijednost(transakcijas);
+
 
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // postavaFiltiranjePoMjesecu(2);
                 bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
                 spinnerRacun(2);
                 ukNovac=0;
@@ -168,7 +169,6 @@ public class AnalizaFragment extends Fragment {
         buttonPrihod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //  postavaFiltiranjePoMjesecu(1);
                 bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
                 spinnerRacun(1);
                 ukNovac=0;
@@ -178,7 +178,6 @@ public class AnalizaFragment extends Fragment {
         buttonOboje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // postavaFiltiranjePoMjesecu(3);
                 bojeIzmjena(buttonOboje,buttonTrošak,buttonPrihod,buttonNedavno);
                 //setUpBarChart();
                 ukNovac=0;
@@ -188,7 +187,6 @@ public class AnalizaFragment extends Fragment {
         buttonNedavno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  postavaFiltiranjePoMjesecu(4);
                 bojeIzmjena(buttonNedavno,buttonTrošak,buttonPrihod,buttonOboje);
                 //setUpLineChart();
                 ukNovac=0;
@@ -202,55 +200,45 @@ public class AnalizaFragment extends Fragment {
 
     }
 
-    private void unesiDanTjedan() {
+    private void unesiDanTjedan(String vrijeme) {
         List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
         for (Transakcija t:transakcijas){
             if (t.getTipTransakcije()==2){
                 transakcijeTroškova.add(t);}
         }
 
-        danasnjiDatum(transakcijeTroškova);
-        prosjecniDatum(transakcijeTroškova);
-        ukupnoTjedan(transakcijeTroškova);
+        danasnjiDatum(transakcijeTroškova,vrijeme);
+        prosjecniDatum(transakcijeTroškova,vrijeme);
+        ukupnoTjedan(transakcijeTroškova,vrijeme);
         textTjedan.setText("Tjedan"+"\n"+ String.valueOf(Math.round(tjedan*100.0)/100.0)+" kn");
         textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(Math.round(prosDan*100.0)/100.0)+" kn");
         textTrenutDan.setText("Danas"+"\n"+ String.valueOf(Math.round(trenDan*100.0)/100.0)+" kn");
     }
 
-    private void danasnjiDatum(List<Transakcija>potrebneTransakcije){
+    private void danasnjiDatum(List<Transakcija>potrebneTransakcije, String vrijeme){
         String danasDat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        //Log.d("anjaaa",danasDat);
-        for (Transakcija tr:potrebneTransakcije){
-            if(danasDat.equals(tr.getDatum())){
-                trenDan+=tr.getIznos();}}
-    }
-
-    private void prosjecniDatum(List<Transakcija>potrebneTransakcije){
-        float avera=0;
-        YearMonth lastMonth = null;
-        String prethodniMjesec = null;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            lastMonth = YearMonth.now().minusMonths(1);
-            DateTimeFormatter montHFormatter = DateTimeFormatter.ofPattern("yyyy-MM");
-            prethodniMjesec=lastMonth.format(montHFormatter);
-
+        String danasMjesec = new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(new Date());
+        trenDan=0;
+        if (danasMjesec.equals(vrijeme)){
+            for (Transakcija tr:potrebneTransakcije){
+                if(danasDat.equals(tr.getDatum())){
+                    trenDan+=tr.getIznos();}}
         }
 
-        for (Transakcija t: potrebneTransakcije){
-            SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat formatter2 =new SimpleDateFormat("yyyy-MM");
+        else{
+            SimpleDateFormat dateFormat =new SimpleDateFormat("MMM yyyy");
+            SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                Date datumTransakcije = formatter.parse(t.getDatum().toString());
-                Date datumMjeseca = formatter2.parse(prethodniMjesec);
+                Date converted = dateFormat.parse(vrijeme);
+                Calendar c = Calendar.getInstance();
+                c.setTime(converted);
+                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                String formiranoVrijeme=formater.format(c.getTime());
+                //Log.d("podsjetnik", formiranoVrijeme);
 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(datumTransakcije);
-                Calendar cal1=Calendar.getInstance();
-                cal1.setTime(datumMjeseca);
-
-                if(cal.get(Calendar.MONTH)==cal1.get(Calendar.MONTH)&&cal.get(Calendar.YEAR)==cal1.get(Calendar.YEAR)){
-                    avera+=t.getIznos(); }
+                for (Transakcija tr2:potrebneTransakcije){
+                    if(formiranoVrijeme.equals(tr2.getDatum())){
+                        trenDan+=tr2.getIznos();}}
 
 
             } catch (ParseException e) {
@@ -259,33 +247,95 @@ public class AnalizaFragment extends Fragment {
 
         }
 
-        prosDan=avera/30;
 
     }
 
-    private void ukupnoTjedan (List<Transakcija>potrebneTransakcije){
+    private void prosjecniDatum(List<Transakcija>potrebneTransakcije, String vrijeme){
+        Calendar kalendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat =new SimpleDateFormat("MMM yyyy");
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM");
+        float avera=0;
+
+        try {
+            Date datum = dateFormat.parse(vrijeme);
+            kalendar.setTime(datum);
+            kalendar.add(Calendar.MONTH,-1);
+            prosDan=0;
+            String formiranoVrijeme=formater.format(kalendar.getTime());
+
+            for (Transakcija t: potrebneTransakcije){
+                Date datumTransakcije = new SimpleDateFormat("yyyy-MM-dd").parse(t.getDatum());
+                String zeljeniMjesec=formater.format(datumTransakcije);
+
+                if(formiranoVrijeme.equals(zeljeniMjesec)){
+                    avera+=t.getIznos();}
+            }
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        prosDan=avera/30;
+    }
+
+    private void ukupnoTjedan (List<Transakcija>potrebneTransakcije, String vrijeme){
+        String danasMjesec = new SimpleDateFormat("MMM yyyy", Locale.getDefault()).format(new Date());
+        SimpleDateFormat dateFormat =new SimpleDateFormat("MMM yyyy");
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
         String pocetniDatum;
         String zavrsniDatum;
         float zbr = 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        pocetniDatum =df.format(calendar.getTime());
-        calendar.add(Calendar.DATE, 6);
-        zavrsniDatum = df.format(calendar.getTime());
+        tjedan=0;
 
-        for (Transakcija t:potrebneTransakcije){
-            if (t.getDatum().compareTo(pocetniDatum)>=0){
-                if (t.getDatum().compareTo(zavrsniDatum)<=0){
-                    zbr+=t.getIznos();
+        if (danasMjesec.equals(vrijeme)){
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            pocetniDatum =df.format(calendar.getTime());
+            calendar.add(Calendar.DATE, 6);
+            zavrsniDatum = df.format(calendar.getTime());
+
+            for (Transakcija t:potrebneTransakcije){
+                if (t.getDatum().compareTo(pocetniDatum)>=0){
+                    if (t.getDatum().compareTo(zavrsniDatum)<=0){
+                        zbr+=t.getIznos();
+                    }
                 }
             }
         }
-        tjedan=zbr/7;
 
+        else{
+
+            try {
+
+                Date converted = dateFormat.parse(vrijeme);
+                Calendar c = Calendar.getInstance();
+                c.setTime(converted);
+                c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                c.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+                c.add(Calendar.DATE, 28);
+                pocetniDatum=formater.format(c.getTime());
+                c.add(Calendar.DATE, 6);
+                zavrsniDatum = formater.format(c.getTime());
+
+                for (Transakcija t:potrebneTransakcije){
+                    if (t.getDatum().compareTo(pocetniDatum)>=0){
+                        if (t.getDatum().compareTo(zavrsniDatum)<=0){
+                            zbr+=t.getIznos();
+                        }
+                    }
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        tjedan=zbr/7;
     }
 
-    private void postavaFiltiranjePoMjesecu(final List<Transakcija>potrebneTransakcije, final int broj) {
+    private void postavaFiltiranjePoMjesecu(final int broj, final String odabrani) {
 
         if (broj==1||broj==2){
             vidljivostTime(textVrijeme,buttonLijevo,buttonDesno);
@@ -293,8 +343,9 @@ public class AnalizaFragment extends Fragment {
             final SimpleDateFormat formater = new SimpleDateFormat("MMM yyyy");
             currentMonth= formater.format(kalendar.getTime());
             textVrijeme.setText(currentMonth);
-            filtracijaVrijeme(potrebneTransakcije,broj, currentMonth);
+            filtracijaVrijeme(odabrani,broj, currentMonth);
 
+            
             strelice(true);
 
             buttonLijevo.setOnClickListener(new View.OnClickListener() {
@@ -307,13 +358,15 @@ public class AnalizaFragment extends Fragment {
                         kalendar.add(Calendar.MONTH,-1);
                         textVrijeme.setText(formater.format(kalendar.getTime()));
                         strelice(false);
-                        filtracijaVrijeme(potrebneTransakcije,broj,formater.format(kalendar.getTime()));
+                        filtracijaVrijeme(odabrani,broj,formater.format(kalendar.getTime()));
+
                         buttonDesno.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 kalendar.add(Calendar.MONTH,1);
                                 textVrijeme.setText(formater.format(kalendar.getTime()));
-                                filtracijaVrijeme(potrebneTransakcije,broj,formater.format(kalendar.getTime()));
+                                filtracijaVrijeme(odabrani, broj,formater.format(kalendar.getTime()));
+
                                 if(formater.format(kalendar.getTime()).equals(currentMonth)){
                                     strelice(true);
                                 }
@@ -391,12 +444,14 @@ public class AnalizaFragment extends Fragment {
         btn2.setVisibility(View.VISIBLE);
     }
 
-    private void filtracijaVrijeme(List<Transakcija>potrebneTransakcije, int broj, String vrijeme){
+    private void filtracijaVrijeme(String odabrani, int broj, String vrijeme){
         SimpleDateFormat format = new SimpleDateFormat("MMM yyyy");
         List<Transakcija> transakcijeVremena= new ArrayList<Transakcija>();
+        sveVrijednost(vrijeme);
+        unesiDanTjedan(vrijeme);
         String zeljeniMjesec = null;
 
-        for(Transakcija t: potrebneTransakcije){
+        for(Transakcija t: transakcijas){
             try {
 
                 Date datum = new SimpleDateFormat("yyyy-MM-dd").parse(t.getDatum());
@@ -412,7 +467,8 @@ public class AnalizaFragment extends Fragment {
 
         }
 
-        dodajDataSet(transakcijeVremena,broj);
+        filtracijaPoRačunima(broj,odabrani, transakcijeVremena);
+
 
     }
 
@@ -490,13 +546,12 @@ public class AnalizaFragment extends Fragment {
         pieChart.setDrawEntryLabels(false);
         pieChart.getDescription().setEnabled(false);
 
-        filtracijaPoRačunima(broj,odabrani);
+       // filtracijaPoRačunima(broj,odabrani);
 
-        if (broj == 2){
-            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");}
+        postavaFiltiranjePoMjesecu(broj,odabrani);
 
-        else if (broj==1){
-            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " HRK");}
+
+
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -506,7 +561,7 @@ public class AnalizaFragment extends Fragment {
 
                 String iznos = e.toString().substring(pos1+3);
 
-                Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel().toString() +"\n"+"Novac: " + iznos + " HRK", Toast.LENGTH_SHORT);
+                Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel() +"\n"+"Novac: " + iznos + " HRK", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
                 toast.show();
             }
@@ -527,20 +582,38 @@ public class AnalizaFragment extends Fragment {
        // barChart=(BarChart) view.findViewById(R.id.chartBar);
     //}
 
-    private void sveVrijednost(List<Transakcija> potrebneTransakcije){
+    private void sveVrijednost(String vrijeme){
         float prihod=0;
         float trosak=0;
 
-        for (Transakcija t: potrebneTransakcije){
-            if(t.getTipTransakcije()==1){
-                prihod+=t.getIznos();
+        SimpleDateFormat format = new SimpleDateFormat("MMM yyyy");
+        String zeljeniMjesec = null;
+
+        for(Transakcija t: transakcijas){
+            try {
+
+                Date datum = new SimpleDateFormat("yyyy-MM-dd").parse(t.getDatum());
+                zeljeniMjesec=format.format(datum);
+                Log.d("tu",zeljeniMjesec);
+
+                if(zeljeniMjesec.equals(vrijeme) && t.getTipTransakcije()==1){
+                    prihod+=t.getIznos();
+                    Log.d("tu","Tu sam");
+                }
+                if(t.getTipTransakcije()==2 && zeljeniMjesec.equals(vrijeme)){
+                    trosak+=t.getIznos();
+                }
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            if(t.getTipTransakcije()==2){
-                trosak+=t.getIznos();
-            }
+
+
         }
         sve=String.valueOf(prihod-trosak);
         ukupanTP.setText(sve + " kn");
+
     }
 
     private void dodajDataSet(List<Transakcija> potrebneTransakcije, int broj) {
@@ -575,26 +648,35 @@ public class AnalizaFragment extends Fragment {
         pieChart.getLegend().setEnabled(false);
 
         PieData pieData = new PieData(dataSet);
+
+        if (broj == 2){
+            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");}
+
+        else if (broj==1){
+            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " HRK");}
+
+
         pieChart.setData(pieData);
         pieChart.invalidate();
     }
 
-    private void filtracijaPoRačunima (int broj, String odabrani){
+    private void filtracijaPoRačunima (int broj, String odabrani, List<Transakcija>potrebneTransakcije){
 
         List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
         List<Transakcija> transakcijeRačuna = new ArrayList<Transakcija>();
 
         int id_rac=0;
-        for (Transakcija t:transakcijas){
+        for (Transakcija t:potrebneTransakcije){
             if (t.getTipTransakcije()==broj){
                 transakcijeTroškova.add(t);
             }
         }
 
+        ukNovac=0;
+
 
         if (odabrani.equals("Svi računi")){
-            //dodajDataSet(transakcijeTroškova,broj);
-            postavaFiltiranjePoMjesecu(transakcijeTroškova,broj);
+            dodajDataSet(transakcijeTroškova,broj);
 
         }
         else{
@@ -608,9 +690,10 @@ public class AnalizaFragment extends Fragment {
                     transakcijeRačuna.add(tranRac);
                 }
             }
-            //dodajDataSet(transakcijeRačuna,broj);
-            postavaFiltiranjePoMjesecu(transakcijeRačuna,broj);
+
+            dodajDataSet(transakcijeRačuna,broj);
         }
+
     }
 
     private void mockData(){
