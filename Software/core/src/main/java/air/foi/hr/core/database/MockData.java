@@ -57,7 +57,7 @@ public class MockData {
         Transakcija transakcija2 = new Transakcija();
         transakcija2.setId(2);
         transakcija2.setIznos(2000);
-        transakcija2.setDatum("2021-01-10");
+        transakcija2.setDatum("2021-01-11");
         transakcija2.setRacunTerecenja(1);
         transakcija2.setRacunPrijenosa(1);
         transakcija2.setTipTransakcije(2);
@@ -74,7 +74,7 @@ public class MockData {
         Transakcija transakcija3 = new Transakcija();
         transakcija3.setId(3);
         transakcija3.setIznos(350);
-        transakcija3.setDatum("2021-01-05");
+        transakcija3.setDatum("2021-01-11");
         transakcija3.setRacunTerecenja(1);
         transakcija3.setRacunPrijenosa(1);
         transakcija3.setTipTransakcije(1);

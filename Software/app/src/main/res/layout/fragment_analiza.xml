@@ -45,20 +45,40 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/iznosTP"
+    <RelativeLayout
+        android:id="@+id/ukupanIznos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:textColor="#000000"
         android:background="#dddddd"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutRac"
+        >
 
-       />
+        <TextView
+            android:id="@+id/iznosTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="#dddddd"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerValuta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="25dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:layout_toRightOf="@id/iznosTP"
+
+            />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layoutRazdoblje"
@@ -66,7 +86,7 @@
         android:layout_height="wrap_content"
         android:background="#C0C0C0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iznosTP"
+        app:layout_constraintTop_toBottomOf="@id/ukupanIznos"
         >
 
         <ImageButton

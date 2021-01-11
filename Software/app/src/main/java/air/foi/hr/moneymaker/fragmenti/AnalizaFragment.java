@@ -88,6 +88,7 @@ public class AnalizaFragment extends Fragment {
     //BarChart barChart;
 
     Spinner dropRac;
+    Spinner dropValuta;
 
 
     private Button buttonTrošak;
@@ -105,6 +106,7 @@ public class AnalizaFragment extends Fragment {
 
 
     String odabrani="Svi računi";
+    String odabranaValuta="HRK";
 
 
     private TextView textProsDan;
@@ -125,14 +127,17 @@ public class AnalizaFragment extends Fragment {
         mockData();
         InicijalizacijaVarijabli();
         bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
-        spinnerRacun(2);
+        spinnerValuta(2);
+        //spinnerRacun(2);
         ukNovac=0;
         return view;
     }
 
     private void InicijalizacijaVarijabli() {
         dropRac=view.findViewById(R.id.racunDrop);
-        spinnerRacun(2);
+        dropValuta=view.findViewById(R.id.spinnerValuta);
+        //spinnerRacun(2);
+        spinnerValuta(2);
 
 
         textVrijeme = view.findViewById(R.id.vrijemeFilter);
@@ -160,7 +165,8 @@ public class AnalizaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje,buttonNedavno);
-                spinnerRacun(2);
+                //spinnerRacun(2);
+                spinnerValuta(2);
                 ukNovac=0;
 
             }
@@ -170,7 +176,8 @@ public class AnalizaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 bojeIzmjena(buttonPrihod,buttonTrošak,buttonOboje,buttonNedavno);
-                spinnerRacun(1);
+                //spinnerRacun(1);
+                spinnerValuta(1);
                 ukNovac=0;
             }
         });
@@ -202,17 +209,29 @@ public class AnalizaFragment extends Fragment {
 
     private void unesiDanTjedan(String vrijeme) {
         List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
+        List<Racun> racuni = new ArrayList<Racun>();
+
+        for (Racun rac:racuns){
+            if(rac.getValuta().equals(odabranaValuta)){
+                racuni.add(rac);
+                //Log.d("racuni",rac.getNaziv());
+            }
+        }
+
         for (Transakcija t:transakcijas){
-            if (t.getTipTransakcije()==2){
-                transakcijeTroškova.add(t);}
+            for(Racun racT:racuni){
+                if (t.getRacunTerecenja()==racT.getId()&&t.getTipTransakcije()==2){
+                    transakcijeTroškova.add(t);
+                }
+            }
         }
 
         danasnjiDatum(transakcijeTroškova,vrijeme);
         prosjecniDatum(transakcijeTroškova,vrijeme);
         ukupnoTjedan(transakcijeTroškova,vrijeme);
-        textTjedan.setText("Tjedan"+"\n"+ String.valueOf(Math.round(tjedan*100.0)/100.0)+" kn");
-        textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(Math.round(prosDan*100.0)/100.0)+" kn");
-        textTrenutDan.setText("Danas"+"\n"+ String.valueOf(Math.round(trenDan*100.0)/100.0)+" kn");
+        textTjedan.setText("Tjedan"+"\n"+ String.valueOf(Math.round(tjedan*100.0)/100.0)+" "+odabranaValuta);
+        textProsDan.setText("Dan(posj.)"+"\n"+ String.valueOf(Math.round(prosDan*100.0)/100.0)+" "+odabranaValuta);
+        textTrenutDan.setText("Danas"+"\n"+ String.valueOf(Math.round(trenDan*100.0)/100.0)+" "+odabranaValuta);
     }
 
     private void danasnjiDatum(List<Transakcija>potrebneTransakcije, String vrijeme){
@@ -486,12 +505,46 @@ public class AnalizaFragment extends Fragment {
 
     }
 
+    private void spinnerValuta(final int brojP){
+
+        List<String> items = new ArrayList<>();
+        items.add("HRK");
+        for (Racun rac:racuns){
+            if(!items.contains(rac.getValuta())){
+                items.add(rac.getValuta());
+            }
+
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+
+        dropValuta.setAdapter(adapter);
+        dropValuta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                odabranaValuta = adapterView.getItemAtPosition(i).toString();
+                spinnerRacun(brojP);
+                //setUpPieChart(brojP,odabrani);
+                //ukNovac=0;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+    }
+
     private void spinnerRacun(final int brojP){
 
         List<String> items = new ArrayList<>();
         items.add("Svi računi");
         for (Racun rac:racuns){
-            items.add(rac.getNaziv());
+            if(odabranaValuta.equals(rac.getValuta())){
+                items.add(rac.getNaziv());
+            }
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
@@ -550,9 +603,6 @@ public class AnalizaFragment extends Fragment {
 
         postavaFiltiranjePoMjesecu(broj,odabrani);
 
-
-
-
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -561,7 +611,7 @@ public class AnalizaFragment extends Fragment {
 
                 String iznos = e.toString().substring(pos1+3);
 
-                Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel() +"\n"+"Novac: " + iznos + " HRK", Toast.LENGTH_SHORT);
+                Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel() +"\n"+"Novac: " + iznos + " " + odabranaValuta, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
                 toast.show();
             }
@@ -585,20 +635,37 @@ public class AnalizaFragment extends Fragment {
     private void sveVrijednost(String vrijeme){
         float prihod=0;
         float trosak=0;
+        List<Transakcija>transakcijeTroškova=new ArrayList<>();
+        List<Racun> racuni = new ArrayList<Racun>();
 
         SimpleDateFormat format = new SimpleDateFormat("MMM yyyy");
         String zeljeniMjesec = null;
 
-        for(Transakcija t: transakcijas){
+        for (Racun rac:racuns){
+            if(rac.getValuta().equals(odabranaValuta)){
+                racuni.add(rac);
+                //Log.d("racuni",rac.getNaziv());
+            }
+        }
+
+        for (Transakcija t:transakcijas){
+            for(Racun racT:racuni){
+                if (t.getRacunTerecenja()==racT.getId()){
+                    transakcijeTroškova.add(t);
+                }
+            }
+        }
+
+        for(Transakcija t: transakcijeTroškova){
             try {
 
                 Date datum = new SimpleDateFormat("yyyy-MM-dd").parse(t.getDatum());
                 zeljeniMjesec=format.format(datum);
-                Log.d("tu",zeljeniMjesec);
+                //Log.d("tu",zeljeniMjesec);
 
                 if(zeljeniMjesec.equals(vrijeme) && t.getTipTransakcije()==1){
                     prihod+=t.getIznos();
-                    Log.d("tu","Tu sam");
+                    //Log.d("tu","Tu sam");
                 }
                 if(t.getTipTransakcije()==2 && zeljeniMjesec.equals(vrijeme)){
                     trosak+=t.getIznos();
@@ -612,7 +679,7 @@ public class AnalizaFragment extends Fragment {
 
         }
         sve=String.valueOf(prihod-trosak);
-        ukupanTP.setText(sve + " kn");
+        ukupanTP.setText(sve);
 
     }
 
@@ -650,10 +717,10 @@ public class AnalizaFragment extends Fragment {
         PieData pieData = new PieData(dataSet);
 
         if (broj == 2){
-            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " HRK");}
+            pieChart.setCenterText("Troškovi: " + "\n" + ukNovac + " " + odabranaValuta);}
 
         else if (broj==1){
-            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " HRK");}
+            pieChart.setCenterText("Prihodi: " + "\n" + ukNovac + " "+ odabranaValuta);}
 
 
         pieChart.setData(pieData);
@@ -664,11 +731,21 @@ public class AnalizaFragment extends Fragment {
 
         List<Transakcija> transakcijeTroškova= new ArrayList<Transakcija>();
         List<Transakcija> transakcijeRačuna = new ArrayList<Transakcija>();
+        List<Racun> racuni = new ArrayList<Racun>();
+
+        for (Racun rac:racuns){
+            if(rac.getValuta().equals(odabranaValuta)){
+                racuni.add(rac);
+                Log.d("racuni",rac.getNaziv());
+            }
+        }
 
         int id_rac=0;
         for (Transakcija t:potrebneTransakcije){
-            if (t.getTipTransakcije()==broj){
-                transakcijeTroškova.add(t);
+            for(Racun racT:racuni){
+                if (t.getTipTransakcije()==broj&&t.getRacunTerecenja()==racT.getId()){
+                    transakcijeTroškova.add(t);
+                }
             }
         }
 
@@ -679,6 +756,7 @@ public class AnalizaFragment extends Fragment {
             dodajDataSet(transakcijeTroškova,broj);
 
         }
+
         else{
             for (Racun rac:racuns){
                 if(rac.getNaziv().equals(odabrani)){
