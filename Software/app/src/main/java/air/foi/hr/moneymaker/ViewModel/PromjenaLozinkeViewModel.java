@@ -7,12 +7,18 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
+
 import air.foi.hr.core.database.MyDatabase;
 
+import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.manager.HashiranjeLozinke;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.session.Sesija;
+import eu.airmoneymaker.rest.HNBApiImplementor;
+import eu.airmoneymaker.rest.HNBApiInstance;
+import eu.airmoneymaker.rest.HNBValute;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import okhttp3.MediaType;
@@ -39,7 +45,6 @@ public class PromjenaLozinkeViewModel extends ViewModel {
             }
             else {
                 String lokalnaStaraLozinka = Sesija.getInstance().getKorisnik().getLozinka();
-                Log.e("lozinke: ", staraLozinka + " " + lokalnaStaraLozinka);
                 String hashStareLozinke;
                 final String hashLozinka;
                 try {
@@ -48,7 +53,6 @@ public class PromjenaLozinkeViewModel extends ViewModel {
                 } catch (Exception e) {
                     return;
                 }
-                Log.e("nesto:" , lokalnaStaraLozinka + " " + hashStareLozinke);
                 if (lokalnaStaraLozinka.equals(hashStareLozinke)) {
                     Retrofit r = RetrofitInstance.getInstance();
                     RestApiImplementor api = r.create(RestApiImplementor.class);
@@ -77,7 +81,6 @@ public class PromjenaLozinkeViewModel extends ViewModel {
                 PrikaziObavijest("Niste unijeli sve parametre!");
             }
     }
-
     private void PrikaziObavijest(String poruka){
         Toast.makeText(context,poruka,Toast.LENGTH_LONG).show();
     }
