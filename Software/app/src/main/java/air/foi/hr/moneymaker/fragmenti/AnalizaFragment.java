@@ -1,19 +1,31 @@
 package air.foi.hr.moneymaker.fragmenti;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,6 +34,10 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -41,6 +57,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,9 +76,12 @@ import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
+import air.foi.hr.moneymaker.MainActivity;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.AnalizaViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+
+import static android.text.TextUtils.substring;
 
 public class AnalizaFragment extends Fragment {
     private AnalizaViewModel viewModel;
@@ -79,6 +101,7 @@ public class AnalizaFragment extends Fragment {
     String sve;
     String currentYear;
     String currentMonth;
+    String currentHour;
 
     Boolean pritisnut=false;
 
@@ -91,6 +114,8 @@ public class AnalizaFragment extends Fragment {
     private Button buttonTrošak;
     private Button buttonPrihod;
     private Button buttonOboje;
+    private Button buttonPdf;
+
 
     private ImageButton buttonPostavke;
     private ImageButton buttonDesno;
@@ -106,16 +131,24 @@ public class AnalizaFragment extends Fragment {
     private TextView textTjedan;
     private TextView textVrijeme;
 
+    public static int REQUEST_PERMISSIONS = 1;
+    boolean boolean_permission;
+    boolean boolean_save;
+
     List<Racun> potrebniRačuni = new ArrayList<>();
     List<Transakcija> sveTransakcijeTroškovaValute= new ArrayList<Transakcija>();
-    List<Transakcija> sveTransakcijePrihodaValute= new ArrayList<Transakcija>();
     List<Transakcija> sveTransakcijeValute= new ArrayList<Transakcija>();
 
     SimpleDateFormat formaterMMyy = new SimpleDateFormat("MMM yyyy");
     SimpleDateFormat formateryy = new SimpleDateFormat("yyyy");
+    SimpleDateFormat formaterMM = new SimpleDateFormat("MM");
     SimpleDateFormat formaterDate = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat formaterHours = new SimpleDateFormat("HHmmss");
+
     Calendar kalendarVrijeme = Calendar.getInstance();
     Calendar danasDanTjedan =  Calendar.getInstance();
+
+    Bitmap bmp;
 
 
     @Override
@@ -158,6 +191,9 @@ public class AnalizaFragment extends Fragment {
         barChart=(BarChart) view.findViewById(R.id.chartBar);
         barChart.setVisibility(view.INVISIBLE);
 
+        buttonPdf =view.findViewById(R.id.create);
+
+
 
         buttonTrošak.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,12 +222,25 @@ public class AnalizaFragment extends Fragment {
             }
         });
 
+
+        buttonPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fn_permission();
+                kreirajPdf();
+            }
+        });
+
+
+
         buttonPostavke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
             }
         });
+
+
 
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(AnalizaViewModel.class);
@@ -281,8 +330,9 @@ public class AnalizaFragment extends Fragment {
                 int pos1= e.toString().indexOf("y: ");
 
                 String iznos = e.toString().substring(pos1+3);
+
                 Toast toast=Toast.makeText(getActivity(), "Kategorija:"+ pe.getLabel() +"\n"+"Novac: " + iznos + " " + odabranaValuta, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
+                //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
                 toast.show();
             }
 
@@ -312,7 +362,7 @@ public class AnalizaFragment extends Fragment {
 
                 if(!iznos.equals("0.0")){
                     Toast toast=Toast.makeText(getActivity(), iznos + " " + odabranaValuta, Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
+                    //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 1450);
                     toast.show();
                 }
             }
@@ -493,7 +543,6 @@ public class AnalizaFragment extends Fragment {
     }
 
 
-
     private void unesiDanTjedan(String vrijeme, int broj) {
         sveTransakcijeTroškovaValute.clear();
         for (Transakcija t:transakcijas){
@@ -634,7 +683,6 @@ public class AnalizaFragment extends Fragment {
             textTjedan.setVisibility(view.INVISIBLE);
         }
     }
-
 
     private void sveVrijednost(String vrijeme, int broj){
         float prihod=0;
@@ -799,6 +847,114 @@ public class AnalizaFragment extends Fragment {
     }
 
 
+    private void kreirajPdf(){
+        kalendarVrijeme = Calendar.getInstance();
+        currentYear= formateryy.format(kalendarVrijeme.getTime());
+        currentMonth= formaterMM.format(kalendarVrijeme.getTime());
+        currentHour=formaterHours.format(kalendarVrijeme.getTime());
+        String nazivPDFDatoteke="MoneyMaker_Troškovi_"+currentMonth+"_"+currentYear+"_"+currentHour+".pdf";
+        String nazivDatoteke="MoneyMaker_Troškovi_"+currentMonth+"_"+currentYear+"_"+currentHour;
+
+        PdfDocument document = new PdfDocument();
+
+        Paint paint = new Paint();
+        Paint title = new Paint();
+
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(1120, 792, 1).create();
+        PdfDocument.Page page = document.startPage(pageInfo);
+
+
+
+        Canvas canvas = page.getCanvas();
+
+        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        title.setTextSize(15);
+
+        canvas.drawText("A portal for IT professionals.", 209, 100, title);
+        canvas.drawText("Geeks for Geeks", 209, 80, title);
+
+        title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+        title.setTextSize(15);
+        title.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText("This is sample document which we have created.", 396, 560, title);
+        document.finishPage(page);
+
+
+
+
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/MoneyMaker_PDF_proba_1/";
+        File dir = new File(path);
+        if (!dir.exists())
+            dir.mkdirs();
+        int brojac=0;
+        File filePath = new File(dir,nazivPDFDatoteke);
+
+        if(filePath.exists()){
+            File child[]=dir.listFiles();
+            for(File files:child){
+                if(nazivDatoteke.equals(files.getName().substring(0,27))){
+                    brojac+=1;
+                }
+
+            }
+            nazivPDFDatoteke=nazivDatoteke+"("+brojac+").pdf";
+            filePath = new File(dir,nazivPDFDatoteke);
+        }
+
+
+        try {
+            document.writeTo(new FileOutputStream(filePath));
+            boolean_save=true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        document.close();
+
+    }
+
+
+    private void fn_permission() {
+
+        if ((ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
+                (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSIONS);
+
+            }
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSIONS);
+
+            }
+        } else {
+            boolean_permission = true;
+
+
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                boolean_permission = true;
+
+
+            } else {
+                Toast.makeText(getContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
+
+            }
+        }
+    }
+
     private void strelice(Boolean first){
 
         if (first) {
@@ -826,6 +982,7 @@ public class AnalizaFragment extends Fragment {
         }
         pritisnut=false;
     }
+
 
     private void mockData(){
 

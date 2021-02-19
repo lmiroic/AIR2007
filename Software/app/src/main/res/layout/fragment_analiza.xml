@@ -186,8 +186,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kreiraj PDF"
+        app:layout_constraintBottom_toTopOf="@+id/linearno"
+        android:orientation="horizontal"
+        />
+
+
 
     <LinearLayout
+        android:id="@+id/linearno"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
