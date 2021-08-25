@@ -1,12 +1,21 @@
 package air.foi.hr.core.entiteti;
 
+import android.content.Context;
+import android.graphics.Path;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Optional;
+
+import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.modul.transakcije.TransactionImplementor;
+
 
 @Entity(tableName = "transakcija")
-public class Transakcija {
+public class Transakcija implements TransactionImplementor{
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -150,5 +159,46 @@ public class Transakcija {
 
     public void setKategorijaTransakcije(int kategorijaTransakcije) {
         this.kategorijaTransakcije = kategorijaTransakcije;
+    }
+
+    @Override
+    public String toString() {
+        return "Transakcija{" +
+                "id=" + id +
+                ", iznos=" + iznos +
+                ", datum='" + datum + '\'' +
+                ", racunTerecenja=" + racunTerecenja +
+                ", racunPrijenosa=" + racunPrijenosa +
+                ", tipTransakcije=" + tipTransakcije +
+                ", memo='" + memo + '\'' +
+                ", opis='" + opis + '\'' +
+                ", ponavljajuciTrosak=" + ponavljajuciTrosak +
+                ", ikona='" + ikona + '\'' +
+                ", boja='" + boja + '\'' +
+                ", korisnik=" + korisnik +
+                ", doDatuma='" + doDatuma + '\'' +
+                ", intervalPonavljanja=" + intervalPonavljanja +
+                ", kategorijaTransakcije=" + kategorijaTransakcije +
+                '}';
+    }
+
+    @Override
+    public String getImeRacuna(Context context) {
+        return Optional.ofNullable(MyDatabase.getInstance(context).getRacunDAO().DohvatiRacun(getRacunPrijenosa())).map(Racun::getNaziv).orElse("");
+    }
+
+    @Override
+    public int getIkonaTransakcije(Context context) {
+        return context.getResources().getIdentifier(ikona,"drawable",context.getPackageName());
+    }
+
+    @Override
+    public float getIznosTransakcije() {
+        return Optional.ofNullable(getIznos()).orElse((float) 0.0);
+    }
+
+    @Override
+    public void executeAction(Context context, Transakcija transakcija) {
+
     }
 }
