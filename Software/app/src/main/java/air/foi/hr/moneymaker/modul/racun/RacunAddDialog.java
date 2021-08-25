@@ -27,12 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.CustomAdapterAddRacun;
 import air.foi.hr.moneymaker.manager.RacunAddModel;
+import air.foi.hr.moneymaker.modul.kategorije.CategoryAddDialog;
 import air.foi.hr.moneymaker.session.Sesija;
 
 public class RacunAddDialog extends Dialog implements View.OnClickListener {
@@ -40,15 +42,19 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
     private Spinner valuta;
     private ImageView ikona;
     private RecyclerView recyclerView;
-    private Button unesi;
+    private Button unesi,obrisi;
     private OnDialogRacunResult onDialogRacunResult;
     private String odabranaValuta="";
+    private Racun racun;
     public String ikoneRacuna[]={"ic_money","ic_credit_card", "ic_maestro", "ic_visa","ic_mastercard","ic_paypal","ic_american", "ic_kasica"};
     private ArrayList<RacunAddModel> arrayList;
     private CustomAdapterAddRacun adapterAddRacun;
-
     public RacunAddDialog(@NonNull Context context) {
         super(context);
+    }
+    public RacunAddDialog(@NonNull Context context, Racun racun) {
+        super(context);
+        this.racun=racun;
     }
 
     @Override
@@ -72,11 +78,33 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_racun_add);
         valuta=findViewById(R.id.spinerAddValuta);
         unesi=findViewById(R.id.btnDodajRacun);
+        obrisi=findViewById(R.id.btnIzbrisiRacun);
         unesi.setOnClickListener(this);
         imeRacuna=findViewById(R.id.txtAddImeRacuna);
         stanjeRacuna=findViewById(R.id.txtAddStanje);
         PostaviRecycleView();
         PostaviSpinner();
+        if(racun!=null){
+            imeRacuna.setText(racun.getNaziv());
+            valuta.setSelection(OdaberiSpinner());
+            stanjeRacuna.setText(String.valueOf(racun.getPocetno_stanje()));
+            oznaciIkonu(racun.getIkona());
+            unesi.setText("Ažuriraj");
+            unesi.setOnClickListener(this);
+            obrisi.setVisibility(View.VISIBLE);
+            obrisi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onDialogRacunResult != null) {
+                        Racun r = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
+                        MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiRacun(r);
+                        Toast.makeText(getContext(), "Izbrisali ste račun:  " + r.getNaziv(), Toast.LENGTH_SHORT).show();
+                        onDialogRacunResult.finish();
+                    }
+                    RacunAddDialog.this.dismiss();
+                }
+            });
+        }
     }
 
     @Override
@@ -122,23 +150,47 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if(onDialogRacunResult!=null){
-                if(!odabranaValuta.equals("") && !imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("") && adapterAddRacun.focusedItemRacun>0){
-                    Racun noviRacun= new Racun();
-                    noviRacun.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
-                    noviRacun.setIkona(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna());
-                    noviRacun.setNaziv(imeRacuna.getText().toString());
-                    noviRacun.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
-                    noviRacun.setValuta(odabranaValuta);
-                    MyDatabase.getInstance(getContext()).getRacunDAO().UnosRacuna(noviRacun);
-                    Toast.makeText(getContext(), "Unijeli ste novi račun: " + noviRacun.getNaziv(), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
-                }
+            Log.e("KLIKNUO", "kliknul si");
+            if(racun==null) {
+                if (onDialogRacunResult != null) {
+                    if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
+                        Racun noviRacun = new Racun();
+                        noviRacun.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
+                        noviRacun.setIkona(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna());
+                        noviRacun.setNaziv(imeRacuna.getText().toString());
+                        noviRacun.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
+                        noviRacun.setValuta(odabranaValuta);
+                        MyDatabase.getInstance(getContext()).getRacunDAO().UnosRacuna(noviRacun);
+                        Toast.makeText(getContext(), "Unijeli ste novi račun: " + noviRacun.getNaziv(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
+                    }
 
-                onDialogRacunResult.finish();
+                    onDialogRacunResult.finish();
+                }
+                RacunAddDialog.this.dismiss();
             }
-            RacunAddDialog.this.dismiss();
+            else{
+                if (onDialogRacunResult != null) {
+                    if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
+                        Racun r=MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
+                        r.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
+                        r.setId(r.getId());
+                        r.setNaziv(imeRacuna.getText().toString());
+                        r.setIkona(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna());
+                        r.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
+                        r.setValuta(odabranaValuta);
+                        MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(r);
+                        Toast.makeText(getContext(), "Ažuriran račun " + r.getNaziv(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
+                    }
+
+                    onDialogRacunResult.finish();
+                }
+                RacunAddDialog.this.dismiss();
+            }
+
         }
     }
     private void PostaviRecycleView(){
@@ -149,4 +201,23 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
     }
+    private int OdaberiSpinner(){
+        for(int i =0; i<valuta.getCount(); i++){
+            if(valuta.getItemAtPosition(i).toString().equalsIgnoreCase(racun.getValuta())){
+                return i;
+            }
+        }
+        return 0;
+    }
+    private void oznaciIkonu(String ikona){
+        adapterAddRacun.focusedItemRacun=dohvatiIndexIkone(ikona);
+    }
+    private int dohvatiIndexIkone(String ikona){
+        for(int i=0; i<ikoneRacuna.length; i++)
+            if(ikoneRacuna[i].equalsIgnoreCase(ikona)){
+                return i;
+            }
+        return 0;
+    }
+
 }
