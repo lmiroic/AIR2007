@@ -20,6 +20,9 @@ public interface RacunDAO {
     @Query("SELECT * from racun WHERE id=:id")
     Racun DohvatiRacun(int id);
 
+    @Query("SELECT * from racun WHERE naziv=:naziv")
+    Racun DohvatiRacunPoNazivu(String naziv);
+
     @Query("SELECT * from racun")
     LiveData<List<Racun>> DohvatiSveRacuneLive();
 

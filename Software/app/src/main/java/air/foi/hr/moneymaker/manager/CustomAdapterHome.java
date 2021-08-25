@@ -97,8 +97,8 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
         public viewHolder(View itemView) {
             super(itemView);
             icon = (ImageView) itemView.findViewById(R.id.icon);
-            iconName = (TextView) itemView.findViewById(R.id.icon_name);
-            iconSum=(TextView) itemView.findViewById(R.id.icon_sum);
+            iconName = (TextView) itemView.findViewById(R.id.nazivKategorije);
+            iconSum=(TextView) itemView.findViewById(R.id.iznosTransakcije);
         }
     }
 }
