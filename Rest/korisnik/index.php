@@ -33,6 +33,9 @@
     function provjeriPostojanostPodatakaAzuriranogKorisnika(){
         return (provjeriID()&&provjeriAtribut()&&provjeriVrijednost())?true:false;
     }
+    function provjeriPostojanostPodatakaKorisnikaZaLogin(){
+        return (provjeriEmail()&&provjeriLozinku())?true:false;
+    }
     function kreirajKorisnikovRedak(){
         $korisnikovRedak;
         $korisnikovRedak["ime"]=$_POST["ime"];
