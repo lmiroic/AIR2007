@@ -10,6 +10,9 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 
 @Entity(tableName = "kategorijaTransakcije")
@@ -70,8 +73,20 @@ public class KategorijaTransakcije implements CategoryImplementor {
     }
 
     @Override
-    public float getCategorySum() {
-        return 1111;
+    public float getCategorySum(Context context,KategorijaTransakcije kt) {
+        List<Transakcija> svetransakcije=MyDatabase.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije();
+        if(svetransakcije!=null){
+            float sumaTransakcija=0;
+            for(Transakcija t:svetransakcije){
+                if(t.getKategorijaTransakcije()==kt.id){
+                    sumaTransakcija+=t.getIznos();
+                }
+            }
+            return sumaTransakcija;
+        }
+        else
+            return 0;
+
     }
 
     @Override

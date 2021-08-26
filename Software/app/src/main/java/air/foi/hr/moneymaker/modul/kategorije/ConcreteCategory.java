@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.core.modul.kategorije.OnDialogCategoryResult;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
@@ -48,7 +49,7 @@ public class ConcreteCategory implements CategoryImplementor {
         return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
     }
     @Override
-    public float getCategorySum() {
+    public float getCategorySum(Context context,KategorijaTransakcije kt) {
         return 0;
     }
 

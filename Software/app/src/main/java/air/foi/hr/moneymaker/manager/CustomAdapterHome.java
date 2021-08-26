@@ -57,7 +57,7 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
             catch(Exception e){
                 Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon(context));
             }
-            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum()));
+            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum(context,((KategorijaTransakcije)arrayList.get(position)))));
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
