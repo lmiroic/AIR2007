@@ -10,19 +10,23 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
 import air.foi.hr.core.modul.transakcije.TransactionImplementor;
@@ -65,6 +69,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         InicijalizacijaVarijabli();
         PostaviFloatingButtone();
         PostaviRecycleView();
+        brisiTransakciju(recyclerView,adapterTransakcije);
         return view;
     }
 
@@ -166,7 +171,6 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
     }
 
     private void trosak() {
-        Toast.makeText(getContext(), "trosak sam", Toast.LENGTH_LONG).show();
         TransactionTrosakDialog transactionTrosakDialog = new TransactionTrosakDialog(getContext(), this);
         transactionTrosakDialog.SetOnDialogTransactionResult(new OnDialogTransactionResult() {
             @Override
@@ -177,7 +181,6 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         transactionTrosakDialog.show();
     }
     private void prihod(){
-        Toast.makeText(getContext(), "ovo je prihod", Toast.LENGTH_LONG).show();
         TransactionPrihodDialog transactionPrihodDialog=new TransactionPrihodDialog(getContext(),this);
         transactionPrihodDialog.SetOnDialogTransationResult(new OnDialogTransactionResult() {
             @Override
@@ -188,7 +191,6 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         transactionPrihodDialog.show();
     }
     private void prijenos(){
-        Toast.makeText(getContext(), "ovo je prijenos", Toast.LENGTH_LONG).show();
         TransactionPrijenosDialog transactionPrijenosDialog=new TransactionPrijenosDialog(getContext(), this);
         transactionPrijenosDialog.SetOnDialogTransactionResult(new OnDialogTransactionResult() {
             @Override
@@ -201,7 +203,6 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getContext(), "kliknu sam", Toast.LENGTH_LONG).show();
         switch (v.getId()) {
             case R.id.floatingActionTrosak:
                 trosak();
@@ -216,5 +217,21 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
                 break;
         }
 
+    }
+    public void brisiTransakciju(final RecyclerView recyclerView, final CustomAdapterTransakcije customAdapterTransakcije) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final Transakcija transakcija1 = customAdapterTransakcije.getTransactionAtPosition(viewHolder.getAdapterPosition());
+                customAdapterTransakcije.removeKolegijAtPosition(viewHolder.getAdapterPosition());
+                MyDatabase.getInstance(getContext()).getTransakcijaDAO().IzbrisiTransakciju(transakcija1);
+                Snackbar.make(recyclerView, "Izbrisana je transakcija " + transakcija1.getOpis(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 }
