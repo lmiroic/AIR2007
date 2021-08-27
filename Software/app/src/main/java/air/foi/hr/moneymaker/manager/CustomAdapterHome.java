@@ -57,7 +57,7 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
             catch(Exception e){
                 Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon(context));
             }
-            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum()));
+            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum(context,((KategorijaTransakcije)arrayList.get(position)))));
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,8 +97,8 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
         public viewHolder(View itemView) {
             super(itemView);
             icon = (ImageView) itemView.findViewById(R.id.icon);
-            iconName = (TextView) itemView.findViewById(R.id.icon_name);
-            iconSum=(TextView) itemView.findViewById(R.id.icon_sum);
+            iconName = (TextView) itemView.findViewById(R.id.nazivKategorije);
+            iconSum=(TextView) itemView.findViewById(R.id.iznosTransakcije);
         }
     }
 }

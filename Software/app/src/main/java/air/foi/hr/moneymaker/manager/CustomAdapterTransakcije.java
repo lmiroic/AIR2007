@@ -1,36 +1,50 @@
 package air.foi.hr.moneymaker.manager;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
+import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.KategorijaTransakcije;
+import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
-import air.foi.hr.core.modul.kategorije.CategoryImplementor;
+import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
+import air.foi.hr.core.modul.transakcije.TransactionImplementor;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.modul.transakcije.ConcreteTransakcija;
+import air.foi.hr.moneymaker.modul.transakcije.TransactionPrihodDialog;
+import air.foi.hr.moneymaker.modul.transakcije.TransactionPrijenosDialog;
+import air.foi.hr.moneymaker.modul.transakcije.TransactionTrosakDialog;
 
 
 public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapterTransakcije.viewHolder> {
     private Context context;
-    public List<Transakcija>arrayList;
+    public List<TransactionImplementor>arrayList;
 
-    public CustomAdapterTransakcije(Context context, List<Transakcija> arrayList) {
+
+    public CustomAdapterTransakcije(Context context, List<TransactionImplementor> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
     }
 
     public CustomAdapterTransakcije(Context context) {
         this.context=context;
+    }
+
+    public Transakcija getTransactionAtPosition(final int position) {
+        return (Transakcija)arrayList.get(position);
     }
 
     @NonNull
@@ -42,6 +56,49 @@ public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapter
 
     @Override
     public void onBindViewHolder(@NonNull CustomAdapterTransakcije.viewHolder holder, int position) {
+        KategorijaTransakcije kategorijaTransakcije= MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().DohvatiKategorijuTransakcije(((Transakcija) arrayList.get(position)).getKategorijaTransakcije());
+        if(kategorijaTransakcije!=null){
+            holder.nazivTransakcije.setText(kategorijaTransakcije.getNaziv());
+            holder.sumaTransakcije.setText(String.valueOf(((Transakcija) arrayList.get(position)).getIznos()));
+            holder.nazivRacuna.setText(((Transakcija) arrayList.get(position)).getOpis());
+            holder.ikonaTransakcije.setImageResource(kategorijaTransakcije.getCategoryIcon(context));
+            holder.cardViewTransakcije.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(((Transakcija) arrayList.get(position)).getTipTransakcije()==TipTransakcije.TROSAK){
+                        TransactionTrosakDialog transactionTrosakDialog=new TransactionTrosakDialog(context,(Transakcija)arrayList.get(position));
+                        transactionTrosakDialog.SetOnDialogTransactionResult(new OnDialogTransactionResult() {
+                            @Override
+                            public void finish() {
+
+                            }
+                        });
+                        transactionTrosakDialog.show();
+                    }
+                    else if(((Transakcija) arrayList.get(position)).getTipTransakcije()==TipTransakcije.PRIHOD){
+                        TransactionPrihodDialog transactionPrihodDialog=new TransactionPrihodDialog(context,(Transakcija)arrayList.get(position));
+                        transactionPrihodDialog.SetOnDialogTransationResult(new OnDialogTransactionResult() {
+                            @Override
+                            public void finish() {
+
+                            }
+                        });
+                        transactionPrihodDialog.show();
+                    }
+                    else if(((Transakcija) arrayList.get(position)).getTipTransakcije()==TipTransakcije.PRIJENOS){
+                        TransactionPrijenosDialog transactionPrijenosDialog=new TransactionPrijenosDialog(context,(Transakcija)arrayList.get(position));
+                        transactionPrijenosDialog.SetOnDialogTransactionResult(new OnDialogTransactionResult() {
+                            @Override
+                            public void finish() {
+
+                            }
+                        });
+                        transactionPrijenosDialog.show();
+                    }
+
+                }
+            });
+        }
 
     }
 
@@ -50,13 +107,26 @@ public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapter
         return arrayList.size();
     }
 
+    public void removeKolegijAtPosition(final int adapterPosition) {
+        arrayList.remove(adapterPosition);
+    }
+
     public class viewHolder extends RecyclerView.ViewHolder {
+        TextView nazivTransakcije;
+        TextView sumaTransakcije;
+        ImageView ikonaTransakcije;
+        TextView nazivRacuna;
+        CardView cardViewTransakcije;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
+            nazivTransakcije=(TextView) itemView.findViewById(R.id.nazivKategorije);
+            sumaTransakcije=(TextView) itemView.findViewById(R.id.iznosTransakcije);
+            ikonaTransakcije=(ImageView) itemView.findViewById(R.id.icon);
+            nazivRacuna=(TextView) itemView.findViewById(R.id.nazivRacuna);
+            cardViewTransakcije=(CardView) itemView.findViewById(R.id.cardViewTransakcija);
+
+
         }
     }
-    public void PostaviTransakcije(List<Transakcija>transakcijaList){
-
-    }
-
 }

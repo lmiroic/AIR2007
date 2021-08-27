@@ -33,71 +33,89 @@
             android:layout_centerInParent="true"
             app:layout_constraintVertical_bias="0.222" />
 
-        <ImageButton
-            android:id="@+id/buttonInfo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="#dddddd"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_info_anja"
-            android:layout_alignParentRight="true"
-             />
+
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/iznosTP"
+    <RelativeLayout
+        android:id="@+id/ukupanIznos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:textColor="#000000"
         android:background="#dddddd"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutRac"
+        >
 
-       />
+        <TextView
+            android:id="@+id/iznosTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:background="#dddddd"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerValuta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textSize="25dp"
+            android:background="#dddddd"
+            android:scaleType="fitCenter"
+            android:layout_toRightOf="@id/iznosTP"
+
+            />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layoutRazdoblje"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#dddddd"
+        android:background="#C0C0C0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iznosTP"
+        app:layout_constraintTop_toBottomOf="@id/ukupanIznos"
         >
 
         <ImageButton
             android:id="@+id/buttonLijevo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_left_anja"
-            android:layout_toLeftOf="@id/spinnerMjeseci"
+            android:layout_toLeftOf="@id/vrijemeFilter"
 
             />
 
-        <Spinner
-            android:id="@+id/spinnerMjeseci"
+        <TextView
+            android:id="@+id/vrijemeFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#000000"
+
 
             />
+
+
 
         <ImageButton
             android:id="@+id/buttonDesno"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="#dddddd"
+            android:background="#C0C0C0"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_riht_anja"
-            android:layout_toRightOf="@id/spinnerMjeseci"
+            android:layout_toRightOf="@id/vrijemeFilter"
 
             />
 
@@ -110,7 +128,7 @@
         app:layout_constraintTop_toBottomOf="@id/layoutRazdoblje"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
-        android:weightSum="4"
+        android:weightSum="3"
         >
 
         <Button
@@ -143,17 +161,6 @@
             android:textColor="#ffffff"
             />
 
-        <Button
-            android:id="@+id/buttonNedavnaPotrosnja"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Nedavna\npotrošnja"
-            android:textColor="#ffffff"
-
-
-            />
 
     </LinearLayout>
 
@@ -169,28 +176,29 @@
 
      />
 
-   <!-- <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chartLine"
-        android:layout_width="339dp"
-        android:layout_height="292dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chartBar"
-        android:layout_width="339dp"
-        android:layout_height="292dp"
+        android:layout_width="397dp"
+        android:layout_height="310dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kreiraj PDF"
+        app:layout_constraintBottom_toTopOf="@+id/linearno"
+        android:orientation="horizontal"
+        />
+
+
 
     <LinearLayout
+        android:id="@+id/linearno"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"

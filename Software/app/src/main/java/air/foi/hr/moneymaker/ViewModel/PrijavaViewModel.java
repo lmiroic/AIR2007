@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.List;
+import java.util.Objects;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
@@ -83,7 +84,7 @@ public class PrijavaViewModel extends ViewModel {
             public void onResponse(Call<List<Korisnik>> call, Response<List<Korisnik>> response) {
                 boolean status=false;
                 for (Korisnik k:response.body()){
-                    if (k.getGoogle_ID().trim().equals(account.getId().toString().trim())){
+                    if (k!=null && k.getGoogle_ID()!=null && k.getGoogle_ID().trim().equals(account.getId().toString().trim())){
                         status=true;
                         break;
                     }
@@ -101,7 +102,7 @@ public class PrijavaViewModel extends ViewModel {
                         @Override
                         public void onResponse(Call<List<Korisnik>> call, Response<List<Korisnik>> response) {
                             for(Korisnik k:response.body()){
-                                if(k.getGoogle_ID().equals(account.getId().toString().trim())){
+                                if(k!=null && k.getGoogle_ID()!=null && k.getGoogle_ID().equals(account.getId().toString().trim())){
                                     ZapisiKorisnikaULokalnuBazu(k);
                                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
                                     FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
