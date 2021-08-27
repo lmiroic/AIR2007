@@ -8,15 +8,15 @@
 
     <Button
         android:id="@+id/btnPromjeniLozinku"
-        android:layout_width="230dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:text="Promjeni lozinku"
         app:layout_constraintBottom_toTopOf="@+id/btnPromijeniValutu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="0.729" />
 
     <ImageButton
         android:id="@+id/btnBack"
@@ -24,24 +24,32 @@
         android:layout_height="40dp"
         android:background="#00FFFFFF"
         android:scaleType="fitCenter"
-        android:tint="#070707"
         app:layout_constraintBottom_toTopOf="@+id/btnPromjeniLozinku"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/abc_vector_test"
-        tools:srcCompat="@drawable/abc_vector_test" />
+        app:srcCompat="@drawable/ic_backv2" />
 
     <Button
         android:id="@+id/btnPromijeniValutu"
-        android:layout_width="230dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="500dp"
+        android:layout_marginBottom="80dp"
         android:text="Promijeni valutu"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCiljevi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnCiljevi"
+        android:layout_width="487dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="516dp"
+        android:text="Ciljevi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,7 +32,7 @@ public class MockData {
         transakcija.setBoja("Boja");
         transakcija.setKorisnik(1);
         transakcija.setDoDatuma("20.10.2010");
-        transakcija.setIntervalPonavljanja(1);
+        transakcija.setIntervalPonavljanja("2020-12-30");
         transakcija.setKategorijaTransakcije(1);
 
 
@@ -50,7 +50,7 @@ public class MockData {
         transakcijaP.setBoja("Boja");
         transakcijaP.setKorisnik(1);
         transakcijaP.setDoDatuma("20.10.2010");
-        transakcijaP.setIntervalPonavljanja(1);
+        transakcijaP.setIntervalPonavljanja("2020-12-30");
         transakcijaP.setKategorijaTransakcije(5);
 
 
@@ -68,7 +68,7 @@ public class MockData {
         transakcija2.setBoja("Boja");
         transakcija2.setKorisnik(1);
         transakcija2.setDoDatuma("20.10.2010");
-        transakcija2.setIntervalPonavljanja(1);
+        transakcija2.setIntervalPonavljanja("2020-12-30");
         transakcija2.setKategorijaTransakcije(1);
 
         Transakcija transakcija3 = new Transakcija();
@@ -85,7 +85,7 @@ public class MockData {
         transakcija3.setBoja("Boja");
         transakcija3.setKorisnik(1);
         transakcija3.setDoDatuma("20.10.2010");
-        transakcija3.setIntervalPonavljanja(1);
+        transakcija3.setIntervalPonavljanja("2020-12-30");
         transakcija3.setKategorijaTransakcije(5);
 
         Transakcija transakcija4 = new Transakcija();
@@ -102,7 +102,7 @@ public class MockData {
         transakcija4.setBoja("Boja");
         transakcija4.setKorisnik(1);
         transakcija4.setDoDatuma("20.10.2010");
-        transakcija4.setIntervalPonavljanja(1);
+        transakcija4.setIntervalPonavljanja("2020-12-30");
         transakcija4.setKategorijaTransakcije(4);
 
         Transakcija transakcija5 = new Transakcija();
@@ -119,7 +119,7 @@ public class MockData {
         transakcija5.setBoja("Boja");
         transakcija5.setKorisnik(1);
         transakcija5.setDoDatuma("20.10.2010");
-        transakcija5.setIntervalPonavljanja(1);
+        transakcija5.setIntervalPonavljanja("2020-12-30");
         transakcija5.setKategorijaTransakcije(3);
 
 

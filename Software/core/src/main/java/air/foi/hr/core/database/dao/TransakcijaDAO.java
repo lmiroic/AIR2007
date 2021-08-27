@@ -30,4 +30,7 @@ public interface TransakcijaDAO {
     public void IzbrisiTransakciju(Transakcija... transakcije);
     @Query("SELECT * from transakcija")
     LiveData<List<Transakcija>> DohvatiSveTransakcijeLIVE();
+
+    @Query("SELECT * from transakcija WHERE ponavljajuciTrosak=:ponTrosak")
+    List<Transakcija> DohvatiTransakcijePonavljajucegTroska(boolean ponTrosak);
 }
