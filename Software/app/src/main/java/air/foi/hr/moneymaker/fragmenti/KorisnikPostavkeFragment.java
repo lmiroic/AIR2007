@@ -17,6 +17,7 @@ public class KorisnikPostavkeFragment extends Fragment {
     private KorisnikPostavkeViewModel viewModel;
     private Button btnPromjeniLozinku;
     private Button btnPromjeniValutu;
+    private Button btnCiljevi;
     private ImageButton btnBack;
 
     private View view;
@@ -58,6 +59,14 @@ public class KorisnikPostavkeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentSwitcher.ShowFragment(FragmentName.HOME,getFragmentManager());
+            }
+        });
+
+        btnCiljevi=view.findViewById(R.id.btnCiljevi);
+        btnCiljevi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.CILJEVI,getFragmentManager());
             }
         });
 

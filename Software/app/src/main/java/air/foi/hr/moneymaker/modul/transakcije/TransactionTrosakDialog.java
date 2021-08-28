@@ -14,11 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
@@ -42,6 +48,7 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
     private Button btnSlikajTrosak;
     public ImageView imageViewTrosak;
     private Button btnUreduTrosak;
+    private Switch switchTroska;
     private Transakcija transakcija;
     private CustomAdapterTransakcije customAdapterTransakcije;
     private TransakcijaFragment transakcijaFragment;
@@ -49,6 +56,8 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
     private Racun odabraniRacun;
     private Button btnAzurirajTrosak;
     private int iznosTransakcije;
+    SimpleDateFormat formaterDate = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar datumPonavljajucegTroska = Calendar.getInstance();
 
 
     public TransactionTrosakDialog(@NonNull Context context) {
@@ -79,6 +88,7 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
         btnAzurirajTrosak = findViewById(R.id.btnAzurirajTrosak);
         btnAzurirajTrosak.setVisibility(View.INVISIBLE);
         btnAzurirajTrosak.setEnabled(false);
+        switchTroska = findViewById(R.id.switchTroska);
         datumTrosak = findViewById(R.id.txtDatumTrosak);
         datumTrosak.setInputType(InputType.TYPE_CLASS_DATETIME);
         iznosTrosak = findViewById(R.id.txtOdaberiIznosTrosak);
@@ -123,26 +133,44 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
             opisTrosak.setText(transakcija.getOpis());
             odabirKategorijeTrosak.setSelection(OdaberiSpinnerKategorije());
             odabirRacunaTrosak.setSelection(OdaberiSpinnerRacuna());
-            iznosTransakcije=(int)transakcija.getIznos();
+            iznosTransakcije = (int) transakcija.getIznos();
             btnUreduTrosak.setEnabled(false);
             btnUreduTrosak.setVisibility(View.INVISIBLE);
-
+            if (transakcija.isPonavljajuciTrosak() == true) {
+                switchTroska.setChecked(true);
+            }
             btnAzurirajTrosak.setEnabled(true);
             btnAzurirajTrosak.setVisibility(View.VISIBLE);
             btnAzurirajTrosak.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(transakcija!=null){
+                    if (transakcija != null) {
                         if (!iznosTrosak.getText().toString().isEmpty() && !datumTrosak.getText().toString().isEmpty() && !opisTrosak.getText().toString().isEmpty()) {
                             float iznos = Float.parseFloat(iznosTrosak.getText().toString());
                             String datum = datumTrosak.getText().toString();
                             String opis = opisTrosak.getText().toString();
                             int odabranRacun = odabraniRacun.getId();
-                            if(transakcija.getIznos()<iznos){
-                                if (odabraniRacun.getPocetno_stanje() >= iznos-transakcija.getIznos()) {
+                            if (transakcija.getIznos() < iznos) {
+                                if (odabraniRacun.getPocetno_stanje() >= iznos - transakcija.getIznos()) {
                                     transakcija.setIznos(iznos);
-                                    transakcija.setDatum(datum);
                                     transakcija.setOpis(opis);
+                                    if (switchTroska.isChecked() == true) {
+                                        transakcija.setPonavljajuciTrosak(true);
+                                        Date datumPonavljanjaTroska = null;
+                                        try {
+                                            datumPonavljanjaTroska = formaterDate.parse(datum);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        datumPonavljajucegTroska.setTime(datumPonavljanjaTroska);
+                                        datumPonavljajucegTroska.add(Calendar.MONTH, 1);
+                                        transakcija.setIntervalPonavljanja(formaterDate.format(datumPonavljajucegTroska.getTime()));
+                                        transakcija.setDatum(formaterDate.format(datumPonavljanjaTroska));
+                                    } else{
+                                        transakcija.setPonavljajuciTrosak(false);
+                                        transakcija.setDatum(datum);
+                                        transakcija.setIntervalPonavljanja(null);
+                                    }
                                     transakcija.setRacunTerecenja(odabranRacun);
                                     transakcija.setTipTransakcije(2);
                                     transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
@@ -151,8 +179,8 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
 
                                     Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId());
                                     float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                                    racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - (iznos-iznosTransakcije));
-                                    Log.e("racun",String.valueOf(pocetnoStanje-(iznos-iznosTransakcije)));
+                                    racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - (iznos - iznosTransakcije));
+                                    Log.e("racun", String.valueOf(pocetnoStanje - (iznos - iznosTransakcije)));
                                     MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
 
                                     Log.e("transakcija", transakcija.toString());
@@ -160,20 +188,37 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
                                     TransactionTrosakDialog.this.dismiss();
                                 } else
                                     Toast.makeText(v.getContext(), "Nemate dovoljno novaca na računu", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
+                            } else {
                                 transakcija.setIznos(iznos);
-                                transakcija.setDatum(datum);
                                 transakcija.setOpis(opis);
                                 transakcija.setRacunTerecenja(odabranRacun);
                                 transakcija.setTipTransakcije(2);
                                 transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
                                 transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
+                                if (switchTroska.isChecked() == true){
+                                    transakcija.setPonavljajuciTrosak(true);
+                                    Date datumPonavljanjaTroska = null;
+                                    try {
+                                        datumPonavljanjaTroska = formaterDate.parse(datum);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    datumPonavljajucegTroska.setTime(datumPonavljanjaTroska);
+                                    datumPonavljajucegTroska.add(Calendar.MONTH, 1);
+                                    transakcija.setIntervalPonavljanja(formaterDate.format(datumPonavljajucegTroska.getTime()));
+                                    transakcija.setDatum(formaterDate.format(datumPonavljanjaTroska));
+                                }
+                                else{
+                                    transakcija.setPonavljajuciTrosak(false);
+                                    transakcija.setDatum(datum);
+                                    transakcija.setIntervalPonavljanja(null);
+                                }
+
                                 MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
 
                                 Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId());
                                 float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                                racunZaAzuriranje.setPocetno_stanje(pocetnoStanje + (iznosTransakcije-iznos));
+                                racunZaAzuriranje.setPocetno_stanje(pocetnoStanje + (iznosTransakcije - iznos));
                                 MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
 
                                 Log.e("transakcija", transakcija.toString());
@@ -194,17 +239,19 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
 
 
     }
-    private int OdaberiSpinnerKategorije(){
-        for(int i =0; i<odabirKategorijeTrosak.getCount(); i++){
-            if(odabirKategorijeTrosak.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getKategorijaTransakcijeDAO().DohvatiKategorijuTransakcije(transakcija.getKategorijaTransakcije()).getNaziv())){
+
+    private int OdaberiSpinnerKategorije() {
+        for (int i = 0; i < odabirKategorijeTrosak.getCount(); i++) {
+            if (odabirKategorijeTrosak.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getKategorijaTransakcijeDAO().DohvatiKategorijuTransakcije(transakcija.getKategorijaTransakcije()).getNaziv())) {
                 return i;
             }
         }
         return 0;
     }
-    private int OdaberiSpinnerRacuna(){
-        for(int i =0; i<odabirRacunaTrosak.getCount(); i++){
-            if(odabirRacunaTrosak.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv())){
+
+    private int OdaberiSpinnerRacuna() {
+        for (int i = 0; i < odabirRacunaTrosak.getCount(); i++) {
+            if (odabirRacunaTrosak.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv())) {
                 return i;
             }
         }
@@ -250,16 +297,33 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
                 if (!iznosTrosak.getText().toString().isEmpty() && !datumTrosak.getText().toString().isEmpty() && !opisTrosak.getText().toString().isEmpty()) {
                     float iznos = Float.parseFloat(iznosTrosak.getText().toString());
                     String datum = datumTrosak.getText().toString();
+
                     String opis = opisTrosak.getText().toString();
                     int odabranRacun = this.odabraniRacun.getId();
                     if (odabraniRacun.getPocetno_stanje() >= iznos) {
                         Transakcija transakcija = new Transakcija();
                         transakcija.setIznos(iznos);
-                        transakcija.setDatum(datum);
                         transakcija.setOpis(opis);
                         transakcija.setRacunTerecenja(odabranRacun);
                         transakcija.setTipTransakcije(2);
                         transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
+                        if (switchTroska.isChecked() == true){
+                            transakcija.setPonavljajuciTrosak(true);
+                            Date datumPonavljanjaTroska = null;
+                            try {
+                                datumPonavljanjaTroska = formaterDate.parse(datum);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            datumPonavljajucegTroska.setTime(datumPonavljanjaTroska);
+                            datumPonavljajucegTroska.add(Calendar.MONTH, 1);
+                            transakcija.setIntervalPonavljanja(formaterDate.format(datumPonavljajucegTroska.getTime()));
+                            transakcija.setDatum(formaterDate.format(datumPonavljanjaTroska));
+                        }
+                        else{
+                            transakcija.setPonavljajuciTrosak(false);
+                            transakcija.setDatum(datum);
+                        }
                         transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
                         MyDatabase.getInstance(getContext()).getTransakcijaDAO().UnosTransakcije(transakcija);
                         Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId());
@@ -274,61 +338,6 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
                         Toast.makeText(v.getContext(), "Nemate dovoljno novaca na računu", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(v.getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_SHORT).show();
-                TransactionTrosakDialog.this.dismiss();
-                break;
-
-            case R.id.btnAzurirajTrosak:
-                if(transakcija!=null){
-                    if (!iznosTrosak.getText().toString().isEmpty() && !datumTrosak.getText().toString().isEmpty() && !opisTrosak.getText().toString().isEmpty()) {
-                        float iznos = Float.parseFloat(iznosTrosak.getText().toString());
-                        String datum = datumTrosak.getText().toString();
-                        String opis = opisTrosak.getText().toString();
-                        int odabranRacun = this.odabraniRacun.getId();
-                        if(transakcija.getIznos()<iznos){
-                            if (odabraniRacun.getPocetno_stanje() >= iznos-transakcija.getIznos()) {
-                                transakcija.setIznos(iznos);
-                                transakcija.setDatum(datum);
-                                transakcija.setOpis(opis);
-                                transakcija.setRacunTerecenja(odabranRacun);
-                                transakcija.setTipTransakcije(2);
-                                transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
-                                transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
-                                MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
-
-                                Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId());
-                                float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                                racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - (iznos-transakcija.getIznos()));
-                                MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
-
-                                Log.e("transakcija", transakcija.toString());
-                                Toast.makeText(v.getContext(), "Uspješno ažurirana transakcija troška", Toast.LENGTH_SHORT).show();
-                                TransactionTrosakDialog.this.dismiss();
-                            } else
-                                Toast.makeText(v.getContext(), "Nemate dovoljno novaca na računu", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            transakcija.setIznos(iznos);
-                            transakcija.setDatum(datum);
-                            transakcija.setOpis(opis);
-                            transakcija.setRacunTerecenja(odabranRacun);
-                            transakcija.setTipTransakcije(2);
-                            transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
-                            transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
-                            MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
-
-                            Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId());
-                            float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                            racunZaAzuriranje.setPocetno_stanje(pocetnoStanje + (transakcija.getIznos()-iznos));
-                            MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
-
-                            Log.e("transakcija", transakcija.toString());
-                            Toast.makeText(v.getContext(), "Uspješno ažurirana transakcija troška", Toast.LENGTH_SHORT).show();
-                            TransactionTrosakDialog.this.dismiss();
-                        }
-
-                    } else
-                        Toast.makeText(v.getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_SHORT).show();
-                }
                 TransactionTrosakDialog.this.dismiss();
                 break;
         }

@@ -14,16 +14,16 @@ import air.foi.hr.core.modul.transakcije.TransactionImplementor;
 
 
 @Entity(tableName = "transakcija")
-public class Transakcija implements TransactionImplementor{
+public class Transakcija implements TransactionImplementor {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     private float iznos;
     private String datum;
-    @ForeignKey(entity = Racun.class,parentColumns ="id",childColumns = "racun")
+    @ForeignKey(entity = Racun.class, parentColumns = "id", childColumns = "racun")
     private int racunTerecenja;
-    @ForeignKey(entity=Racun.class,parentColumns = "id",childColumns = "racun")
+    @ForeignKey(entity = Racun.class, parentColumns = "id", childColumns = "racun")
     private int racunPrijenosa;
     private int tipTransakcije;
     private String memo;
@@ -31,14 +31,23 @@ public class Transakcija implements TransactionImplementor{
     private boolean ponavljajuciTrosak;
     private String ikona;
     private String boja;
-    @ForeignKey(entity = Korisnik.class,parentColumns = "id",childColumns = "korisnik")
+    @ForeignKey(entity = Korisnik.class, parentColumns = "id", childColumns = "korisnik")
     private int korisnik;
     private String doDatuma;
-    private int intervalPonavljanja;
-    @ForeignKey(entity = KategorijaTransakcije.class,parentColumns = "id",childColumns = "kategorijaTransakcije")
+    private String intervalPonavljanja;
+    private boolean placenTrosak;
+    @ForeignKey(entity = KategorijaTransakcije.class, parentColumns = "id", childColumns = "kategorijaTransakcije")
     private int kategorijaTransakcije;
 
     public Transakcija() {
+    }
+
+    public boolean isPlacenTrosak() {
+        return placenTrosak;
+    }
+
+    public void setPlacenTrosak(boolean placenTrosak) {
+        this.placenTrosak = placenTrosak;
     }
 
     public int getId() {
@@ -145,11 +154,11 @@ public class Transakcija implements TransactionImplementor{
         this.doDatuma = doDatuma;
     }
 
-    public int getIntervalPonavljanja() {
+    public String getIntervalPonavljanja() {
         return intervalPonavljanja;
     }
 
-    public void setIntervalPonavljanja(int intervalPonavljanja) {
+    public void setIntervalPonavljanja(String intervalPonavljanja) {
         this.intervalPonavljanja = intervalPonavljanja;
     }
 
@@ -189,7 +198,7 @@ public class Transakcija implements TransactionImplementor{
 
     @Override
     public int getIkonaTransakcije(Context context) {
-        return context.getResources().getIdentifier(ikona,"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(ikona, "drawable", context.getPackageName());
     }
 
     @Override

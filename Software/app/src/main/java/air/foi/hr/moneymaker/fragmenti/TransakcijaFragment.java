@@ -228,7 +228,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final Transakcija transakcija1 = customAdapterTransakcije.getTransactionAtPosition(viewHolder.getAdapterPosition());
-                customAdapterTransakcije.removeKolegijAtPosition(viewHolder.getAdapterPosition());
+                customAdapterTransakcije.removeTransactionAtPosition(viewHolder.getAdapterPosition());
                 MyDatabase.getInstance(getContext()).getTransakcijaDAO().IzbrisiTransakciju(transakcija1);
                 Snackbar.make(recyclerView, "Izbrisana je transakcija " + transakcija1.getOpis(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }

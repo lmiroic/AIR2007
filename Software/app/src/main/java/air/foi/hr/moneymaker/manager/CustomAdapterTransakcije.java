@@ -107,7 +107,7 @@ public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapter
         return arrayList.size();
     }
 
-    public void removeKolegijAtPosition(final int adapterPosition) {
+    public void removeTransactionAtPosition(final int adapterPosition) {
         arrayList.remove(adapterPosition);
     }
 

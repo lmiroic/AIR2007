@@ -10,7 +10,8 @@ public enum FragmentName {
     ANALIZA(7),
     POSTAVKE(8),
     PROMJENA_LOZINKE(9),
-    PROMJENA_VALUTE(10);
+    PROMJENA_VALUTE(10),
+    CILJEVI(11);
 
     private FragmentName(int i) {
 
