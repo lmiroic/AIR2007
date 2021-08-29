@@ -14,6 +14,7 @@ import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 
@@ -48,28 +49,31 @@ public interface RestApiImplementor {
     );
 
     //Racun
+    @GET("racun/index.php?query=selectRacuneKorisnika")
+    Call<List<Racun>>DohvatiKorisnikoveRacune(@Query("korisnik_id") int korisnik_id);
+
     @GET("racun/index.php?query=getall")
     Call<List<Racun>>DohvatiSveRacune();
     @GET("racun/index.php?query=selectOneRacun")
     Call<List<Racun>>DohvatiRacun(@Query("id")int id);
     @Multipart
     @POST("racun/index.php?query=insert")
-    Call<Void> UnesiRacun (@Part("naziv") String naziv,
-                           @Part("pocetno_stanje") float pocetno_stanje,
-                           @Part("valuta") String valuta,
-                           @Part("boja") String boja,
-                           @Part("ikona") String ikona,
-                           @Part("korisnik_id") int korisnik_id
+    Call<Void> UnesiRacun (@Part("naziv") RequestBody naziv,
+                           @Part("pocetno_stanje") RequestBody pocetno_stanje,
+                           @Part("valuta") RequestBody valuta,
+                           @Part("ikona") RequestBody ikona,
+                           @Part("korisnik_id") RequestBody korisnik_id
     );
     @Multipart
     @POST("racun/index.php?query=update")
-    Call<Void> AzurirajRacun (@Part("id") int id,
-                                  @Part("atribut") RequestBody atribut,
-                                  @Part("vrijednost") RequestBody vrijednost
+    Call<Void> AzurirajRacun(@Part("id") int id,
+                             @Part("atribut") RequestBody atribut,
+                             @Part("vrijednost") RequestBody vrijednost
+
     );
     @Multipart
     @POST("racun/index.php?query=delete")
-    Call<Void> ObrisiRacun (@Part("id") int id);
+    Call<Void> ObrisiRacun (@Part("id") RequestBody id);
 
     //KategorijaTransakcije
     @GET("kategorijaTransakcije/index.php?query=getall")

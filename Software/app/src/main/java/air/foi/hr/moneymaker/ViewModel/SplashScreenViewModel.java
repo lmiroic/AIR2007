@@ -56,24 +56,7 @@ public class SplashScreenViewModel extends ViewModel {
                 }
             });
         }
-        if(!ProvjeraPostojanostiRacunaUBazi()){
-            Retrofit r= RetrofitInstance.getInstance();
-            RestApiImplementor api=r.create(RestApiImplementor.class);
-            final Call<List<Racun>> pozivUnosa = api.DohvatiSveRacune();
-            pozivUnosa.enqueue(new Callback<List<Racun>>() {
-                @Override
-                public void onResponse(Call<List<Racun>> call, Response<List<Racun>> response) {
-                    for(Racun racun: response.body()){
-                        MyDatabase.getInstance(context).getRacunDAO().UnosRacuna(racun);
-                    }
-                }
 
-                @Override
-                public void onFailure(Call<List<Racun>> call, Throwable t) {
-
-                }
-            });
-        }
         if(!ProvjeraPostojanostiValuteUBazi()){
             Retrofit r= HNBApiInstance.getInstance();
             HNBApiImplementor api=r.create(HNBApiImplementor.class);
@@ -92,7 +75,7 @@ public class SplashScreenViewModel extends ViewModel {
 
                 @Override
                 public void onFailure(Call<List<HNBValute>> call, Throwable t) {
-
+                    Log.e("Response", t.getMessage(), t);
                 }
             });
 

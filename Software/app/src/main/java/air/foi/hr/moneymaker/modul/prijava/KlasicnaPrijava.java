@@ -2,6 +2,7 @@ package air.foi.hr.moneymaker.modul.prijava;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
+import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.manager.HashiranjeLozinke;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
@@ -42,17 +44,16 @@ public class KlasicnaPrijava implements IPrijava {
             public void onResponse(Call<List<Korisnik>> call, final Response<List<Korisnik>> response) {
                 try {
                     Korisnik DohvacenKorisnik = response.body().get(0);
-
                     if(response.isSuccessful() && DohvacenKorisnik != null){
                         if (DohvacenKorisnik.getEmail().equals(email) && DohvacenKorisnik.getLozinka().equals(HashiranjeLozinke.HashirajLozinku(lozinka))) {
                             Log.e("Korisnik", "Uspješna prijava!");
                             UpravljanjeKorisnikomULokalnojBazi(DohvacenKorisnik,fragmentManager);
-                        } else {
-                            Log.e("Korisnik", "Neuspješna prijava, korisnik ne postoji.");
                         }
                     }
                 }
                 catch (Exception e){
+                    Log.e("Prijava", "Neuspješna prijava!");
+                    Toast.makeText(context,"Neuspješna prijava!",Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -87,17 +88,43 @@ public class KlasicnaPrijava implements IPrijava {
             if (ProvjeraPostojiLiKorisnik(korisnik)){
                 Korisnik k=DohvatiKorisnika(korisnik);
                 Sesija.getInstance().setKorisnik(korisnik);
+                dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                 FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
             }
             else{
                 ZapisiKorisnikaULokalnuBazu(korisnik);
                 Sesija.getInstance().setKorisnik(korisnik);
+                dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                 FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
             }
         }
         catch(Exception exception){
             exception.printStackTrace();
         }
+    }
+    private void dohvatiRacune(int korisnik_id){
+        if(!ProvjeraPostojanostiRacunaUBazi()){
+            Retrofit r= RetrofitInstance.getInstance();
+            RestApiImplementor api=r.create(RestApiImplementor.class);
+            int korisnikId=Sesija.getInstance().getKorisnik().getId();
+            final Call<List<Racun>> pozivUnosa = api.DohvatiKorisnikoveRacune(korisnikId);
+            pozivUnosa.enqueue(new Callback<List<Racun>>() {
+                @Override
+                public void onResponse(Call<List<Racun>> call, Response<List<Racun>> response) {
+                    for(Racun racun: response.body()){
+                        MyDatabase.getInstance(context).getRacunDAO().UnosRacuna(racun);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Racun>> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+    private boolean ProvjeraPostojanostiRacunaUBazi() {
+        return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
     }
 
 }

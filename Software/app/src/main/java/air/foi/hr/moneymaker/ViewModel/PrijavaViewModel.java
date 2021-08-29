@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
+import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.session.Sesija;
@@ -97,9 +98,11 @@ public class PrijavaViewModel extends ViewModel {
                     RegistracijaKorisnikaPutemGoogleAccounta(account, fragmentManager);
                 } else if (ProvjeraPostojanostiKorisnikaLokalno(account)) {
                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
+                    dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                     FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
-                } else {
-                    Call<List<Korisnik>> korisnik = api.DohvatiSveKorisnike();
+                }
+                else{
+                    Call<List<Korisnik>>korisnik=api.DohvatiSveKorisnike();
                     korisnik.enqueue(new Callback<List<Korisnik>>() {
                         @Override
                         public void onResponse(Call<List<Korisnik>> call, Response<List<Korisnik>> response) {
@@ -107,7 +110,8 @@ public class PrijavaViewModel extends ViewModel {
                                 if (k != null && k.getGoogle_ID() != null && k.getGoogle_ID().equals(account.getId().toString().trim())) {
                                     ZapisiKorisnikaULokalnuBazu(k);
                                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
-                                    FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
+                                    dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
+                                    FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
                                     break;
                                 }
                             }
@@ -126,5 +130,29 @@ public class PrijavaViewModel extends ViewModel {
 
             }
         });
+    }
+    private void dohvatiRacune(int korisnik_id){
+        if(!ProvjeraPostojanostiRacunaUBazi()){
+            Retrofit r= RetrofitInstance.getInstance();
+            RestApiImplementor api=r.create(RestApiImplementor.class);
+            int korisnikId=Sesija.getInstance().getKorisnik().getId();
+            final Call<List<Racun>> pozivUnosa = api.DohvatiKorisnikoveRacune(korisnikId);
+            pozivUnosa.enqueue(new Callback<List<Racun>>() {
+                @Override
+                public void onResponse(Call<List<Racun>> call, Response<List<Racun>> response) {
+                    for(Racun racun: response.body()){
+                        MyDatabase.getInstance(context).getRacunDAO().UnosRacuna(racun);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Racun>> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+    private boolean ProvjeraPostojanostiRacunaUBazi() {
+        return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
     }
 }
