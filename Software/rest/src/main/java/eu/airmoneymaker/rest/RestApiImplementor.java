@@ -6,6 +6,7 @@ import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -73,4 +74,23 @@ public interface RestApiImplementor {
     //KategorijaTransakcije
     @GET("kategorijaTransakcije/index.php?query=getall")
     Call<List<KategorijaTransakcije>>DohvatiSveKategorijeTransakcije();
+
+    @Multipart
+    @POST("upload/upload.php?query=insert")
+    Call<Void> UnesiTransakciju(@Part("iznos") RequestBody iznos,
+                                @Part("datum") RequestBody datum,
+                                @Part("racunTerecenja") RequestBody racunTerecenja,
+                                @Part("racunPrijenosa") RequestBody racunPrijenosa,
+                                @Part("tipTransakcije") RequestBody tipTransakcije,
+                                @Part MultipartBody.Part memo,
+                                @Part("opis") RequestBody opis,
+                                @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
+                                @Part("ikona") RequestBody ikona,
+                                @Part("korisnik") RequestBody korisnik,
+                                @Part("intervalPonavljanja") RequestBody intervalPonavljanja,
+                                @Part("kategorijaTransakcije") RequestBody kategorijaTransakcije,
+                                @Part("placenTrosak") RequestBody placenTrosak
+    );
+
+
 }

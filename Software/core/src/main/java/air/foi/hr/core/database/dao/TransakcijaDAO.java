@@ -11,6 +11,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import air.foi.hr.core.entiteti.Transakcija;
+import retrofit2.http.Multipart;
 
 @Dao
 public interface TransakcijaDAO {
@@ -33,4 +34,6 @@ public interface TransakcijaDAO {
 
     @Query("SELECT * from transakcija WHERE ponavljajuciTrosak=:ponTrosak")
     List<Transakcija> DohvatiTransakcijePonavljajucegTroska(boolean ponTrosak);
+
+
 }
