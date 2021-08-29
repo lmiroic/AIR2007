@@ -36,6 +36,15 @@ import air.foi.hr.moneymaker.manager.CustomAdapterAddRacun;
 import air.foi.hr.moneymaker.manager.RacunAddModel;
 import air.foi.hr.moneymaker.modul.kategorije.CategoryAddDialog;
 import air.foi.hr.moneymaker.session.Sesija;
+import eu.airmoneymaker.rest.RestApiImplementor;
+import eu.airmoneymaker.rest.RetrofitInstance;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.Part;
 
 public class RacunAddDialog extends Dialog implements View.OnClickListener {
     private EditText imeRacuna, stanjeRacuna;
@@ -98,6 +107,20 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                     if (onDialogRacunResult != null) {
                         Racun r = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
                         MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiRacun(r);
+                        Retrofit retrofit = RetrofitInstance.getInstance();
+                        RestApiImplementor api=retrofit.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa=api.ObrisiRacun(RequestBody.create(MediaType.parse("text/plain"),String.valueOf(racun.getId())));
+                        pozivUnosa.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Log.e("Racun", "izbrisan racun");
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+
+                            }
+                        });
                         Toast.makeText(getContext(), "Izbrisali ste račun:  " + r.getNaziv(), Toast.LENGTH_SHORT).show();
                         onDialogRacunResult.finish();
                     }
@@ -150,7 +173,6 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Log.e("KLIKNUO", "kliknul si");
             if(racun==null) {
                 if (onDialogRacunResult != null) {
                     if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
@@ -161,11 +183,27 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                         noviRacun.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
                         noviRacun.setValuta(odabranaValuta);
                         MyDatabase.getInstance(getContext()).getRacunDAO().UnosRacuna(noviRacun);
+                        Retrofit r= RetrofitInstance.getInstance();
+                        RestApiImplementor api=r.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa = api.UnesiRacun(RequestBody.create(MediaType.parse("text/plain"),imeRacuna.getText().toString()),
+                                RequestBody.create(MediaType.parse("text/plain"),stanjeRacuna.getText().toString()),
+                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(odabranaValuta)),
+                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna())),
+                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(Sesija.getInstance().getKorisnik().getId())
+                        ));
+                        pozivUnosa.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Log.e("Racun","unesen novi racun baza");
+                            }
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                            }
+                        });
                         Toast.makeText(getContext(), "Unijeli ste novi račun: " + noviRacun.getNaziv(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();
                     }
-
                     onDialogRacunResult.finish();
                 }
                 RacunAddDialog.this.dismiss();
@@ -181,6 +219,20 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                         r.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
                         r.setValuta(odabranaValuta);
                         MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(r);
+                        Retrofit retrofit= RetrofitInstance.getInstance();
+                        RestApiImplementor api=retrofit.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa = api.AzurirajRacun(r.getId(), RequestBody.create(MediaType.parse("text/plain"), "naziv"), RequestBody.create(MediaType.parse("text/plain"), String.valueOf(imeRacuna.getText())));
+                        pozivUnosa.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                Log.e("Racun", "azuriran racun u bazi");
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+
+                            }
+                        });
                         Toast.makeText(getContext(), "Ažuriran račun " + r.getNaziv(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_LONG).show();

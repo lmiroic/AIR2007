@@ -8,10 +8,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.KorisnikPostavkeViewModel;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.session.Sesija;
 
 public class KorisnikPostavkeFragment extends Fragment {
     private KorisnikPostavkeViewModel viewModel;
@@ -19,6 +22,7 @@ public class KorisnikPostavkeFragment extends Fragment {
     private Button btnPromjeniValutu;
     private Button btnCiljevi;
     private ImageButton btnBack;
+    private Button btnOdjava;
 
     private View view;
 
@@ -69,6 +73,17 @@ public class KorisnikPostavkeFragment extends Fragment {
                 FragmentSwitcher.ShowFragment(FragmentName.CILJEVI,getFragmentManager());
             }
         });
+
+        btnOdjava=view.findViewById(R.id.btnOdjava);
+        btnOdjava.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Sesija.getInstance().setKorisnik(null);
+                MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiSveRacune();
+                FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
+            }
+        });
+
 
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(KorisnikPostavkeViewModel.class);

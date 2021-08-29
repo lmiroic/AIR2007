@@ -34,4 +34,7 @@ public interface RacunDAO {
 
     @Delete
     public void IzbrisiRacun(Racun... racuni);
+
+    @Query("DELETE from racun")
+    public void IzbrisiSveRacune();
 }

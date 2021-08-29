@@ -159,7 +159,7 @@ public class AnalizaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_analiza, container, false);
-        mockData();
+        //mockData();
         InicijalizacijaVarijabli();
         bojeIzmjena(buttonTrošak,buttonPrihod,buttonOboje);
         spinnerValuta(2);
@@ -1007,7 +1007,7 @@ public class AnalizaFragment extends Fragment {
 
         }
 
-        else { MockData.writeAllR(context);}
+        //else { MockData.writeAllR(context);}
 
 
 

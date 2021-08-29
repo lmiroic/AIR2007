@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HNBApiInstance {
     private static Retrofit INSTANCE;
-    private static final String BASE_URL="http://api.hnb.hr/tecajn/";
+    private static final String BASE_URL="https://api.hnb.hr/tecajn/";
 
     public static Retrofit getInstance(){
         if(INSTANCE==null){

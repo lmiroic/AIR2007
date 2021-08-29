@@ -1,6 +1,7 @@
 package air.foi.hr.moneymaker.fragmenti;
 
 import android.app.AlertDialog;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -42,6 +45,8 @@ public class RacunFragment extends Fragment {
     private RacunViewModel viewModel;
     private View view;
     RecyclerView recyclerView;
+    private ImageButton btnPostavke;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,13 @@ public class RacunFragment extends Fragment {
     }
 
     private void InicijalizacijaVarijabli() {
+        btnPostavke=view.findViewById(R.id.imgBtnPostavke);
+        btnPostavke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+            }
+        });
         ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
         viewModel=new ViewModelProvider(this,factory).get(RacunViewModel.class);
         viewModel.konstruktor(getContext(), (BottomNavigationView) view.findViewById(R.id.bottomNav));
