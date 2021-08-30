@@ -46,13 +46,14 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
     public CiljeviAddDialog(@NonNull Context context) {
         super(context);
     }
-    public CiljeviAddDialog(@NonNull Context context,CiljeviFragment ciljeviFragment) {
+
+    public CiljeviAddDialog(@NonNull Context context, CiljeviFragment ciljeviFragment) {
         super(context);
-        this.ciljeviFragment=ciljeviFragment;
-        this.ciljeviFragment.ciljeviAddDialog=this;
+        this.ciljeviFragment = ciljeviFragment;
+        this.ciljeviFragment.ciljeviAddDialog = this;
     }
 
-    public void SetOnDialogCiljeciResult(OnDialogCiljeviResult onDialogCiljeviResult) {
+    public void SetOnDialogCiljeviResult(OnDialogCiljeviResult onDialogCiljeviResult) {
         this.onDialogCiljeviResult = onDialogCiljeviResult;
     }
 
@@ -61,13 +62,13 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_ciljevi);
-        buttonDodajCilj =findViewById(R.id.btnDodajCilj);
-        nazivCilja=findViewById(R.id.txtDodajNazivCilja);
-        datumCilja=findViewById(R.id.txtDatumCilja);
+        buttonDodajCilj = findViewById(R.id.btnDodajCilj);
+        nazivCilja = findViewById(R.id.txtDodajNazivCilja);
+        datumCilja = findViewById(R.id.txtDatumCilja);
         datumCilja.setInputType(InputType.TYPE_CLASS_DATETIME);
-        iznosCilja=findViewById(R.id.txtDodajIznosCilja);
+        iznosCilja = findViewById(R.id.txtDodajIznosCilja);
         iznosCilja.setInputType(InputType.TYPE_CLASS_NUMBER);
-        kategorijeCilja=findViewById(R.id.spinnerDodajKategorijuCilja);
+        kategorijeCilja = findViewById(R.id.spinnerDodajKategorijuCilja);
 
         PostaviSpinnerKategorijaCilja();
 
@@ -83,9 +84,6 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
 
             }
         });
-
-
-
     }
 
     private void PostaviSpinnerKategorijaCilja() {
@@ -103,19 +101,19 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.btnDodajCilj:
-                if(!nazivCilja.getText().toString().isEmpty()&&!datumCilja.getText().toString().isEmpty()&&!iznosCilja.getText().toString().isEmpty()){
-                    float iznos=Float.parseFloat(iznosCilja.getText().toString());
-                    String datum=datumCilja.getText().toString();
-                    String naziv=nazivCilja.getText().toString();
+                if (!nazivCilja.getText().toString().isEmpty() && !datumCilja.getText().toString().isEmpty() && !iznosCilja.getText().toString().isEmpty()) {
+                    float iznos = Float.parseFloat(iznosCilja.getText().toString());
+                    String datum = datumCilja.getText().toString();
+                    String naziv = nazivCilja.getText().toString();
                     Date ciljaniDatum = null;
                     try {
                         ciljaniDatum = formaterDate.parse(datum);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Ciljevi noviCilj=new Ciljevi();
+                    Ciljevi noviCilj = new Ciljevi();
                     noviCilj.setDatum(formaterDate.format(ciljaniDatum));
                     noviCilj.setIznos(iznos);
                     noviCilj.setKategorija(odabranaKategorijaTransakcijeCilja.getId());
@@ -123,8 +121,7 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
                     noviCilj.setNaziv(naziv);
                     noviCilj.setOstvarenCilj(false);
                     MyDatabase.getInstance(getContext()).getCiljeviDAO().UnosCilja(noviCilj);
-                }
-                else
+                } else
                     Toast.makeText(v.getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_SHORT).show();
                 CiljeviAddDialog.this.dismiss();
                 break;

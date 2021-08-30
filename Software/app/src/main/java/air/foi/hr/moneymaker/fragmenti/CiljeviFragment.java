@@ -24,13 +24,11 @@ import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Ciljevi;
-import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.ciljevi.OnDialogCiljeviResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.CiljeviViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterCiljevi;
-import air.foi.hr.moneymaker.manager.CustomAdapterTransakcije;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.ciljevi.CiljeviAddDialog;
 
@@ -99,7 +97,7 @@ public class CiljeviFragment extends Fragment implements View.OnClickListener {
     }
     private void dialogOpen(){
         CiljeviAddDialog ciljeviAddDialog=new CiljeviAddDialog(getContext(),this);
-        ciljeviAddDialog.SetOnDialogCiljeciResult(new OnDialogCiljeviResult() {
+        ciljeviAddDialog.SetOnDialogCiljeviResult(new OnDialogCiljeviResult() {
             @Override
             public void finish() {
 

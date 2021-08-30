@@ -29,6 +29,7 @@ import java.util.List;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
 import air.foi.hr.moneymaker.R;
@@ -51,24 +52,26 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
     private Spinner valuta;
     private ImageView ikona;
     private RecyclerView recyclerView;
-    private Button unesi,obrisi;
+    private Button unesi, obrisi;
     private OnDialogRacunResult onDialogRacunResult;
-    private String odabranaValuta="";
+    private String odabranaValuta = "";
     private Racun racun;
-    public String ikoneRacuna[]={"ic_money","ic_credit_card", "ic_maestro", "ic_visa","ic_mastercard","ic_paypal","ic_american", "ic_kasica"};
+    public String ikoneRacuna[] = {"ic_money", "ic_credit_card", "ic_maestro", "ic_visa", "ic_mastercard", "ic_paypal", "ic_american", "ic_kasica"};
     private ArrayList<RacunAddModel> arrayList;
     private CustomAdapterAddRacun adapterAddRacun;
+
     public RacunAddDialog(@NonNull Context context) {
         super(context);
     }
+
     public RacunAddDialog(@NonNull Context context, Racun racun) {
         super(context);
-        this.racun=racun;
+        this.racun = racun;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnDodajRacun:
                 new OkListenerAddRacun().onClick(v);
                 break;
@@ -85,15 +88,15 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_racun_add);
-        valuta=findViewById(R.id.spinerAddValuta);
-        unesi=findViewById(R.id.btnDodajRacun);
-        obrisi=findViewById(R.id.btnIzbrisiRacun);
+        valuta = findViewById(R.id.spinerAddValuta);
+        unesi = findViewById(R.id.btnDodajRacun);
+        obrisi = findViewById(R.id.btnIzbrisiRacun);
         unesi.setOnClickListener(this);
-        imeRacuna=findViewById(R.id.txtAddImeRacuna);
-        stanjeRacuna=findViewById(R.id.txtAddStanje);
+        imeRacuna = findViewById(R.id.txtAddImeRacuna);
+        stanjeRacuna = findViewById(R.id.txtAddStanje);
         PostaviRecycleView();
         PostaviSpinner();
-        if(racun!=null){
+        if (racun != null) {
             imeRacuna.setText(racun.getNaziv());
             valuta.setSelection(OdaberiSpinner());
             stanjeRacuna.setText(String.valueOf(racun.getPocetno_stanje()));
@@ -108,8 +111,8 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                         Racun r = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
                         MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiRacun(r);
                         Retrofit retrofit = RetrofitInstance.getInstance();
-                        RestApiImplementor api=retrofit.create(RestApiImplementor.class);
-                        Call<Void> pozivUnosa=api.ObrisiRacun(RequestBody.create(MediaType.parse("text/plain"),String.valueOf(racun.getId())));
+                        RestApiImplementor api = retrofit.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa = api.ObrisiRacun(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racun.getId())));
                         pozivUnosa.enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -134,22 +137,24 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-    public void setOnDialogRacunResult(OnDialogRacunResult onDialogRacunResult){
+
+    public void setOnDialogRacunResult(OnDialogRacunResult onDialogRacunResult) {
         this.onDialogRacunResult = onDialogRacunResult;
 
     }
-    private void PostaviSpinner(){
+
+    private void PostaviSpinner() {
         final List<Valuta> valute = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiSveValute();
         final List<String> valutaZaSpinner = new ArrayList<>();
-        for(Valuta v:valute){
+        for (Valuta v : valute) {
             valutaZaSpinner.add(v.getNaziv());
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),R.layout.spinner_valuta_racuna,valutaZaSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_valuta_racuna, valutaZaSpinner);
         valuta.setAdapter(adapter);
         valuta.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                odabranaValuta=valutaZaSpinner.get(position);
+                odabranaValuta = valutaZaSpinner.get(position);
             }
 
             @Override
@@ -159,9 +164,9 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
         });
     }
 
-    private List<RacunAddModel> VratiListuIkona(){
-        arrayList=new ArrayList<>();
-        for(int i=0; i<ikoneRacuna.length; i++) {
+    private List<RacunAddModel> VratiListuIkona() {
+        arrayList = new ArrayList<>();
+        for (int i = 0; i < ikoneRacuna.length; i++) {
             RacunAddModel racunAddModel = new RacunAddModel();
             racunAddModel.setIkonaRacuna(ikoneRacuna[i]);
             arrayList.add(racunAddModel);
@@ -169,11 +174,11 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
         return arrayList;
     }
 
-    private class OkListenerAddRacun implements View.OnClickListener{
+    private class OkListenerAddRacun implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            if(racun==null) {
+            if (racun == null) {
                 if (onDialogRacunResult != null) {
                     if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
                         Racun noviRacun = new Racun();
@@ -183,19 +188,20 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                         noviRacun.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
                         noviRacun.setValuta(odabranaValuta);
                         MyDatabase.getInstance(getContext()).getRacunDAO().UnosRacuna(noviRacun);
-                        Retrofit r= RetrofitInstance.getInstance();
-                        RestApiImplementor api=r.create(RestApiImplementor.class);
-                        Call<Void> pozivUnosa = api.UnesiRacun(RequestBody.create(MediaType.parse("text/plain"),imeRacuna.getText().toString()),
-                                RequestBody.create(MediaType.parse("text/plain"),stanjeRacuna.getText().toString()),
-                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(odabranaValuta)),
-                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna())),
-                                RequestBody.create(MediaType.parse("text/plain"),String.valueOf(Sesija.getInstance().getKorisnik().getId())
-                        ));
+                        Retrofit r = RetrofitInstance.getInstance();
+                        RestApiImplementor api = r.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa = api.UnesiRacun(RequestBody.create(MediaType.parse("text/plain"), imeRacuna.getText().toString()),
+                                RequestBody.create(MediaType.parse("text/plain"), stanjeRacuna.getText().toString()),
+                                RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranaValuta)),
+                                RequestBody.create(MediaType.parse("text/plain"), String.valueOf(adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna())),
+                                RequestBody.create(MediaType.parse("text/plain"), String.valueOf(Sesija.getInstance().getKorisnik().getId())
+                                ));
                         pozivUnosa.enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
-                                Log.e("Racun","unesen novi racun baza");
+                                Log.e("Racun", "unesen novi racun baza");
                             }
+
                             @Override
                             public void onFailure(Call<Void> call, Throwable t) {
                             }
@@ -207,11 +213,10 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                     onDialogRacunResult.finish();
                 }
                 RacunAddDialog.this.dismiss();
-            }
-            else{
+            } else {
                 if (onDialogRacunResult != null) {
                     if (!imeRacuna.getText().toString().equals("") && !stanjeRacuna.getText().toString().equals("")) {
-                        Racun r=MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
+                        Racun r = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(racun.getId());
                         r.setKorisnik_id(Sesija.getInstance().getKorisnik().getId());
                         r.setId(r.getId());
                         r.setNaziv(imeRacuna.getText().toString());
@@ -219,9 +224,9 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
                         r.setPocetno_stanje(Float.parseFloat(stanjeRacuna.getText().toString()));
                         r.setValuta(odabranaValuta);
                         MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(r);
-                        Retrofit retrofit= RetrofitInstance.getInstance();
-                        RestApiImplementor api=retrofit.create(RestApiImplementor.class);
-                        Call<Void> pozivUnosa = api.AzurirajRacun(r.getId(), RequestBody.create(MediaType.parse("text/plain"), "naziv"), RequestBody.create(MediaType.parse("text/plain"), String.valueOf(imeRacuna.getText())));
+                        Retrofit retrofit = RetrofitInstance.getInstance();
+                        RestApiImplementor api = retrofit.create(RestApiImplementor.class);
+                        Call<Void> pozivUnosa = api.AzurirajRacun(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(r.getId())), RequestBody.create(MediaType.parse("text/plain"), imeRacuna.getText().toString()), RequestBody.create(MediaType.parse("text/plain"), (stanjeRacuna.getText().toString())), RequestBody.create(MediaType.parse("text/plain"), (odabranaValuta)), RequestBody.create(MediaType.parse("text/plain"), (adapterAddRacun.arrayList.get(adapterAddRacun.focusedItemRacun).getRawIkonaRacuna())), RequestBody.create(MediaType.parse("text/plain"), (String.valueOf(Sesija.getInstance().getKorisnik().getId()))));
                         pozivUnosa.enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -245,28 +250,32 @@ public class RacunAddDialog extends Dialog implements View.OnClickListener {
 
         }
     }
-    private void PostaviRecycleView(){
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerViewAddRacun);
+
+    private void PostaviRecycleView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewAddRacun);
         CustomAdapterAddRacun adapter = new CustomAdapterAddRacun(getContext(), VratiListuIkona());
         adapterAddRacun = adapter;
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
     }
-    private int OdaberiSpinner(){
-        for(int i =0; i<valuta.getCount(); i++){
-            if(valuta.getItemAtPosition(i).toString().equalsIgnoreCase(racun.getValuta())){
+
+    private int OdaberiSpinner() {
+        for (int i = 0; i < valuta.getCount(); i++) {
+            if (valuta.getItemAtPosition(i).toString().equalsIgnoreCase(racun.getValuta())) {
                 return i;
             }
         }
         return 0;
     }
-    private void oznaciIkonu(String ikona){
-        adapterAddRacun.focusedItemRacun=dohvatiIndexIkone(ikona);
+
+    private void oznaciIkonu(String ikona) {
+        adapterAddRacun.focusedItemRacun = dohvatiIndexIkone(ikona);
     }
-    private int dohvatiIndexIkone(String ikona){
-        for(int i=0; i<ikoneRacuna.length; i++)
-            if(ikoneRacuna[i].equalsIgnoreCase(ikona)){
+
+    private int dohvatiIndexIkone(String ikona) {
+        for (int i = 0; i < ikoneRacuna.length; i++)
+            if (ikoneRacuna[i].equalsIgnoreCase(ikona)) {
                 return i;
             }
         return 0;
