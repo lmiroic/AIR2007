@@ -3,6 +3,7 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,14 @@ import air.foi.hr.moneymaker.manager.CustomAdapterTransakcije;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionPrihodDialog;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionPrijenosDialog;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionTrosakDialog;
+import eu.airmoneymaker.rest.RestApiImplementor;
+import eu.airmoneymaker.rest.RetrofitInstance;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class TransakcijaFragment extends Fragment implements View.OnClickListener {
@@ -230,6 +239,19 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
                 final Transakcija transakcija1 = customAdapterTransakcije.getTransactionAtPosition(viewHolder.getAdapterPosition());
                 customAdapterTransakcije.removeTransactionAtPosition(viewHolder.getAdapterPosition());
                 MyDatabase.getInstance(getContext()).getTransakcijaDAO().IzbrisiTransakciju(transakcija1);
+                Retrofit retrofit = RetrofitInstance.getInstance();
+                RestApiImplementor api = retrofit.create(RestApiImplementor.class);
+                Call<Void> pozivUnosa = api.ObrisiTransakciju(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transakcija1.getId())));
+                pozivUnosa.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.e("Transakcija", "Izbrisana transakcija");
+                    }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
                 Snackbar.make(recyclerView, "Izbrisana je transakcija " + transakcija1.getOpis(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         }).attachToRecyclerView(recyclerView);

@@ -19,18 +19,32 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.fragmenti.TransakcijaFragment;
 import air.foi.hr.moneymaker.manager.CustomAdapterTransakcije;
 import air.foi.hr.moneymaker.session.Sesija;
+import eu.airmoneymaker.rest.RestApiImplementor;
+import eu.airmoneymaker.rest.RetrofitInstance;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class TransactionPrihodDialog extends Dialog implements android.view.View.OnClickListener {
 
@@ -49,6 +63,9 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
     private TransakcijaFragment transakcijaFragment;
     private KategorijaTransakcije odabranaKategorijaTransakcije;
     private Racun odabraniRacun;
+    private float iznosTransakcije;
+
+    SimpleDateFormat formaterDate = new SimpleDateFormat("yyyy-MM-dd");
 
     public TransactionPrihodDialog(@NonNull Context context) {
         super(context);
@@ -97,6 +114,8 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
         btnAzurirajPrihod.setVisibility(View.INVISIBLE);
 
         if (transakcija != null) {
+            btnSlikajPrihod.setEnabled(false);
+            btnSlikajPrihod.setVisibility(View.INVISIBLE);
             btnUreduPrihod.setEnabled(false);
             btnUreduPrihod.setVisibility(View.INVISIBLE);
 
@@ -108,6 +127,7 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
             opisPrihod.setText(transakcija.getOpis());
             odabirKategorijePrihod.setSelection(OdaberiSpinnerKategorije());
             odabirRacunaPrihod.setSelection(OdaberiSpinnerRacuna());
+            iznosTransakcije=transakcija.getIznos();
 
             btnAzurirajPrihod.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -116,20 +136,80 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
                         float iznos = Float.parseFloat(iznosPrihod.getText().toString());
                         String datum = datumPrihod.getText().toString();
                         String opis = opisPrihod.getText().toString();
-                        transakcija.setIznos(iznos);
-                        transakcija.setDatum(datum);
-                        transakcija.setOpis(opis);
-                        transakcija.setRacunPrijenosa(odabraniRacun.getId());
-                        transakcija.setTipTransakcije(1);
-                        transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
-                        transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
-                        MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
+                        String formatiraniDatum="";
+                        try {
+                            formatiraniDatum=formaterDate.format(formaterDate.parse(datum));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (transakcija.getIznos() <= iznos) {
+                            transakcija.setIznos(iznos);
+                            transakcija.setDatum(formatiraniDatum);
+                            transakcija.setOpis(opis);
+                            transakcija.setRacunPrijenosa(odabraniRacun.getId());
+                            transakcija.setTipTransakcije(1);
+                            transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
+                            transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
+                            MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
 
-                        float pocetnoStanje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId()).getPocetno_stanje();
-                        odabraniRacun.setPocetno_stanje(pocetnoStanje + iznos);
-                        MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabraniRacun);
-                        Toast.makeText(v.getContext(), "Uspješno ažurirana transakcija prihoda", Toast.LENGTH_SHORT).show();
-                        TransactionPrihodDialog.this.dismiss();
+                            RequestBody requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transakcija.getId()));
+                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                            RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), formatiraniDatum);
+                            RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(0));
+                            RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabraniRacun.getId()));
+                            RequestBody requestTipTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(TipTransakcije.PRIHOD));
+                            RequestBody requestPonavljajuciTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+                            RequestBody requestIntervalPonavljanja = RequestBody.create(MediaType.parse("text/plain"), "");
+                            RequestBody requestMemo = RequestBody.create(MediaType.parse("text/plain"), transakcija.getMemo() != null ? transakcija.getMemo() : "");
+                            RequestBody requestOpis = RequestBody.create(MediaType.parse("text/plain"), opis);
+                            RequestBody requestIkona = RequestBody.create(MediaType.parse("text/plain"), "");
+                            RequestBody requestKorisnik = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(Sesija.getInstance().getKorisnik().getId()));
+                            RequestBody requestKategorijaTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranaKategorijaTransakcije.getId()));
+                            RequestBody requestPlacenTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+
+                            AzurirajTransakcijuUBazi(requestId, requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak);
+
+                            float pocetnoStanje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId()).getPocetno_stanje();
+                            odabraniRacun.setPocetno_stanje(pocetnoStanje + (iznos - iznosTransakcije));
+                            MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabraniRacun);
+                            AzurirajRacunUBazi(odabraniRacun);
+                            Toast.makeText(v.getContext(), "Uspješno ažurirana transakcija prihoda", Toast.LENGTH_SHORT).show();
+                            TransactionPrihodDialog.this.dismiss();
+                        }
+                        else{
+                            transakcija.setIznos(iznos);
+                            transakcija.setDatum(formatiraniDatum);
+                            transakcija.setOpis(opis);
+                            transakcija.setRacunPrijenosa(odabraniRacun.getId());
+                            transakcija.setTipTransakcije(1);
+                            transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
+                            transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
+                            MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
+
+                            RequestBody requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transakcija.getId()));
+                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                            RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), formatiraniDatum);
+                            RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(0));
+                            RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabraniRacun.getId()));
+                            RequestBody requestTipTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(TipTransakcije.PRIHOD));
+                            RequestBody requestPonavljajuciTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+                            RequestBody requestIntervalPonavljanja = RequestBody.create(MediaType.parse("text/plain"), "");
+                            RequestBody requestMemo = RequestBody.create(MediaType.parse("text/plain"), transakcija.getMemo() != null ? transakcija.getMemo() : "");
+                            RequestBody requestOpis = RequestBody.create(MediaType.parse("text/plain"), opis);
+                            RequestBody requestIkona = RequestBody.create(MediaType.parse("text/plain"), "");
+                            RequestBody requestKorisnik = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(Sesija.getInstance().getKorisnik().getId()));
+                            RequestBody requestKategorijaTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranaKategorijaTransakcije.getId()));
+                            RequestBody requestPlacenTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+
+                            AzurirajTransakcijuUBazi(requestId, requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak);
+
+                            float pocetnoStanje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabraniRacun.getId()).getPocetno_stanje();
+                            odabraniRacun.setPocetno_stanje(pocetnoStanje - ( iznosTransakcije-iznos));
+                            MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabraniRacun);
+                            AzurirajRacunUBazi(odabraniRacun);
+                            Toast.makeText(v.getContext(), "Uspješno ažurirana transakcija prihoda", Toast.LENGTH_SHORT).show();
+                            TransactionPrihodDialog.this.dismiss();
+                        }
                     }
                 }
             });
@@ -205,6 +285,60 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
         odabirRacunaPrihod.setAdapter(adapter);
     }
 
+    private void AzurirajTransakcijuUBazi(RequestBody requestId, RequestBody requestIznos, RequestBody requestDatum, RequestBody requestRacunTerecenja, RequestBody requestRacunPrijenosa, RequestBody requestTipTransakcije, RequestBody requestMemo, RequestBody requestOpis, RequestBody requestPonavljajuciTrosak, RequestBody requestIkona, RequestBody requestKorisnik, RequestBody requestIntervalPonavljanja, RequestBody requestKategorijaTransakcije, RequestBody requestPlacenTrosak) {
+        Retrofit retrofit = RetrofitInstance.getInstance();
+        RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
+        restApiImplementor.AzurirajTransakciju(requestId, requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("response", t.getMessage(), t);
+
+            }
+        });
+    }
+
+    private void AzurirajRacunUBazi(Racun racunZaAzuriranje) {
+        Retrofit retrofit = RetrofitInstance.getInstance();
+        RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
+        Call<Void> pozivUnosa = restApiImplementor.AzurirajRacun(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje.getId())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getNaziv()), RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje.getPocetno_stanje())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getValuta()), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getIkona()), RequestBody.create(MediaType.parse("text/plain"), (String.valueOf(racunZaAzuriranje.getKorisnik_id()))));
+        pozivUnosa.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.e("Racun", "azuriran racun u bazi");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void UnesiTransakcijuUBazu(Transakcija transakcija, RequestBody requestIznos, RequestBody requestDatum, RequestBody requestRacunTerecenja, RequestBody requestRacunPrijenosa, RequestBody requestTipTransakcije, MultipartBody.Part requestMemo, RequestBody requestOpis, RequestBody requestPonavljajuciTrosak, RequestBody requestIkona, RequestBody requestKorisnik, RequestBody requestIntervalPonavljanja, RequestBody requestKategorijaTransakcije, RequestBody requestPlacenTrosak) {
+        Retrofit retrofit = RetrofitInstance.getInstance();
+        RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
+        restApiImplementor.UnesiTransakciju(requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak).enqueue(new Callback<Transakcija>() {
+            @Override
+            public void onResponse(Call<Transakcija> call, Response<Transakcija> response) {
+                if(response.isSuccessful()){
+                    transakcija.setMemo(response.body().getMemo());
+                    MyDatabase.getInstance(getContext()).getTransakcijaDAO().UnosTransakcije(transakcija);
+                    //MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transakcija> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -228,12 +362,36 @@ public class TransactionPrihodDialog extends Dialog implements android.view.View
                     transakcija.setRacunPrijenosa(odabraniRacun.getId());
                     transakcija.setTipTransakcije(1);
                     transakcija.setKategorijaTransakcije(odabranaKategorijaTransakcije.getId());
-                    MyDatabase.getInstance(getContext()).getTransakcijaDAO().UnosTransakcije(transakcija);
-                    float pocetnoStanje=odabraniRacun.getPocetno_stanje();
-                    odabraniRacun.setPocetno_stanje(pocetnoStanje+iznos);
-                    MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabraniRacun);
-                    Toast.makeText(v.getContext(), "Uspješno unesena transakcija prihoda", Toast.LENGTH_SHORT).show();
-                    this.hide();
+                    transakcija.setKorisnik(Sesija.getInstance().getKorisnik().getId());
+                    transakcija.setIntervalPonavljanja("");
+                    if(transakcijaFragment.slika!=null) {
+
+                        File datotekaSlike = new File(ImageFilePath.getPath(getContext(), transakcijaFragment.slika));
+                        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), datotekaSlike);
+                        RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                        RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), datum);
+                        RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(0));
+                        RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabraniRacun.getId()));
+                        RequestBody requestTipTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(TipTransakcije.PRIHOD));
+                        MultipartBody.Part requestMemo = MultipartBody.Part.createFormData("memo", datotekaSlike.getName(), requestFile);
+                        RequestBody requestOpis = RequestBody.create(MediaType.parse("text/plain"), opis);
+                        RequestBody requestIkona = RequestBody.create(MediaType.parse("text/plain"), "");
+                        RequestBody requestKorisnik = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(Sesija.getInstance().getKorisnik().getId()));
+                        RequestBody requestIntervalPonavljanja = RequestBody.create(MediaType.parse("text/plain"), "");
+                        RequestBody requestKategorijaTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranaKategorijaTransakcije.getId()));
+                        RequestBody requestPlacenTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+                        RequestBody requestPonavljajuciTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
+
+                        UnesiTransakcijuUBazu(transakcija, requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak);
+                        float pocetnoStanje = odabraniRacun.getPocetno_stanje();
+                        odabraniRacun.setPocetno_stanje(pocetnoStanje + iznos);
+                        MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabraniRacun);
+                        AzurirajRacunUBazi(odabraniRacun);
+                        Toast.makeText(v.getContext(), "Uspješno unesena transakcija prihoda", Toast.LENGTH_SHORT).show();
+                        TransactionPrihodDialog.this.dismiss();
+                    }
+                    else
+                        Toast.makeText(v.getContext(),"Morate ucitati sliku transakcije",Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(v.getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_SHORT).show();
                 break;

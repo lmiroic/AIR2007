@@ -14,8 +14,10 @@ import java.util.Objects;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.modul.prijava.KlasicnaPrijava;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
@@ -99,6 +101,7 @@ public class PrijavaViewModel extends ViewModel {
                 } else if (ProvjeraPostojanostiKorisnikaLokalno(account)) {
                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
                     dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
+                    dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
                     FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
                 }
                 else{
@@ -111,6 +114,7 @@ public class PrijavaViewModel extends ViewModel {
                                     ZapisiKorisnikaULokalnuBazu(k);
                                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
                                     dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
+                                    dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
                                     FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
                                     break;
                                 }
@@ -152,7 +156,37 @@ public class PrijavaViewModel extends ViewModel {
             });
         }
     }
+    private void dohvatiSveTransakcijeKorisnika(int korisnik){
+        if(!ProvjeraPostojanostiTransakcijaUBazi()){
+            Retrofit r= RetrofitInstance.getInstance();
+            RestApiImplementor api=r.create(RestApiImplementor.class);
+            final Call<List<Transakcija>> pozivUnosa = api.DohvatiKorisnikoveTransakcije(korisnik);
+            pozivUnosa.enqueue(new Callback<List<Transakcija>>() {
+                @Override
+                public void onResponse(Call<List<Transakcija>> call, Response<List<Transakcija>> response) {
+                    if(response.body()!=null){
+                        for(Transakcija t:response.body()){
+                            MyDatabase.getInstance(context).getTransakcijaDAO().UnosTransakcije(t);
+                        }
+                    }
+                    else
+                        Log.e("Transakcija","Nemaa");
+                }
+
+                @Override
+                public void onFailure(Call<List<Transakcija>> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
     private boolean ProvjeraPostojanostiRacunaUBazi() {
         return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
+    }
+
+    private boolean ProvjeraPostojanostiTransakcijaUBazi() {
+        return MyDatabase.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije().size() > 0 ? true : false;
     }
 }

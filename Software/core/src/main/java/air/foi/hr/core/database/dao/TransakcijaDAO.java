@@ -35,5 +35,11 @@ public interface TransakcijaDAO {
     @Query("SELECT * from transakcija WHERE ponavljajuciTrosak=:ponTrosak")
     List<Transakcija> DohvatiTransakcijePonavljajucegTroska(boolean ponTrosak);
 
+    @Query("SELECT * from transakcija WHERE racunPrijenosa=:racPrijenosa OR racunTerecenja=:racTerecenja")
+    List<Transakcija> DohvatiTransakcijeRacuna(int racPrijenosa,int racTerecenja);
+
+    @Query("DELETE from transakcija")
+    public void IzbrisiSveTransakcije();
+
 
 }
