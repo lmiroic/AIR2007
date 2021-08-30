@@ -57,13 +57,22 @@ function provjeriIntervalPonavljanja(){
 function provjeriKategorijuTransakcije(){
     return (isset($_POST["kategorijaTransakcije"]))?true:false;
 }
+function provjeriPlacenTrosak(){
+    return (isset($_POST["placenTrosak"]))?true:false;
+}
 
 function provjeriPostojanostPodatakaNoveTransakcije(){
-    return (provjeriIznos()&&provjeriDatum()&&provjeriRacunTerecenja()&&provjeriRacunPrijenosa()&&provjeriTipTransakcije()&&provjeriMemo()&&provjeriOpis()&&provjeriPonavljajuciTrosak()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriIntervalPonavljanja()&&provjeriKategorijuTransakcije())?true:false;
+    return (provjeriIznos()&&provjeriDatum()&&provjeriRacunTerecenja()&&provjeriRacunPrijenosa()&&provjeriTipTransakcije()&&provjeriMemo()&&provjeriOpis()&&provjeriPonavljajuciTrosak()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriIntervalPonavljanja()&&provjeriKategorijuTransakcije()&&provjeriPlacenTrosak())?true:false;
 }
+
 function provjeriPostojanostPodatakaAzuriraneTransakcije(){
     return (provjeriID()&&provjeriAtribut()&&provjeriVrijednost())?true:false;
 }
+
+function provjeriPostojanostPodatakaAzuriraneTransakcijeKorisnika(){
+    return (provjeriID()&&provjeriIznos()&&provjeriDatum()&&provjeriRacunTerecenja()&&provjeriRacunPrijenosa()&&provjeriTipTransakcije()&&provjeriMemo()&&provjeriOpis()&&provjeriPonavljajuciTrosak()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriIntervalPonavljanja()&&provjeriKategorijuTransakcije()&&provjeriPlacenTrosak())?true:false;
+}
+
 function kreirajRedakTransakcije($fileMemo){
     $redakTransakcije;
     $redakTransakcije["iznos"]=$_POST["iznos"];
@@ -78,6 +87,7 @@ function kreirajRedakTransakcije($fileMemo){
     $redakTransakcije["korisnik"]=$_POST["korisnik"];
     $redakTransakcije["intervalPonavljanja"]=$_POST["intervalPonavljanja"];
     $redakTransakcije["kategorijaTransakcije"]=$_POST["kategorijaTransakcije"];
+    $redakTransakcije["placenTrosak"]=$_POST["placenTrosak"];
     return $redakTransakcije;
 }
 
@@ -115,8 +125,12 @@ if(isset($_GET["query"])&&$_GET["query"]=="insert"){
                     $folderPath='https://moneymakerair.tk/api/upload/slike/'.$fileNameDate; 
                     $transakcija = kreirajRedakTransakcije($folderPath);
                     $t = new Transakcija($transakcija);
-                    $upit = "INSERT INTO transakcija(iznos,datum,racunTerecenja,racunPrijenosa,tipTransakcije,memo,opis,ponavljajuciTrosak,ikona,korisnik,intervalPonavljanja,kategorijaTransakcije) VALUES (TRIM(BOTH '\"' FROM $t->iznos),TRIM(BOTH '\"' FROM '$t->datum'),TRIM(BOTH '\"' FROM $t->racunTerecenja),TRIM(BOTH '\"' FROM $t->racunPrijenosa),TRIM(BOTH '\"' FROM $t->tipTransakcije),TRIM(BOTH '\"' FROM '$t->memo'),TRIM(BOTH '\"' FROM '$t->opis'),TRIM(BOTH '\"' FROM $t->ponavljajuciTrosak),TRIM(BOTH '\"' FROM '$t->ikona'),TRIM(BOTH '\"' FROM $t->korisnik),TRIM(BOTH '\"' FROM '$t->intervalPonavljanja'),TRIM(BOTH '\"' FROM $t->kategorijaTransakcije))";
+                    $upit = "INSERT INTO transakcija(iznos,datum,racunTerecenja,racunPrijenosa,tipTransakcije,memo,opis,ponavljajuciTrosak,ikona,korisnik,intervalPonavljanja,kategorijaTransakcije,placenTrosak) VALUES (TRIM(BOTH '\"' FROM $t->iznos),TRIM(BOTH '\"' FROM '$t->datum'),TRIM(BOTH '\"' FROM $t->racunTerecenja),TRIM(BOTH '\"' FROM $t->racunPrijenosa),TRIM(BOTH '\"' FROM $t->tipTransakcije),TRIM(BOTH '\"' FROM '$t->memo'),TRIM(BOTH '\"' FROM '$t->opis'),TRIM(BOTH '\"' FROM $t->ponavljajuciTrosak),TRIM(BOTH '\"' FROM '$t->ikona'),TRIM(BOTH '\"' FROM $t->korisnik),TRIM(BOTH '\"' FROM '$t->intervalPonavljanja'),TRIM(BOTH '\"' FROM $t->kategorijaTransakcije),TRIM(BOTH '\"' FROM '$t->placenTrosak'))";
                     $rezultatObrade = $baza->updateDB($upit);
+                    header('Content-type: application/json');
+                    http_response_code(200); 
+                    echo json_encode($t);
+                    
                 }
                 else{        
                     $errorMSG = json_encode(array("message" => "Sorry, your file is too large, please upload 5 MB size", "status" => false));    
@@ -145,6 +159,7 @@ if(isset($_GET["query"])&&$_GET["query"]=="insert"){
     }*/
 
 }
+
 if(isset($_GET["query"])&&$_GET["query"]=="getall")
 {
     $sveTransakcije=array();
@@ -158,6 +173,7 @@ if(isset($_GET["query"])&&$_GET["query"]=="getall")
     http_response_code(200); 
     echo json_encode($sveTransakcije);
 }  
+
 if(isset($_GET["query"])&&$_GET["query"]=="selectOneTransakcija"&&isset($_GET["id"]))
 {
     $redakTransakcije=array();
@@ -172,6 +188,22 @@ if(isset($_GET["query"])&&$_GET["query"]=="selectOneTransakcija"&&isset($_GET["i
     http_response_code(200); 
     echo json_encode($redakTransakcije);
 }
+
+if(isset($_GET["query"])&&$_GET["query"]=="selectTransakcijeKorisnika"&&isset($_GET["korisnik"]))
+{
+    $sveTransakcijeKorisnika=array();
+    $korisnik=$_GET["korisnik"];
+    $DohvatIzBaze=$baza->selectDB("SELECT * from transakcija where korisnik=$korisnik");
+    while($redak=mysqli_fetch_array($DohvatIzBaze))
+    {
+        $t=new Transakcija($redak,true);
+        array_push($sveTransakcijeKorisnika,$t->getJson());
+    }
+    header('Content-type: application/json');
+    http_response_code(200); 
+    echo json_encode($sveTransakcijeKorisnika);
+}
+
 if(isset($_GET["query"])&&$_GET["query"]=="update"&&provjeriPostojanostPodatakaAzuriraneTransakcije()){
 
     $atribut = $_POST["atribut"];
@@ -180,6 +212,27 @@ if(isset($_GET["query"])&&$_GET["query"]=="update"&&provjeriPostojanostPodatakaA
     $upit = "UPDATE transakcija SET $atribut='{$vrijednost}' WHERE id=$identifikator";
     $baza->updateDB($upit);
 }
+
+if(isset($_GET["query"])&&$_GET["query"]=="updateTransakcije"&&provjeriPostojanostPodatakaAzuriraneTransakcijeKorisnika()){
+
+    $id = $_POST["id"];
+    $iznos = $_POST["iznos"];
+    $datum = $_POST["datum"];
+    $racunTerecenja = $_POST["racunTerecenja"];
+    $racunPrijenosa = $_POST["racunPrijenosa"];
+    $tipTransakcije = $_POST["tipTransakcije"];
+    $memo = $_POST["memo"];
+    $opis = $_POST["opis"];
+    $ponavljajuciTrosak = $_POST["ponavljajuciTrosak"];
+    $ikona = $_POST["ikona"];
+    $korisnik = $_POST["korisnik"];
+    $intervalPonavljanja = $_POST["intervalPonavljanja"];
+    $kategorijaTransakcije = $_POST["kategorijaTransakcije"];
+    $placenTrosak = $_POST["placenTrosak"];
+    $upit = "UPDATE transakcija SET iznos=$iznos,datum='$datum',racunTerecenja=$racunTerecenja,racunPrijenosa=$racunPrijenosa,tipTransakcije=$tipTransakcije,memo='$memo',opis='$opis',ponavljajuciTrosak=$ponavljajuciTrosak,ikona='$ikona',korisnik=$korisnik,intervalPonavljanja='$intervalPonavljanja',kategorijaTransakcije=$kategorijaTransakcije,placenTrosak=$placenTrosak WHERE id=$id";
+    $baza->updateDB($upit);
+}
+
 if(isset($_GET["query"])&&$_GET["query"]=="delete"&&provjeriID()){
     $identifikator = $_POST["id"];
     $upit = "DELETE FROM transakcija WHERE id=$identifikator";
