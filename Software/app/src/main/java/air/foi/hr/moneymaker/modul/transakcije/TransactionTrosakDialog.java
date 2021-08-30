@@ -100,7 +100,7 @@ public class TransactionTrosakDialog extends Dialog implements android.view.View
         btnAzurirajTrosak.setEnabled(false);
         switchTroska = findViewById(R.id.switchTroska);
         datumTrosak = findViewById(R.id.txtDatumTrosak);
-        datumTrosak.setInputType(InputType.TYPE_CLASS_DATETIME);
+        datumTrosak.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
         iznosTrosak = findViewById(R.id.txtOdaberiIznosTrosak);
         iznosTrosak.setInputType(InputType.TYPE_CLASS_NUMBER);
         opisTrosak = findViewById(R.id.txtOpisTrosak);

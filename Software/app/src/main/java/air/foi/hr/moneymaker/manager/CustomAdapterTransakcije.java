@@ -57,10 +57,11 @@ public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapter
     @Override
     public void onBindViewHolder(@NonNull CustomAdapterTransakcije.viewHolder holder, int position) {
         KategorijaTransakcije kategorijaTransakcije= MyDatabase.getInstance(context).getKategorijaTransakcijeDAO().DohvatiKategorijuTransakcije(((Transakcija) arrayList.get(position)).getKategorijaTransakcije());
+        Transakcija transakcija= MyDatabase.getInstance(context).getTransakcijaDAO().DohvatiTransakciju(((Transakcija ) arrayList.get(position)).getId());
         if(kategorijaTransakcije!=null){
             holder.nazivTransakcije.setText(kategorijaTransakcije.getNaziv());
             holder.sumaTransakcije.setText(String.valueOf(((Transakcija) arrayList.get(position)).getIznos()));
-            holder.nazivRacuna.setText(((Transakcija) arrayList.get(position)).getOpis());
+            holder.nazivRacuna.setText(transakcija.getOpis());
             holder.ikonaTransakcije.setImageResource(kategorijaTransakcije.getCategoryIcon(context));
             holder.cardViewTransakcije.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,12 +119,13 @@ public class CustomAdapterTransakcije extends RecyclerView.Adapter<CustomAdapter
         TextView nazivRacuna;
         CardView cardViewTransakcije;
 
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             nazivTransakcije=(TextView) itemView.findViewById(R.id.nazivKategorije);
             sumaTransakcije=(TextView) itemView.findViewById(R.id.iznosTransakcije);
             ikonaTransakcije=(ImageView) itemView.findViewById(R.id.icon);
-            nazivRacuna=(TextView) itemView.findViewById(R.id.nazivRacuna);
+            nazivRacuna=(TextView) itemView.findViewById(R.id.txtNazivRacunaTransakcije);
             cardViewTransakcije=(CardView) itemView.findViewById(R.id.cardViewTransakcija);
 
 

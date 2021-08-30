@@ -34,6 +34,17 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/txtNazivRacunaTransakcije"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingBottom="2dp"
+                    android:textAlignment="center"
+                    android:textSize="14sp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -41,26 +52,26 @@
 
                     <TextView
                         android:id="@+id/nazivKategorije"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_gravity="left"
+                        android:textStyle="bold"
                         android:textColor="@android:color/black"
+                        android:layout_width="126dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/iznosTransakcije"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="126dp"
+                        android:layout_height="21dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
                         android:layout_gravity="right"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
-                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/nazivRacuna"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
