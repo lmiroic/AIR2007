@@ -70,4 +70,16 @@ public class Korisnik {
     public void setGoogle_ID(String google_ID) {
         this.google_ID = google_ID;
     }
+
+    @Override
+    public String toString() {
+        return "Korisnik{" +
+                "id=" + id +
+                ", ime='" + ime + '\'' +
+                ", prezime='" + prezime + '\'' +
+                ", email='" + email + '\'' +
+                ", lozinka='" + lozinka + '\'' +
+                ", google_ID='" + google_ID + '\'' +
+                '}';
+    }
 }
