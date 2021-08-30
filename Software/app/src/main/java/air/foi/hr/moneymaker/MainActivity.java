@@ -22,10 +22,13 @@ import android.widget.Toast;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.manager.FragmentName;
+import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
+import air.foi.hr.core.modul.transakcije.SyncInitiator;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.session.SinkronizacijaBazePodataka;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SyncInitiator {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,4 +85,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void initiateSync(String email) {
+        SinkronizacijaBazePodataka.sinkroniziraj(email);
+    }
 }

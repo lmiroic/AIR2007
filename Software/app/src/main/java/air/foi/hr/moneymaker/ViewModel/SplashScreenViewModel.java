@@ -71,6 +71,10 @@ public class SplashScreenViewModel extends ViewModel {
                         valuta.setTecaj(f);
                         MyDatabase.getInstance(context).getValutaDAO().UnosValute(valuta);
                     }
+                    Valuta valuta = new Valuta();
+                    valuta.setNaziv("HRK");
+                    valuta.setTecaj(1);
+                    MyDatabase.getInstance(context).getValutaDAO().UnosValute(valuta);
                 }
 
                 @Override
@@ -80,11 +84,6 @@ public class SplashScreenViewModel extends ViewModel {
             });
 
         }
-    }
-
-
-    private boolean ProvjeraPostojanostiRacunaUBazi() {
-        return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
     }
     private boolean ProvjeraPostojanostiValuteUBazi(){
         return MyDatabase.getInstance(context).getValutaDAO().DohvatiSveValute().size()>0?true:false;

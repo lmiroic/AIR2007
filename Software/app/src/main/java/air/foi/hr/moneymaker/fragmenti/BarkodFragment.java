@@ -19,16 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import air.foi.hr.core.manager.FragmentName;
+import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
+import air.foi.hr.core.modul.transakcije.SyncInitiator;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import info.androidhive.barcode.BarcodeReader;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BarkodFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeReaderListener {
+public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeReaderListener, ISinkronizacijaRacuna {
 
     private View view;
     private Barcode scannedBarcode;
@@ -66,7 +63,12 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                /* SINRKONIZACIJA RAČUNA */
+                                SyncInitiator initiator = (SyncInitiator) getContext();
+                                if(initiator != null){
+                                    initiator.initiateSync(scannedBarcode.displayValue);
+                                    FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
+                                }
+
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -110,5 +112,10 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
     @Override
     public void onCameraPermissionDenied() {
 
+    }
+
+    @Override
+    public Fragment getFragment() {
+        return this;
     }
 }
