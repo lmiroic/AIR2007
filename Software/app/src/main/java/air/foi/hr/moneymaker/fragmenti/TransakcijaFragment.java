@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,11 +30,13 @@ import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Transakcija;
+import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
 import air.foi.hr.core.modul.transakcije.TransactionImplementor;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.TransakcijeViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterTransakcije;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionPrihodDialog;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionPrijenosDialog;
 import air.foi.hr.moneymaker.modul.transakcije.TransactionTrosakDialog;
@@ -57,6 +60,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
     public TransactionTrosakDialog transactionTrosakDialog;
     public TransactionPrihodDialog transactionPrihodDialog;
     public TransactionPrijenosDialog transactionPrijenosDialog;
+    public ImageButton btnPostavke;
 
 
     private View view;
@@ -109,6 +113,13 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         fabPrihod = view.findViewById(R.id.floatingActionPrihod);
         fabTrosak = view.findViewById(R.id.floatingActionTrosak);
         fabPrijenos = view.findViewById(R.id.floatingActionPrijenos);
+        btnPostavke=view.findViewById(R.id.imgBtnPostavke);
+        btnPostavke.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+            }
+        });
 
         fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_open);
         fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_close);

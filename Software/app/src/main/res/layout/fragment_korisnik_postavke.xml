@@ -1,80 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnOdjava"
-        android:layout_width="416dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="440dp"
-        android:text="Odjava"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.207"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCiljevi"
-        app:layout_constraintVertical_bias="1.0" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnPromjeniLozinku"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:text="Promjeni lozinku"
-        app:layout_constraintBottom_toTopOf="@+id/btnPromijeniValutu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.729" />
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="53dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="#00474242"
+            android:backgroundTint="#020202"
+            android:foregroundTint="#020202"
+            android:scaleType="fitCenter"
+            android:tint="#000000"
+            tools:srcCompat="@drawable/ic_backv2" />
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="52dp"
-        android:layout_height="40dp"
-        android:background="#00FFFFFF"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/btnPromjeniLozinku"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_backv2" />
+        <Button
+            android:id="@+id/btnOdjava"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Odjava" />
 
-    <Button
-        android:id="@+id/btnPromijeniValutu"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="80dp"
-        android:text="Promijeni valutu"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCiljevi"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btnPromjeniLozinku"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Promjeni lozinku" />
 
-    <Button
-        android:id="@+id/btnCiljevi"
-        android:layout_width="487dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="512dp"
-        android:text="Ciljevi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btnPromijeniValutu"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Promijeni valutu" />
 
-    <Button
-        android:id="@+id/btnBarkod"
-        android:layout_width="402dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="489dp"
-        android:text="Barkod"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/btnCiljevi"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Ciljevi" />
+
+        <Button
+            android:id="@+id/btnBarkod"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:text="Barkod" />
+
+    </LinearLayout>
+
+</RelativeLayout>
