@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "air.foi.hr.moneymaker"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -51,8 +51,11 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation project(':core')
     implementation project(':rest')
+    implementation project(':barcode-reader')
 
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
+
+    implementation 'com.google.android.gms:play-services-vision:19.0.0'
 
 
 }

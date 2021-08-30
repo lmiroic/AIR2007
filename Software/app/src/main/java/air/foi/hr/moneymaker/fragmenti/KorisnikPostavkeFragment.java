@@ -23,6 +23,7 @@ public class KorisnikPostavkeFragment extends Fragment {
     private Button btnCiljevi;
     private ImageButton btnBack;
     private Button btnOdjava;
+    private Button btnBarkod;
 
     private View view;
 
@@ -41,6 +42,13 @@ public class KorisnikPostavkeFragment extends Fragment {
 
     }
     private void InicijalizacijaVarijabli() {
+        btnBarkod=view.findViewById(R.id.btnBarkod);
+        btnBarkod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.BARCODE_READER,getFragmentManager());
+            }
+        });
 
         btnPromjeniLozinku=view.findViewById(R.id.btnPromjeniLozinku);
         btnPromjeniLozinku.setOnClickListener(new View.OnClickListener() {

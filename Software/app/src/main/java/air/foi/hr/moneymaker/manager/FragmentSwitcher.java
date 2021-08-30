@@ -8,6 +8,7 @@ import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.fragmenti.AnalizaFragment;
+import air.foi.hr.moneymaker.fragmenti.BarkodFragment;
 import air.foi.hr.moneymaker.fragmenti.CiljeviFragment;
 import air.foi.hr.moneymaker.fragmenti.HomeFragment;
 import air.foi.hr.moneymaker.fragmenti.KorisnikPostavkeFragment;
@@ -56,6 +57,9 @@ public class FragmentSwitcher {
             case CILJEVI:
                 fragment=new CiljeviFragment();
                 break;
+            case BARCODE_READER:
+                fragment=new BarkodFragment();
+                break;
         }
         FragmentManager fm= activity.getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
@@ -95,6 +99,9 @@ public class FragmentSwitcher {
                 break;
             case CILJEVI:
                 fragment=new CiljeviFragment();
+                break;
+            case BARCODE_READER:
+                fragment=new BarkodFragment();
                 break;
         }
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();

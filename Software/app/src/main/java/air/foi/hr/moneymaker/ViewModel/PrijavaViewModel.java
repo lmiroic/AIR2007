@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.Ciljevi;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Transakcija;
@@ -102,10 +103,10 @@ public class PrijavaViewModel extends ViewModel {
                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
                     dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                     dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
+                    dohvatiCiljeveKorisnika(Sesija.getInstance().getKorisnik().getId());
                     FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
-                }
-                else{
-                    Call<List<Korisnik>>korisnik=api.DohvatiSveKorisnike();
+                } else {
+                    Call<List<Korisnik>> korisnik = api.DohvatiSveKorisnike();
                     korisnik.enqueue(new Callback<List<Korisnik>>() {
                         @Override
                         public void onResponse(Call<List<Korisnik>> call, Response<List<Korisnik>> response) {
@@ -115,7 +116,8 @@ public class PrijavaViewModel extends ViewModel {
                                     Sesija.getInstance().setKorisnik(MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaPoGoogleID(account.getId()));
                                     dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                                     dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
-                                    FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
+                                    dohvatiCiljeveKorisnika(Sesija.getInstance().getKorisnik().getId());
+                                    FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
                                     break;
                                 }
                             }
@@ -135,16 +137,17 @@ public class PrijavaViewModel extends ViewModel {
             }
         });
     }
-    private void dohvatiRacune(int korisnik_id){
-        if(!ProvjeraPostojanostiRacunaUBazi()){
-            Retrofit r= RetrofitInstance.getInstance();
-            RestApiImplementor api=r.create(RestApiImplementor.class);
-            int korisnikId=Sesija.getInstance().getKorisnik().getId();
+
+    private void dohvatiRacune(int korisnik_id) {
+        if (!ProvjeraPostojanostiRacunaUBazi()) {
+            Retrofit r = RetrofitInstance.getInstance();
+            RestApiImplementor api = r.create(RestApiImplementor.class);
+            int korisnikId = Sesija.getInstance().getKorisnik().getId();
             final Call<List<Racun>> pozivUnosa = api.DohvatiKorisnikoveRacune(korisnikId);
             pozivUnosa.enqueue(new Callback<List<Racun>>() {
                 @Override
                 public void onResponse(Call<List<Racun>> call, Response<List<Racun>> response) {
-                    for(Racun racun: response.body()){
+                    for (Racun racun : response.body()) {
                         MyDatabase.getInstance(context).getRacunDAO().UnosRacuna(racun);
                     }
                 }
@@ -156,21 +159,21 @@ public class PrijavaViewModel extends ViewModel {
             });
         }
     }
-    private void dohvatiSveTransakcijeKorisnika(int korisnik){
-        if(!ProvjeraPostojanostiTransakcijaUBazi()){
-            Retrofit r= RetrofitInstance.getInstance();
-            RestApiImplementor api=r.create(RestApiImplementor.class);
+
+    private void dohvatiSveTransakcijeKorisnika(int korisnik) {
+        if (!ProvjeraPostojanostiTransakcijaUBazi()) {
+            Retrofit r = RetrofitInstance.getInstance();
+            RestApiImplementor api = r.create(RestApiImplementor.class);
             final Call<List<Transakcija>> pozivUnosa = api.DohvatiKorisnikoveTransakcije(korisnik);
             pozivUnosa.enqueue(new Callback<List<Transakcija>>() {
                 @Override
                 public void onResponse(Call<List<Transakcija>> call, Response<List<Transakcija>> response) {
-                    if(response.body()!=null){
-                        for(Transakcija t:response.body()){
+                    if (response.body() != null) {
+                        for (Transakcija t : response.body()) {
                             MyDatabase.getInstance(context).getTransakcijaDAO().UnosTransakcije(t);
                         }
-                    }
-                    else
-                        Log.e("Transakcija","Nemaa");
+                    } else
+                        Log.e("Transakcija", "Nemaa");
                 }
 
                 @Override
@@ -179,14 +182,38 @@ public class PrijavaViewModel extends ViewModel {
                 }
             });
         }
+    }
 
+    private void dohvatiCiljeveKorisnika(int korisnik) {
+        if (!ProvjeraPostojanostiCiljevaUBazi()) {
+            Retrofit r = RetrofitInstance.getInstance();
+            RestApiImplementor api = r.create(RestApiImplementor.class);
+            final Call<List<Ciljevi>> pozivUnosa = api.DohvatiKorisnikoveCiljeve(korisnik);
+            pozivUnosa.enqueue(new Callback<List<Ciljevi>>() {
+                @Override
+                public void onResponse(Call<List<Ciljevi>> call, Response<List<Ciljevi>> response) {
+                    for (Ciljevi cilj : response.body()) {
+                        MyDatabase.getInstance(context).getCiljeviDAO().UnosCilja(cilj);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Ciljevi>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     private boolean ProvjeraPostojanostiRacunaUBazi() {
-        return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size()>0?true:false;
+        return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacune().size() > 0 ? true : false;
     }
 
     private boolean ProvjeraPostojanostiTransakcijaUBazi() {
         return MyDatabase.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije().size() > 0 ? true : false;
+    }
+
+    private boolean ProvjeraPostojanostiCiljevaUBazi() {
+        return MyDatabase.getInstance(context).getCiljeviDAO().DohvatiSveCiljeve().size() > 0 ? true : false;
     }
 }

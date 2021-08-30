@@ -7,6 +7,7 @@ import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
+import air.foi.hr.core.entiteti.Ciljevi;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -97,46 +98,29 @@ public interface RestApiImplementor {
     @Multipart
     @POST("upload/upload.php?query=insert")
     Call<Transakcija> UnesiTransakciju(@Part("iznos") RequestBody iznos,
-                                @Part("datum") RequestBody datum,
-                                @Part("racunTerecenja") RequestBody racunTerecenja,
-                                @Part("racunPrijenosa") RequestBody racunPrijenosa,
-                                @Part("tipTransakcije") RequestBody tipTransakcije,
-                                @Part MultipartBody.Part memo,
-                                @Part("opis") RequestBody opis,
-                                @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
-                                @Part("ikona") RequestBody ikona,
-                                @Part("korisnik") RequestBody korisnik,
-                                @Part("intervalPonavljanja") RequestBody intervalPonavljanja,
-                                @Part("kategorijaTransakcije") RequestBody kategorijaTransakcije,
-                                @Part("placenTrosak") RequestBody placenTrosak
+                                       @Part("datum") RequestBody datum,
+                                       @Part("racunTerecenja") RequestBody racunTerecenja,
+                                       @Part("racunPrijenosa") RequestBody racunPrijenosa,
+                                       @Part("tipTransakcije") RequestBody tipTransakcije,
+                                       @Part MultipartBody.Part memo,
+                                       @Part("opis") RequestBody opis,
+                                       @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
+                                       @Part("ikona") RequestBody ikona,
+                                       @Part("korisnik") RequestBody korisnik,
+                                       @Part("intervalPonavljanja") RequestBody intervalPonavljanja,
+                                       @Part("kategorijaTransakcije") RequestBody kategorijaTransakcije,
+                                       @Part("placenTrosak") RequestBody placenTrosak
     );
 
     @Multipart
     @POST("upload/upload.php?query=updateTransakcije")
     Call<Void> AzurirajTransakciju(@Part("id") RequestBody id,
-                                @Part("iznos") RequestBody iznos,
-                                @Part("datum") RequestBody datum,
-                                @Part("racunTerecenja") RequestBody racunTerecenja,
-                                @Part("racunPrijenosa") RequestBody racunPrijenosa,
-                                @Part("tipTransakcije") RequestBody tipTransakcije,
-                                @Part ("memo") RequestBody memo,
-                                @Part("opis") RequestBody opis,
-                                @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
-                                @Part("ikona") RequestBody ikona,
-                                @Part("korisnik") RequestBody korisnik,
-                                @Part("intervalPonavljanja") RequestBody intervalPonavljanja,
-                                @Part("kategorijaTransakcije") RequestBody kategorijaTransakcije,
-                                @Part("placenTrosak") RequestBody placenTrosak
-    );
-
-    @Multipart
-    @POST("transakcija/index.php?query=insert")
-    Call<Transakcija> UnesiTransakcijuBezSlike(@Part("iznos") RequestBody iznos,
+                                   @Part("iznos") RequestBody iznos,
                                    @Part("datum") RequestBody datum,
                                    @Part("racunTerecenja") RequestBody racunTerecenja,
                                    @Part("racunPrijenosa") RequestBody racunPrijenosa,
                                    @Part("tipTransakcije") RequestBody tipTransakcije,
-                                   @Part ("memo") RequestBody memo,
+                                   @Part("memo") RequestBody memo,
                                    @Part("opis") RequestBody opis,
                                    @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
                                    @Part("ikona") RequestBody ikona,
@@ -147,8 +131,42 @@ public interface RestApiImplementor {
     );
 
     @Multipart
+    @POST("transakcija/index.php?query=insert")
+    Call<Transakcija> UnesiTransakcijuBezSlike(@Part("iznos") RequestBody iznos,
+                                               @Part("datum") RequestBody datum,
+                                               @Part("racunTerecenja") RequestBody racunTerecenja,
+                                               @Part("racunPrijenosa") RequestBody racunPrijenosa,
+                                               @Part("tipTransakcije") RequestBody tipTransakcije,
+                                               @Part("memo") RequestBody memo,
+                                               @Part("opis") RequestBody opis,
+                                               @Part("ponavljajuciTrosak") RequestBody ponavljajuciTrosak,
+                                               @Part("ikona") RequestBody ikona,
+                                               @Part("korisnik") RequestBody korisnik,
+                                               @Part("intervalPonavljanja") RequestBody intervalPonavljanja,
+                                               @Part("kategorijaTransakcije") RequestBody kategorijaTransakcije,
+                                               @Part("placenTrosak") RequestBody placenTrosak
+    );
+
+    @Multipart
     @POST("upload/upload.php?query=delete")
     Call<Void> ObrisiTransakciju(@Part("id") RequestBody id);
 
+    //Ciljevi
 
+    @GET("ciljevi/index.php?query=selectCiljeveKorisnika")
+    Call<List<Ciljevi>> DohvatiKorisnikoveCiljeve(@Query("korisnik") int korisnik);
+
+    @Multipart
+    @POST("ciljevi/index.php?query=insert")
+    Call<Void> UnesiCilj(@Part("naziv") RequestBody naziv,
+                         @Part("iznos") RequestBody iznos,
+                         @Part("korisnik") RequestBody korisnik,
+                         @Part("datum") RequestBody datum,
+                         @Part("kategorija") RequestBody kategorija,
+                         @Part("ostvareniCilj") RequestBody ostvareniCilj
+    );
+
+    @Multipart
+    @POST("ciljevi/index.php?query=delete")
+    Call<Void> ObrisiCilj(@Part("id") RequestBody id);
 }

@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.Ciljevi;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Transakcija;
@@ -95,16 +96,39 @@ public class KlasicnaPrijava implements IPrijava {
                 Sesija.getInstance().setKorisnik(korisnik);
                 dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                 dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
+                dohvatiCiljeveKorisnika(Sesija.getInstance().getKorisnik().getId());
                 FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
             } else {
                 ZapisiKorisnikaULokalnuBazu(korisnik);
                 Sesija.getInstance().setKorisnik(korisnik);
                 dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                 dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
+                dohvatiCiljeveKorisnika(Sesija.getInstance().getKorisnik().getId());
                 FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
             }
         } catch (Exception exception) {
             exception.printStackTrace();
+        }
+    }
+
+    private void dohvatiCiljeveKorisnika(int korisnik) {
+        if (!ProvjeraPostojanostiCiljevaUBazi()) {
+            Retrofit r = RetrofitInstance.getInstance();
+            RestApiImplementor api = r.create(RestApiImplementor.class);
+            final Call<List<Ciljevi>> pozivUnosa = api.DohvatiKorisnikoveCiljeve(korisnik);
+            pozivUnosa.enqueue(new Callback<List<Ciljevi>>() {
+                @Override
+                public void onResponse(Call<List<Ciljevi>> call, Response<List<Ciljevi>> response) {
+                    for (Ciljevi cilj : response.body()) {
+                        MyDatabase.getInstance(context).getCiljeviDAO().UnosCilja(cilj);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Ciljevi>> call, Throwable t) {
+
+                }
+            });
         }
     }
 
@@ -156,6 +180,10 @@ public class KlasicnaPrijava implements IPrijava {
 
     private boolean ProvjeraPostojanostiTransakcijaUBazi() {
         return MyDatabase.getInstance(context).getTransakcijaDAO().DohvatiSveTransakcije().size() > 0 ? true : false;
+    }
+
+    private boolean ProvjeraPostojanostiCiljevaUBazi() {
+        return MyDatabase.getInstance(context).getCiljeviDAO().DohvatiSveCiljeve().size() > 0 ? true : false;
     }
 
 }

@@ -16,7 +16,8 @@ public class AbstractionPrijava {
     public void setPrijava(IPrijava prijava) {
         this.prijava = prijava;
     }
-    public void PrijaviKorisnika(final FragmentManager fragmentManager){
+
+    public void PrijaviKorisnika(final FragmentManager fragmentManager) {
         this.prijava.PrijaviKorisnika(fragmentManager);
     }
 }
