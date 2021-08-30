@@ -33,4 +33,7 @@ public interface CiljeviDAO {
 
     @Delete
     public void IzbrisiCilj(Ciljevi... ciljevis);
+
+    @Query("DELETE from ciljevi")
+    public void IzbrisiSveCiljeve();
 }
