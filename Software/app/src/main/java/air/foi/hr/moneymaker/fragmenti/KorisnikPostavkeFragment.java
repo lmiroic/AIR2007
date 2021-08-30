@@ -80,6 +80,7 @@ public class KorisnikPostavkeFragment extends Fragment {
             public void onClick(View v) {
                 Sesija.getInstance().setKorisnik(null);
                 MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiSveRacune();
+                MyDatabase.getInstance(getContext()).getTransakcijaDAO().IzbrisiSveTransakcije();
                 FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
             }
         });
