@@ -17,6 +17,7 @@ import air.foi.hr.moneymaker.fragmenti.PromjenaLozinkeFragment;
 import air.foi.hr.moneymaker.fragmenti.PromjenaValuteFragment;
 import air.foi.hr.moneymaker.fragmenti.RacunFragment;
 import air.foi.hr.moneymaker.fragmenti.RegistracijaFragment;
+import air.foi.hr.moneymaker.fragmenti.SinkronizacijaFragment;
 import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
 import air.foi.hr.moneymaker.fragmenti.TransakcijaFragment;
 
@@ -60,6 +61,9 @@ public class FragmentSwitcher {
             case BARCODE_READER:
                 fragment=new BarkodFragment();
                 break;
+            case SINKRONIZACIJA:
+                fragment=new SinkronizacijaFragment();
+                break;
         }
         FragmentManager fm= activity.getSupportFragmentManager();
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
@@ -102,6 +106,9 @@ public class FragmentSwitcher {
                 break;
             case BARCODE_READER:
                 fragment=new BarkodFragment();
+                break;
+            case SINKRONIZACIJA:
+                fragment=new SinkronizacijaFragment();
                 break;
         }
         fm.beginTransaction().replace(R.id.fmMain,fragment).commit();

@@ -12,7 +12,8 @@ public enum FragmentName {
     PROMJENA_LOZINKE(9),
     PROMJENA_VALUTE(10),
     CILJEVI(11),
-    BARCODE_READER(12);
+    BARCODE_READER(12),
+    SINKRONIZACIJA(13);
 
 
     private FragmentName(int i) {

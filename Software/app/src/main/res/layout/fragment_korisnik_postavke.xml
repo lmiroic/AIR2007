@@ -24,13 +24,6 @@
             tools:srcCompat="@drawable/ic_backv2" />
 
         <Button
-            android:id="@+id/btnOdjava"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Odjava" />
-
-        <Button
             android:id="@+id/btnPromjeniLozinku"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -52,11 +45,18 @@
             android:text="Ciljevi" />
 
         <Button
-            android:id="@+id/btnBarkod"
+            android:id="@+id/btnSinkronizacija"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Barkod" />
+            android:text="Sinkronizacija" />
+
+        <Button
+            android:id="@+id/btnOdjava"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Odjava" />
 
     </LinearLayout>
 

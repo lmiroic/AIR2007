@@ -27,4 +27,7 @@ public interface ValutaDAO {
 
     @Delete
     public void IzbrisiValutu(Valuta... valute);
+
+    @Query("DELETE from valuta")
+    public void ObrisiSveValute();
 }

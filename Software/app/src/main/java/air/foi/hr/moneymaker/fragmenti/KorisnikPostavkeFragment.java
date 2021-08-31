@@ -23,7 +23,7 @@ public class KorisnikPostavkeFragment extends Fragment {
     private Button btnCiljevi;
     private ImageButton btnBack;
     private Button btnOdjava;
-    private Button btnBarkod;
+    private Button btnSinkronizacija;
 
     private View view;
 
@@ -42,11 +42,11 @@ public class KorisnikPostavkeFragment extends Fragment {
 
     }
     private void InicijalizacijaVarijabli() {
-        btnBarkod=view.findViewById(R.id.btnBarkod);
-        btnBarkod.setOnClickListener(new View.OnClickListener() {
+        btnSinkronizacija=view.findViewById(R.id.btnSinkronizacija);
+        btnSinkronizacija.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.BARCODE_READER,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.SINKRONIZACIJA,getFragmentManager());
             }
         });
 
@@ -90,6 +90,7 @@ public class KorisnikPostavkeFragment extends Fragment {
                 MyDatabase.getInstance(getContext()).getRacunDAO().IzbrisiSveRacune();
                 MyDatabase.getInstance(getContext()).getTransakcijaDAO().IzbrisiSveTransakcije();
                 MyDatabase.getInstance(getContext()).getCiljeviDAO().IzbrisiSveCiljeve();
+                MyDatabase.getInstance(getContext()).getValutaDAO().ObrisiSveValute();
                 FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, getFragmentManager());
             }
         });
