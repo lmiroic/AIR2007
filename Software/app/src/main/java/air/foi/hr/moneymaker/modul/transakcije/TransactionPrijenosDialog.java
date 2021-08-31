@@ -30,10 +30,12 @@ import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
+import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.fragmenti.TransakcijaFragment;
 import air.foi.hr.moneymaker.manager.CustomAdapterTransakcije;
+import air.foi.hr.moneymaker.manager.Mjenjacnica;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
@@ -133,19 +135,36 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                 @Override
                 public void onClick(View v) {
                     if (!iznosPrijenos.getText().toString().isEmpty() && !datumPrijenos.getText().toString().isEmpty() && !opisPrijenos.getText().toString().isEmpty()) {
-                        float iznos = Float.parseFloat(iznosPrijenos.getText().toString());
+                        float iznosZaMjenjacnicu = Float.parseFloat(iznosPrijenos.getText().toString());
+                        Valuta valutaRacunaTerecenja = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiValutu(odabranIzRacun.getValuta());
+                        Valuta valutaRacunaPrijenosa = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiValutu(odabranURacun.getValuta());
+                        float iznos = Mjenjacnica.PromjeniValute(valutaRacunaTerecenja, valutaRacunaPrijenosa, iznosZaMjenjacnicu);
+                        float iznosRacunaIz=0;
+                        float iznosRacunaU=0;
+                        if(valutaRacunaTerecenja.getTecaj()<valutaRacunaPrijenosa.getTecaj()){
+                            iznosRacunaIz=iznos;
+                            iznosRacunaU=iznosZaMjenjacnicu;
+                        }
+                        else if(valutaRacunaTerecenja.getTecaj()>valutaRacunaPrijenosa.getTecaj()){
+                            iznosRacunaIz=iznosZaMjenjacnicu;
+                            iznosRacunaU=iznos;
+                        }
+                        else{
+                            iznosRacunaIz=iznosZaMjenjacnicu;
+                            iznosRacunaU=iznosZaMjenjacnicu;
+                        }
                         String datum = datumPrijenos.getText().toString();
                         String opis = opisPrijenos.getText().toString();
-                        String formatiraniDatum="";
+                        String formatiraniDatum = "";
                         try {
-                            formatiraniDatum=(formaterDate.format(formaterDate.parse(datum)));
+                            formatiraniDatum = (formaterDate.format(formaterDate.parse(datum)));
                         } catch (ParseException e) {
                             Log.e("Exception", e.getMessage(), e);
-                            Toast.makeText(v.getContext(),"Morate unijeti datum u obliku yyyy-MM-dd",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(v.getContext(), "Morate unijeti datum u obliku yyyy-MM-dd", Toast.LENGTH_SHORT).show();
                         }
-                        if (transakcija.getIznos() < iznos) {
-                            if (odabranIzRacun.getPocetno_stanje() >= iznos - transakcija.getIznos()) {
-                                transakcija.setIznos(iznos);
+                        if (transakcija.getIznos() < iznosZaMjenjacnicu) {
+                            if (odabranIzRacun.getPocetno_stanje() >= iznosZaMjenjacnicu - transakcija.getIznos()) {
+                                transakcija.setIznos(iznosZaMjenjacnicu);
                                 transakcija.setDatum(formatiraniDatum);
                                 transakcija.setOpis(opis);
                                 transakcija.setRacunPrijenosa(odabranURacun.getId());
@@ -156,14 +175,14 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                                 MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
 
                                 RequestBody requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transakcija.getId()));
-                                RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                                RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznosZaMjenjacnicu));
                                 RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), formatiraniDatum);
                                 RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranIzRacun.getId()));
                                 RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranURacun.getId()));
                                 RequestBody requestTipTransakcije = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(TipTransakcije.PRIJENOS));
                                 RequestBody requestPonavljajuciTrosak = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(false));
                                 RequestBody requestIntervalPonavljanja = RequestBody.create(MediaType.parse("text/plain"), "");
-                                RequestBody requestMemo = RequestBody.create(MediaType.parse("text/plain"), transakcija.getMemo()!=null?transakcija.getMemo():"");
+                                RequestBody requestMemo = RequestBody.create(MediaType.parse("text/plain"), transakcija.getMemo() != null ? transakcija.getMemo() : "");
                                 RequestBody requestOpis = RequestBody.create(MediaType.parse("text/plain"), opis);
                                 RequestBody requestIkona = RequestBody.create(MediaType.parse("text/plain"), "");
                                 RequestBody requestKorisnik = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(Sesija.getInstance().getKorisnik().getId()));
@@ -175,12 +194,12 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
                                 Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranIzRacun.getId());
                                 float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                                racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - (iznos - iznosTransakcije));
+                                racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - (iznosRacunaIz - iznosTransakcije));
                                 MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
                                 AzurirajRacunUBazi(racunZaAzuriranje);
 
                                 float pocetnoStanjeR2 = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranURacun.getId()).getPocetno_stanje();
-                                odabranURacun.setPocetno_stanje(pocetnoStanjeR2 + (iznos - iznosTransakcije));
+                                odabranURacun.setPocetno_stanje(pocetnoStanjeR2 + (iznosRacunaU - iznosTransakcije));
                                 MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(odabranURacun);
                                 AzurirajRacunUBazi(odabranURacun);
 
@@ -191,7 +210,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                             } else
                                 Toast.makeText(v.getContext(), "Nemate dovoljno novaca na računu", Toast.LENGTH_SHORT).show();
                         } else {
-                            transakcija.setIznos(iznos);
+                            transakcija.setIznos(iznosZaMjenjacnicu);
                             transakcija.setDatum(formatiraniDatum);
                             transakcija.setOpis(opis);
                             transakcija.setRacunPrijenosa(odabranURacun.getId());
@@ -202,7 +221,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                             MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
 
                             RequestBody requestId = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(transakcija.getId()));
-                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznosZaMjenjacnicu));
                             RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), formatiraniDatum);
                             RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranIzRacun.getId()));
                             RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranURacun.getId()));
@@ -220,13 +239,13 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
                             Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranIzRacun.getId());
                             float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                            racunZaAzuriranje.setPocetno_stanje(pocetnoStanje + (iznosTransakcije - iznos));
+                            racunZaAzuriranje.setPocetno_stanje(pocetnoStanje + (iznosTransakcije - iznosRacunaIz));
                             MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
                             AzurirajRacunUBazi(racunZaAzuriranje);
 
                             Racun racunZaAzuriranjeR2 = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranURacun.getId());
                             float pocetnoStanje2 = racunZaAzuriranjeR2.getPocetno_stanje();
-                            racunZaAzuriranjeR2.setPocetno_stanje(pocetnoStanje2 - (iznosTransakcije - iznos));
+                            racunZaAzuriranjeR2.setPocetno_stanje(pocetnoStanje2 - (iznosTransakcije - iznosRacunaU));
                             MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranjeR2);
                             AzurirajRacunUBazi(racunZaAzuriranjeR2);
 
@@ -242,7 +261,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
             btnUreduPrijenos.setEnabled(false);
             btnUreduPrijenos.setVisibility(View.INVISIBLE);
-            // IMAGE VIEW POTREBNO IZRADITI!!
+
 
         }
 
@@ -331,13 +350,12 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
     private int OdaberiSpinnerRacunaTerecenja() {
         for (int i = 0; i < odabirIzRacuna.getCount(); i++) {
-            try{
-                if (MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv()!=null&&odabirIzRacuna.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv())) {
+            try {
+                if (MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv() != null && odabirIzRacuna.getItemAtPosition(i).toString().equalsIgnoreCase(MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(transakcija.getRacunTerecenja()).getNaziv())) {
                     return i;
                 }
-            }
-            catch (Exception e){
-                Log.e("Probal je biti null",e.getMessage(),e);
+            } catch (Exception e) {
+                Log.e("Probal je biti null", e.getMessage(), e);
             }
 
 
@@ -403,12 +421,29 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                 break;
             case R.id.buttonUreduPrijenos:
                 if (!iznosPrijenos.getText().toString().isEmpty() && !datumPrijenos.getText().toString().isEmpty() && !opisPrijenos.getText().toString().isEmpty()) {
-                    float iznos = Float.parseFloat(iznosPrijenos.getText().toString());
-                    if (odabranIzRacun.getPocetno_stanje() >= iznos) {
+                    float iznosZaMjenjacnicu = Float.parseFloat(iznosPrijenos.getText().toString());
+                    Valuta valutaRacunaTerecenja = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiValutu(odabranIzRacun.getValuta());
+                    Valuta valutaRacunaPrijenosa = MyDatabase.getInstance(getContext()).getValutaDAO().DohvatiValutu(odabranURacun.getValuta());
+                    float iznos = Mjenjacnica.PromjeniValute(valutaRacunaTerecenja, valutaRacunaPrijenosa, iznosZaMjenjacnicu);
+                    float iznosRacunaIz=0;
+                    float iznosRacunaU=0;
+                    if(valutaRacunaTerecenja.getTecaj()<valutaRacunaPrijenosa.getTecaj()){
+                        iznosRacunaIz=iznosZaMjenjacnicu;
+                        iznosRacunaU=iznos;
+                    }
+                    else if(valutaRacunaTerecenja.getTecaj()>valutaRacunaPrijenosa.getTecaj()){
+                        iznosRacunaIz=iznosZaMjenjacnicu;
+                        iznosRacunaU=iznos;
+                    }
+                    else if(valutaRacunaTerecenja.getTecaj()==valutaRacunaPrijenosa.getTecaj()){
+                        iznosRacunaIz=iznosZaMjenjacnicu;
+                        iznosRacunaU=iznosZaMjenjacnicu;
+                    }
+                    if (odabranIzRacun.getPocetno_stanje() >= iznosZaMjenjacnicu) {
                         String datum = datumPrijenos.getText().toString();
                         String opis = opisPrijenos.getText().toString();
                         Transakcija transakcija = new Transakcija();
-                        transakcija.setIznos(iznos);
+                        transakcija.setIznos(iznosZaMjenjacnicu);
                         try {
                             transakcija.setDatum(formaterDate.format(formaterDate.parse(datum)));
                         } catch (ParseException e) {
@@ -425,12 +460,12 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
                         Retrofit retrofit = RetrofitInstance.getInstance();
                         RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
-                        if(transakcijaFragment.slika!=null) {
+                        if (transakcijaFragment.slika != null) {
 
 
                             File datotekaSlike = new File(ImageFilePath.getPath(getContext(), transakcijaFragment.slika));
                             RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), datotekaSlike);
-                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznos));
+                            RequestBody requestIznos = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(iznosZaMjenjacnicu));
                             RequestBody requestDatum = RequestBody.create(MediaType.parse("text/plain"), datum);
                             RequestBody requestRacunTerecenja = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranIzRacun.getId()));
                             RequestBody requestRacunPrijenosa = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(odabranURacun.getId()));
@@ -446,7 +481,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                             restApiImplementor.UnesiTransakciju(requestIznos, requestDatum, requestRacunTerecenja, requestRacunPrijenosa, requestTipTransakcije, requestMemo, requestOpis, requestPonavljajuciTrosak, requestIkona, requestKorisnik, requestIntervalPonavljanja, requestKategorijaTransakcije, requestPlacenTrosak).enqueue(new Callback<Transakcija>() {
                                 @Override
                                 public void onResponse(Call<Transakcija> call, Response<Transakcija> response) {
-                                    if(response.isSuccessful()){
+                                    if (response.isSuccessful()) {
                                         transakcija.setMemo(response.body().getMemo());
                                         MyDatabase.getInstance(getContext()).getTransakcijaDAO().UnosTransakcije(transakcija);
                                         //MyDatabase.getInstance(getContext()).getTransakcijaDAO().AzurirajTransakciju(transakcija);
@@ -461,7 +496,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
                             Racun racunZaAzuriranje = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranIzRacun.getId());
                             float pocetnoStanje = racunZaAzuriranje.getPocetno_stanje();
-                            racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - iznos);
+                            racunZaAzuriranje.setPocetno_stanje(pocetnoStanje - iznosRacunaIz);
                             MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje);
 
                             Call<Void> pozivUnosa = restApiImplementor.AzurirajRacun(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje.getId())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getNaziv()), RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje.getPocetno_stanje())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getValuta()), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje.getIkona()), RequestBody.create(MediaType.parse("text/plain"), (String.valueOf(racunZaAzuriranje.getKorisnik_id()))));
@@ -479,7 +514,7 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
 
                             Racun racunZaAzuriranje2 = MyDatabase.getInstance(getContext()).getRacunDAO().DohvatiRacun(odabranURacun.getId());
                             float pocetnoStanje2 = racunZaAzuriranje2.getPocetno_stanje();
-                            racunZaAzuriranje2.setPocetno_stanje(pocetnoStanje2 + iznos);
+                            racunZaAzuriranje2.setPocetno_stanje(pocetnoStanje2 + iznosRacunaU);
                             MyDatabase.getInstance(getContext()).getRacunDAO().AzurirajRacun(racunZaAzuriranje2);
 
                             Call<Void> pozivUnosaRacuna = restApiImplementor.AzurirajRacun(RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje2.getId())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje2.getNaziv()), RequestBody.create(MediaType.parse("text/plain"), String.valueOf(racunZaAzuriranje2.getPocetno_stanje())), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje2.getValuta()), RequestBody.create(MediaType.parse("text/plain"), racunZaAzuriranje2.getIkona()), RequestBody.create(MediaType.parse("text/plain"), (String.valueOf(racunZaAzuriranje2.getKorisnik_id()))));
@@ -498,9 +533,8 @@ public class TransactionPrijenosDialog extends Dialog implements android.view.Vi
                             Log.e("transakcija", transakcija.toString());
                             Toast.makeText(v.getContext(), "Uspješno unesena transakcija prijenosa", Toast.LENGTH_SHORT).show();
                             TransactionPrijenosDialog.this.dismiss();
-                        }
-                        else
-                            Toast.makeText(v.getContext(),"Morate ucitati sliku za unos transakacije",Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(v.getContext(), "Morate ucitati sliku za unos transakacije", Toast.LENGTH_SHORT).show();
                     }
 
                 } else

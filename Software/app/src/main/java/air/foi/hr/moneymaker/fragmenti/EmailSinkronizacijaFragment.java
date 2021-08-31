@@ -10,15 +10,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
 import air.foi.hr.core.modul.transakcije.SyncInitiator;
 import air.foi.hr.moneymaker.R;
+import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
 public class EmailSinkronizacijaFragment extends Fragment implements ISinkronizacijaRacuna {
 
     private View view;
     private EditText emailAdress;
     private Button ctaSync;
+    private Button btnBackEmailSync;
 
     public EmailSinkronizacijaFragment() {
     }
@@ -45,6 +48,13 @@ public class EmailSinkronizacijaFragment extends Fragment implements ISinkroniza
 
     private void init() {
         this.emailAdress = view.findViewById(R.id.etEmailAdresaSync);
+        this.btnBackEmailSync=view.findViewById(R.id.btnNatragEmailSync);
+        this.btnBackEmailSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.SINKRONIZACIJA,getFragmentManager());
+            }
+        });
         this.ctaSync = view.findViewById(R.id.btnCtaEmailSync);
         this.ctaSync.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements SyncInitiator {
 
     @Override
     public void initiateSync(String email) {
-        SinkronizacijaBazePodataka.sinkroniziraj(email);
+        SinkronizacijaBazePodataka sbp=new SinkronizacijaBazePodataka(MainActivity.this);
+        sbp.sinkroniziraj(email);
     }
 }
