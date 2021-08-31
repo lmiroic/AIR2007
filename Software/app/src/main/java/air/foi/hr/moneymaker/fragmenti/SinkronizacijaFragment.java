@@ -41,6 +41,7 @@ public class SinkronizacijaFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
@@ -51,12 +52,6 @@ public class SinkronizacijaFragment extends Fragment {
         this.emailSync();
         this.qrCodeSync();
         this.qrCodeSetup();
-        this.btnNatragSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE, getFragmentManager());
-            }
-        });
         return view;
     }
 
@@ -102,7 +97,13 @@ public class SinkronizacijaFragment extends Fragment {
         qrCodeImage = view.findViewById(R.id.ivQrCode);
         btnQrCodeSync = view.findViewById(R.id.btnQrCodeSync);
         btnEmailSync = view.findViewById(R.id.btnEmailSync);
-        btnNatragSync = view.findViewById(R.id.btnSinkronizacija);
+        btnNatragSync = view.findViewById(R.id.btnNatragSinkronizacija);
+        btnNatragSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE, getFragmentManager());
+            }
+        });
     }
 
     private void switchFragments(Fragment fragment) {
