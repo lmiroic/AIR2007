@@ -8,6 +8,20 @@
     tools:context=".fragmenti.HomeFragment">
 
 
+    <TextView
+        android:id="@+id/txtRacuniNaslov5"
+        android:layout_width="158dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="KATEGORIJE"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -23,14 +37,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="411dp"
-        android:layout_height="557dp"
-        android:layout_marginTop="72dp"
+        android:layout_width="408dp"
+        android:layout_height="655dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPostavke" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPostavke">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <ImageButton
         android:id="@+id/btnPostavke"
@@ -41,6 +57,17 @@
         android:src="@drawable/ic_options_1767904_1502157"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRacuniNaslov5"
+        app:layout_constraintVertical_bias="0.011" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
