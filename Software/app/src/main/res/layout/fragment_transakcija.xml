@@ -21,48 +21,6 @@
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-    <TextView
-        android:id="@+id/txtViewStanjeRacuna"
-        android:layout_width="200dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="106dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="4dp"
-        android:gravity="center"
-        android:ems="10"
-        android:text="1500kn"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/lblRazdoblje"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/imgBtnFilter"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="right"
-        android:background="#FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/SelectOdabiRacuna"
-        android:layout_width="127dp"
-        android:layout_height="21dp"
-
-        android:layout_marginStart="102dp"
-        android:layout_marginEnd="102dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtViewStanjeRacuna"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnFilter"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imgBtnPostavke"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/imgBtnPostavke"
         android:layout_width="40dp"
@@ -73,67 +31,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btnPrethodnoRazdbolje"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="56dp"
-        android:background="#000000"
-        android:backgroundTint="#00350E0E"
-        android:rotation="90"
-        android:scaleType="fitCenter"
-        android:src="@android:drawable/arrow_up_float"
-        android:tint="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewTransakcije"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lblRazdoblje"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewStanjeRacuna"
-        app:layout_constraintVertical_bias="0.757" />
-
-    <EditText
-        android:id="@+id/lblRazdoblje"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="3dp"
-        android:gravity="center"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewTransakcije"
-        app:layout_constraintEnd_toStartOf="@+id/btnPrethodnoRazdbolje"
-        app:layout_constraintStart_toEndOf="@+id/btnSljedeceRazdoblje" />
-
-    <ImageButton
-        android:id="@+id/btnSljedeceRazdoblje"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="8dp"
-        android:background="#000000"
-        android:backgroundTint="#00350E0E"
-        android:rotation="270"
-        android:scaleType="fitCenter"
-        android:src="@android:drawable/arrow_up_float"
-        android:tint="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerViewTransakcije"
-        app:layout_constraintEnd_toStartOf="@+id/lblRazdoblje"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewStanjeRacuna"
-        app:layout_constraintVertical_bias="1.0" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTransakcije"
-        android:layout_width="407dp"
+        android:layout_width="411dp"
         android:layout_height="475dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblRazdoblje">
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 

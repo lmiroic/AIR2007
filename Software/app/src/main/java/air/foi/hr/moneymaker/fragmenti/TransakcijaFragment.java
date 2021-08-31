@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
+import air.foi.hr.core.entiteti.Racun;
+import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
@@ -238,6 +243,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         }
 
     }
+
     public void brisiTransakciju(final RecyclerView recyclerView, final CustomAdapterTransakcije customAdapterTransakcije) {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
