@@ -1,10 +1,8 @@
 package air.foi.hr.moneymaker.session;
 
-import android.app.Application;
+
 import android.content.Context;
 import android.util.Log;
-
-import androidx.fragment.app.FragmentManager;
 
 import java.util.List;
 
@@ -13,8 +11,6 @@ import air.foi.hr.core.entiteti.Ciljevi;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Transakcija;
-import air.foi.hr.core.manager.FragmentName;
-import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import retrofit2.Call;
@@ -24,11 +20,12 @@ import retrofit2.Retrofit;
 
 public class SinkronizacijaBazePodataka {
     private Context context;
+
     public SinkronizacijaBazePodataka(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
-    public void sinkroniziraj(String email){
+    public void sinkroniziraj(String email) {
         Retrofit r = RetrofitInstance.getInstance();
         RestApiImplementor rest = r.create(RestApiImplementor.class);
         rest.DohvatiSveKorisnike().enqueue(new Callback<List<Korisnik>>() {
@@ -36,13 +33,13 @@ public class SinkronizacijaBazePodataka {
             public void onResponse(Call<List<Korisnik>> call, Response<List<Korisnik>> response) {
                 final List<Korisnik> korisnici = response.body();
                 Korisnik korisnikPrijave = null;
-                for(Korisnik k : korisnici){
-                    if(k.getEmail().equalsIgnoreCase(email)) {
+                for (Korisnik k : korisnici) {
+                    if (k.getEmail().equalsIgnoreCase(email)) {
                         korisnikPrijave = k;
                         break;
                     }
                 }
-                if(korisnikPrijave!=null){
+                if (korisnikPrijave != null) {
                     Log.e("Sync", korisnikPrijave.toString());
                     MyDatabase.getInstance(context).getRacunDAO().IzbrisiSveRacune();
                     MyDatabase.getInstance(context).getTransakcijaDAO().IzbrisiSveTransakcije();
@@ -59,10 +56,10 @@ public class SinkronizacijaBazePodataka {
             }
         });
     }
+
     private void UpravljanjeKorisnikomULokalnojBazi(Korisnik korisnik) {
         try {
             if (ProvjeraPostojiLiKorisnik(korisnik)) {
-                Korisnik k = MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnika(korisnik.getId());
                 Sesija.getInstance().setKorisnik(korisnik);
                 dohvatiRacune(Sesija.getInstance().getKorisnik().getId());
                 dohvatiSveTransakcijeKorisnika(Sesija.getInstance().getKorisnik().getId());
@@ -75,7 +72,7 @@ public class SinkronizacijaBazePodataka {
                 dohvatiCiljeveKorisnika(Sesija.getInstance().getKorisnik().getId());
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            Log.e("Exception", exception.getMessage());
         }
     }
 
@@ -142,7 +139,7 @@ public class SinkronizacijaBazePodataka {
         }
     }
 
-    private boolean ProvjeraPostojiLiKorisnik(Korisnik korisnik) throws Exception {
+    private boolean ProvjeraPostojiLiKorisnik(Korisnik korisnik) {
         Korisnik k = MyDatabase.getInstance(context).getKorisnikDAO().DohvatiKorisnikaLogin(korisnik.getEmail(), korisnik.getLozinka());
         if (k != null) {
             return true;

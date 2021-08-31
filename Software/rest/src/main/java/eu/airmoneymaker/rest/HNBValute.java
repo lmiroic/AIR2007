@@ -24,6 +24,7 @@ public class HNBValute {
 
     public HNBValute() {
     }
+
     public String getBroj_tecajnice() {
         return broj_tecajnice;
     }
@@ -59,30 +60,39 @@ public class HNBValute {
     public String getValuta() {
         return valuta;
     }
+
     public void setValuta(String valuta) {
         this.valuta = valuta;
     }
+
     public String getJedinica() {
         return jedinica;
     }
+
     public void setJedinica(String jedinica) {
         this.jedinica = jedinica;
     }
+
     public String getKupovni_tecaj() {
         return kupovni_tecaj;
     }
+
     public void setKupovni_tecaj(String kupovni_tecaj) {
         this.kupovni_tecaj = kupovni_tecaj;
     }
+
     public String getSrednji_tecaj() {
         return srednji_tecaj;
     }
+
     public void setSrednji_tecaj(String srednji_tecaj) {
         this.srednji_tecaj = srednji_tecaj;
     }
+
     public String getProdajni_tecaj() {
         return prodajni_tecaj;
     }
+
     public void setProdajni_tecaj(String prodajni_tecaj) {
         this.prodajni_tecaj = prodajni_tecaj;
     }

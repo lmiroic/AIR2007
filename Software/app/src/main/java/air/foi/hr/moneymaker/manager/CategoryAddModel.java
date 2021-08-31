@@ -6,9 +6,10 @@ public class CategoryAddModel {
     String ikona;
 
     public int getIkona(Context context) {
-        return context.getResources().getIdentifier(ikona,"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(ikona, "drawable", context.getPackageName());
     }
-    public String getRawIkona(){
+
+    public String getRawIkona() {
         return this.ikona;
     }
 

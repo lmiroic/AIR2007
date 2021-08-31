@@ -1,9 +1,6 @@
 package air.foi.hr.moneymaker.modul.racun;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.fragment.app.FragmentManager;
 
 import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
 import air.foi.hr.core.modul.racuni.RacuniImplementor;
@@ -18,11 +15,11 @@ public class ConcreteRacun implements RacuniImplementor {
     public ConcreteRacun() {
     }
 
-    public ConcreteRacun(String naziv, float pocetnoStanje, String ikona, String valuta ) {
+    public ConcreteRacun(String naziv, float pocetnoStanje, String ikona, String valuta) {
         this.naziv = naziv;
-        this.ikona=ikona;
-        this.pocetnoStanje=pocetnoStanje;
-        this.valuta=valuta;
+        this.ikona = ikona;
+        this.pocetnoStanje = pocetnoStanje;
+        this.valuta = valuta;
     }
 
     public ConcreteRacun(String ikona) {
@@ -62,7 +59,6 @@ public class ConcreteRacun implements RacuniImplementor {
     }
 
 
-
     @Override
     public String getImeRacuna() {
         return getNaziv();
@@ -70,7 +66,7 @@ public class ConcreteRacun implements RacuniImplementor {
 
     @Override
     public int getIkonaRacuna(Context context) {
-        return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(getIkona(), "drawable", context.getPackageName());
     }
 
     @Override
@@ -80,7 +76,7 @@ public class ConcreteRacun implements RacuniImplementor {
 
     @Override
     public void executeAction(Context context) {
-        RacunAddDialog racunAddDialog=new RacunAddDialog(context);
+        RacunAddDialog racunAddDialog = new RacunAddDialog(context);
         racunAddDialog.setOnDialogRacunResult(new OnDialogRacunResult() {
             @Override
             public void finish() {

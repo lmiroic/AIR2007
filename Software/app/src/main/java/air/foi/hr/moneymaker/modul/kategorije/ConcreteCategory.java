@@ -1,14 +1,10 @@
 package air.foi.hr.moneymaker.modul.kategorije;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.core.modul.kategorije.OnDialogCategoryResult;
-import air.foi.hr.moneymaker.manager.CustomAdapterHome;
 
 public class ConcreteCategory implements CategoryImplementor {
     private String naziv;
@@ -46,16 +42,17 @@ public class ConcreteCategory implements CategoryImplementor {
 
     @Override
     public int getCategoryIcon(Context context) {
-        return context.getResources().getIdentifier(getIkona(),"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(getIkona(), "drawable", context.getPackageName());
     }
+
     @Override
-    public float getCategorySum(Context context,KategorijaTransakcije kt) {
+    public float getCategorySum(Context context, KategorijaTransakcije kt) {
         return 0;
     }
 
     @Override
     public void executeAction(Context context) {
-        CategoryAddDialog categoryAddDialog=new CategoryAddDialog(context);
+        CategoryAddDialog categoryAddDialog = new CategoryAddDialog(context);
         categoryAddDialog.setOnDialogCategoryResult(new OnDialogCategoryResult() {
             @Override
             public void finish() {

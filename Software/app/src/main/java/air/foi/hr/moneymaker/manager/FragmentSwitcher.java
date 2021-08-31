@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.fragmenti.AnalizaFragment;
@@ -22,95 +21,96 @@ import air.foi.hr.moneymaker.fragmenti.SplashScreenFragment;
 import air.foi.hr.moneymaker.fragmenti.TransakcijaFragment;
 
 public class FragmentSwitcher {
-    public static void ShowFragment(FragmentName fragmentName, AppCompatActivity activity){
-        Fragment fragment=null;
-        switch (fragmentName){
+    public static void ShowFragment(FragmentName fragmentName, AppCompatActivity activity) {
+        Fragment fragment = null;
+        switch (fragmentName) {
             case PRIJAVA:
-                fragment= new PrijavaFragment();
+                fragment = new PrijavaFragment();
                 break;
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();
                 break;
             case HOME:
-                fragment=new HomeFragment();
+                fragment = new HomeFragment();
                 break;
             case REGISTRACIJA:
-                fragment=new RegistracijaFragment();
+                fragment = new RegistracijaFragment();
                 break;
             case RACUN:
-                fragment=new RacunFragment();
+                fragment = new RacunFragment();
                 break;
             case TRANSAKCIJA:
-                fragment=new TransakcijaFragment();
+                fragment = new TransakcijaFragment();
                 break;
             case ANALIZA:
-                fragment=new AnalizaFragment();
+                fragment = new AnalizaFragment();
                 break;
             case POSTAVKE:
-                fragment=new KorisnikPostavkeFragment();
+                fragment = new KorisnikPostavkeFragment();
                 break;
             case PROMJENA_LOZINKE:
-                fragment=new PromjenaLozinkeFragment();
+                fragment = new PromjenaLozinkeFragment();
                 break;
             case PROMJENA_VALUTE:
-                fragment=new PromjenaValuteFragment();
+                fragment = new PromjenaValuteFragment();
                 break;
             case CILJEVI:
-                fragment=new CiljeviFragment();
+                fragment = new CiljeviFragment();
                 break;
             case BARCODE_READER:
-                fragment=new BarkodFragment();
+                fragment = new BarkodFragment();
                 break;
             case SINKRONIZACIJA:
-                fragment=new SinkronizacijaFragment();
+                fragment = new SinkronizacijaFragment();
                 break;
         }
-        FragmentManager fm= activity.getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
+        FragmentManager fm = activity.getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.fmMain, fragment).commit();
     }
-    public static void ShowFragment(FragmentName fragmentName, FragmentManager fm){
-        Fragment fragment=null;
-        switch (fragmentName){
+
+    public static void ShowFragment(FragmentName fragmentName, FragmentManager fm) {
+        Fragment fragment = null;
+        switch (fragmentName) {
             case PRIJAVA:
-                fragment= new PrijavaFragment();
+                fragment = new PrijavaFragment();
                 break;
             case SPLASH_SCREEN:
                 fragment = new SplashScreenFragment();
                 break;
             case HOME:
-                fragment=new HomeFragment();
+                fragment = new HomeFragment();
                 break;
             case REGISTRACIJA:
-                fragment=new RegistracijaFragment();
+                fragment = new RegistracijaFragment();
                 break;
             case RACUN:
-                fragment=new RacunFragment();
+                fragment = new RacunFragment();
                 break;
             case TRANSAKCIJA:
-                fragment=new TransakcijaFragment();
+                fragment = new TransakcijaFragment();
                 break;
             case ANALIZA:
-                fragment=new AnalizaFragment();
+                fragment = new AnalizaFragment();
                 break;
             case POSTAVKE:
-                fragment=new KorisnikPostavkeFragment();
+                fragment = new KorisnikPostavkeFragment();
                 break;
             case PROMJENA_LOZINKE:
-                fragment=new PromjenaLozinkeFragment();
+                fragment = new PromjenaLozinkeFragment();
                 break;
             case PROMJENA_VALUTE:
-                fragment=new PromjenaValuteFragment();
+                fragment = new PromjenaValuteFragment();
                 break;
             case CILJEVI:
-                fragment=new CiljeviFragment();
+                fragment = new CiljeviFragment();
                 break;
             case BARCODE_READER:
-                fragment=new BarkodFragment();
+                fragment = new BarkodFragment();
                 break;
             case SINKRONIZACIJA:
-                fragment=new SinkronizacijaFragment();
+                fragment = new SinkronizacijaFragment();
                 break;
         }
-        fm.beginTransaction().replace(R.id.fmMain,fragment).commit();
+        fm.beginTransaction().replace(R.id.fmMain, fragment).commit();
     }
 }

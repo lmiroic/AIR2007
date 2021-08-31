@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -24,7 +25,6 @@ import java.util.List;
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Ciljevi;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
-import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.modul.ciljevi.OnDialogCiljeviResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.fragmenti.CiljeviFragment;
@@ -120,40 +120,43 @@ public class CiljeviAddDialog extends Dialog implements View.OnClickListener {
                     Date ciljaniDatum = null;
                     try {
                         ciljaniDatum = formaterDate.parse(datum);
+                        Ciljevi noviCilj = new Ciljevi();
+                        noviCilj.setDatum(formaterDate.format(ciljaniDatum));
+                        noviCilj.setIznos(iznos);
+                        noviCilj.setKategorija(odabranaKategorijaTransakcijeCilja.getId());
+                        noviCilj.setKorisnik(Sesija.getInstance().getKorisnik().getId());
+                        noviCilj.setNaziv(naziv);
+                        noviCilj.setOstvarenCilj(false);
+
+                        RequestBody requestDatum=RequestBody.create(MediaType.parse("plain/text"),formaterDate.format(ciljaniDatum));
+                        RequestBody requestIznos=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(iznos));
+                        RequestBody requestKategorija=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(odabranaKategorijaTransakcijeCilja.getId()));
+                        RequestBody requestKorisnik=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(Sesija.getInstance().getKorisnik().getId()));
+                        RequestBody requestNaziv=RequestBody.create(MediaType.parse("plain/text"),naziv);
+                        RequestBody requestOstvareniCilj=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(false));
+
+                        Retrofit retrofit = RetrofitInstance.getInstance();
+                        RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
+                        restApiImplementor.UnesiCilj(requestNaziv, requestIznos, requestKorisnik, requestDatum, requestKategorija, requestOstvareniCilj).enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+
+                            }
+                        });
+
+
+                        MyDatabase.getInstance(getContext()).getCiljeviDAO().UnosCilja(noviCilj);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Log.e("Exception",e.getMessage());
+                        Toast.makeText(v.getContext(), "Morate unijeti datum u obliku yyyy-mm-dd", Toast.LENGTH_SHORT).show();
+
                     }
-                    Ciljevi noviCilj = new Ciljevi();
-                    noviCilj.setDatum(formaterDate.format(ciljaniDatum));
-                    noviCilj.setIznos(iznos);
-                    noviCilj.setKategorija(odabranaKategorijaTransakcijeCilja.getId());
-                    noviCilj.setKorisnik(Sesija.getInstance().getKorisnik().getId());
-                    noviCilj.setNaziv(naziv);
-                    noviCilj.setOstvarenCilj(false);
 
-                    RequestBody requestDatum=RequestBody.create(MediaType.parse("plain/text"),formaterDate.format(ciljaniDatum));
-                    RequestBody requestIznos=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(iznos));
-                    RequestBody requestKategorija=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(odabranaKategorijaTransakcijeCilja.getId()));
-                    RequestBody requestKorisnik=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(Sesija.getInstance().getKorisnik().getId()));
-                    RequestBody requestNaziv=RequestBody.create(MediaType.parse("plain/text"),naziv);
-                    RequestBody requestOstvareniCilj=RequestBody.create(MediaType.parse("plain/text"),String.valueOf(false));
-
-                    Retrofit retrofit = RetrofitInstance.getInstance();
-                    RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
-                    restApiImplementor.UnesiCilj(requestNaziv, requestIznos, requestKorisnik, requestDatum, requestKategorija, requestOstvareniCilj).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-
-                        }
-                    });
-
-
-                    MyDatabase.getInstance(getContext()).getCiljeviDAO().UnosCilja(noviCilj);
                 } else
                     Toast.makeText(v.getContext(), "Niste unijeli sve parametre!", Toast.LENGTH_SHORT).show();
                 CiljeviAddDialog.this.dismiss();

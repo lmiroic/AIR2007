@@ -8,14 +8,12 @@ import android.view.KeyboardShortcutGroup;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,15 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
-import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Racun;
-import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.modul.racuni.OnDialogRacunResult;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.CustomAdapterAddRacun;
 import air.foi.hr.moneymaker.manager.RacunAddModel;
-import air.foi.hr.moneymaker.modul.kategorije.CategoryAddDialog;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
@@ -45,7 +40,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.http.Part;
 
 public class RacunAddDialog extends Dialog implements View.OnClickListener {
     private EditText imeRacuna, stanjeRacuna;

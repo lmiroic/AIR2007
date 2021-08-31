@@ -6,11 +6,13 @@ public class RacunAddModel {
     String ikonaRacuna;
 
     public int getIkonaRacuna(Context context) {
-        return context.getResources().getIdentifier(ikonaRacuna,"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(ikonaRacuna, "drawable", context.getPackageName());
     }
-    public String getRawIkonaRacuna(){
+
+    public String getRawIkonaRacuna() {
         return this.ikonaRacuna;
     }
+
     public void setIkonaRacuna(String ikonaRacuna) {
         this.ikonaRacuna = ikonaRacuna;
     }

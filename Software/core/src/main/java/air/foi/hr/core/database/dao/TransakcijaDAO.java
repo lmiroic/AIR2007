@@ -11,7 +11,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import air.foi.hr.core.entiteti.Transakcija;
-import retrofit2.http.Multipart;
 
 @Dao
 public interface TransakcijaDAO {
@@ -29,6 +28,7 @@ public interface TransakcijaDAO {
 
     @Delete
     public void IzbrisiTransakciju(Transakcija... transakcije);
+
     @Query("SELECT * from transakcija")
     LiveData<List<Transakcija>> DohvatiSveTransakcijeLIVE();
 
@@ -36,7 +36,7 @@ public interface TransakcijaDAO {
     List<Transakcija> DohvatiTransakcijePonavljajucegTroska(boolean ponTrosak);
 
     @Query("SELECT * from transakcija WHERE racunPrijenosa=:racPrijenosa OR racunTerecenja=:racTerecenja")
-    List<Transakcija> DohvatiTransakcijeRacuna(int racPrijenosa,int racTerecenja);
+    List<Transakcija> DohvatiTransakcijeRacuna(int racPrijenosa, int racTerecenja);
 
     @Query("DELETE from transakcija")
     public void IzbrisiSveTransakcije();

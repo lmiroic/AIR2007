@@ -10,14 +10,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.manager.FragmentName;
-import air.foi.hr.moneymaker.modul.racun.ConcreteRacun;
-import air.foi.hr.core.modul.racuni.RacuniImplementor;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 
@@ -27,16 +24,17 @@ public class RacunViewModel extends ViewModel {
     private MyDatabase baza;
 
 
-    private void OznaciIndex(){
+    private void OznaciIndex() {
         bottomNavigationView.setSelectedItemId(R.id.racuni);
     }
 
-    public void konstruktor(Context context, BottomNavigationView bottomNavigationView){
-        this.context=context;
-        this.baza=MyDatabase.getInstance(this.context);
+    public void konstruktor(Context context, BottomNavigationView bottomNavigationView) {
+        this.context = context;
+        this.baza = MyDatabase.getInstance(this.context);
         this.bottomNavigationView = bottomNavigationView;
         this.OznaciIndex();
     }
+
     public void UpravljanjeNavigacijom(final FragmentManager fragmentManager) {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -62,7 +60,7 @@ public class RacunViewModel extends ViewModel {
         });
     }
 
-    public LiveData<List<Racun>> VratiRacunLiveData(){
+    public LiveData<List<Racun>> VratiRacunLiveData() {
         return MyDatabase.getInstance(context).getRacunDAO().DohvatiSveRacuneLive();
     }
 

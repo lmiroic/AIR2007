@@ -6,9 +6,10 @@ public class TransakcijaAddModel {
     String ikona;
 
     public int getIkonaTransakcije(Context context) {
-        return context.getResources().getIdentifier(ikona,"drawable",context.getPackageName());
+        return context.getResources().getIdentifier(ikona, "drawable", context.getPackageName());
     }
-    public String getRawIkonaTransakcije(){
+
+    public String getRawIkonaTransakcije() {
         return this.ikona;
     }
 

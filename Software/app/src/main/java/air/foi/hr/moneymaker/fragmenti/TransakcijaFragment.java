@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import air.foi.hr.core.database.MyDatabase;
-import air.foi.hr.core.entiteti.Racun;
-import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.transakcije.OnDialogTransactionResult;
@@ -66,8 +61,6 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
     public TransactionPrihodDialog transactionPrihodDialog;
     public TransactionPrijenosDialog transactionPrijenosDialog;
     public ImageButton btnPostavke;
-
-
     private View view;
     RecyclerView recyclerView;
     private CustomAdapterTransakcije adapterTransakcije;
@@ -87,7 +80,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         InicijalizacijaVarijabli();
         PostaviFloatingButtone();
         PostaviRecycleView();
-        brisiTransakciju(recyclerView,adapterTransakcije);
+        brisiTransakciju(recyclerView, adapterTransakcije);
         return view;
     }
 
@@ -97,11 +90,11 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         viewModel.VratiTransakcije().observe(this, new Observer<List<Transakcija>>() {
             @Override
             public void onChanged(List<Transakcija> transakcijas) {
-                List<TransactionImplementor> transactionImplementors=new ArrayList<>();
-                for(Transakcija t:transakcijas){
+                List<TransactionImplementor> transactionImplementors = new ArrayList<>();
+                for (Transakcija t : transakcijas) {
                     transactionImplementors.add((TransactionImplementor) t);
                 }
-                adapterTransakcije.arrayList=transactionImplementors;
+                adapterTransakcije.arrayList = transactionImplementors;
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adapterTransakcije);
@@ -118,11 +111,11 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         fabPrihod = view.findViewById(R.id.floatingActionPrihod);
         fabTrosak = view.findViewById(R.id.floatingActionTrosak);
         fabPrijenos = view.findViewById(R.id.floatingActionPrijenos);
-        btnPostavke=view.findViewById(R.id.imgBtnPostavke);
+        btnPostavke = view.findViewById(R.id.imgBtnPostavke);
         btnPostavke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE, getFragmentManager());
             }
         });
 
@@ -149,12 +142,12 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
             slika = data.getData();
             Toast.makeText(getContext(), slika.getPath(), Toast.LENGTH_SHORT).show();
             transactionTrosakDialog.imageViewTrosak.setImageURI(slika);
-             }
-            if (requestCode == 6) {
+        }
+        if (requestCode == 6) {
             slika = data.getData();
             Toast.makeText(getContext(), slika.getPath(), Toast.LENGTH_SHORT).show();
             transactionPrihodDialog.imageViewPrihod.setImageURI(slika);
-             }
+        }
         if (requestCode == 7) {
             slika = data.getData();
             Toast.makeText(getContext(), slika.getPath(), Toast.LENGTH_SHORT).show();
@@ -205,8 +198,9 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         });
         transactionTrosakDialog.show();
     }
-    private void prihod(){
-        TransactionPrihodDialog transactionPrihodDialog=new TransactionPrihodDialog(getContext(),this);
+
+    private void prihod() {
+        TransactionPrihodDialog transactionPrihodDialog = new TransactionPrihodDialog(getContext(), this);
         transactionPrihodDialog.SetOnDialogTransationResult(new OnDialogTransactionResult() {
             @Override
             public void finish() {
@@ -215,8 +209,9 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
         });
         transactionPrihodDialog.show();
     }
-    private void prijenos(){
-        TransactionPrijenosDialog transactionPrijenosDialog=new TransactionPrijenosDialog(getContext(), this);
+
+    private void prijenos() {
+        TransactionPrijenosDialog transactionPrijenosDialog = new TransactionPrijenosDialog(getContext(), this);
         transactionPrijenosDialog.SetOnDialogTransactionResult(new OnDialogTransactionResult() {
             @Override
             public void finish() {
@@ -264,6 +259,7 @@ public class TransakcijaFragment extends Fragment implements View.OnClickListene
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         Log.e("Transakcija", "Izbrisana transakcija");
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
 

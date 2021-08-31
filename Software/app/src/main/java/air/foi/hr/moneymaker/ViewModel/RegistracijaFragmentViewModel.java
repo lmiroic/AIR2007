@@ -7,8 +7,6 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.manager.HashiranjeLozinke;
@@ -27,45 +25,43 @@ public class RegistracijaFragmentViewModel extends ViewModel {
     private MyDatabase baza;
 
 
-    public void konstruktor(Context context){
-        this.context=context;
-        this.baza=MyDatabase.getInstance(this.context);
+    public void konstruktor(Context context) {
+        this.context = context;
+        this.baza = MyDatabase.getInstance(this.context);
     }
 
-    public void RegistrirajKorisnika(String ime, String prezime, String email, String lozinka, final FragmentManager fragmentManager){
-        if(ime!=""&&prezime!=""&&email!=""&&lozinka!=""){
-            String google_ID="";
+    public void RegistrirajKorisnika(String ime, String prezime, String email, String lozinka, final FragmentManager fragmentManager) {
+        if (ime != "" && prezime != "" && email != "" && lozinka != "") {
+            String google_ID = "";
             String hashLozinka;
             try {
-                hashLozinka= HashiranjeLozinke.HashirajLozinku(lozinka);
-            }
-            catch (Exception e){
+                hashLozinka = HashiranjeLozinke.HashirajLozinku(lozinka);
+            } catch (Exception e) {
                 return;
             }
-            Retrofit r= RetrofitInstance.getInstance();
-            RestApiImplementor api=r.create(RestApiImplementor.class);
-            Call<Void> pozivUnosa = api.UnesiKorisnika(RequestBody.create(MediaType.parse("text/plain"), ime),RequestBody.create(MediaType.parse("text/plain"), prezime),RequestBody.create(MediaType.parse("text/plain"), google_ID),RequestBody.create(MediaType.parse("text/plain"), email),RequestBody.create(MediaType.parse("text/plain"), hashLozinka));
+            Retrofit r = RetrofitInstance.getInstance();
+            RestApiImplementor api = r.create(RestApiImplementor.class);
+            Call<Void> pozivUnosa = api.UnesiKorisnika(RequestBody.create(MediaType.parse("text/plain"), ime), RequestBody.create(MediaType.parse("text/plain"), prezime), RequestBody.create(MediaType.parse("text/plain"), google_ID), RequestBody.create(MediaType.parse("text/plain"), email), RequestBody.create(MediaType.parse("text/plain"), hashLozinka));
             pozivUnosa.enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.e("Korisnik","Uspjesna registracija");
+                    Log.e("Korisnik", "Uspjesna registracija");
                     PrikaziObavijest("Uspješna registracija!");
-                    FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA,fragmentManager);
+                    FragmentSwitcher.ShowFragment(FragmentName.PRIJAVA, fragmentManager);
                 }
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("Korisnik","Neuspjesna registracija");
+                    Log.e("Korisnik", "Neuspjesna registracija");
                 }
             });
-        }
-        else{
+        } else {
             PrikaziObavijest("Niste unijeli sve parametre!");
         }
 
     }
 
-    private void PrikaziObavijest(String poruka){
-        Toast.makeText(context,poruka,Toast.LENGTH_LONG).show();
+    private void PrikaziObavijest(String poruka) {
+        Toast.makeText(context, poruka, Toast.LENGTH_LONG).show();
     }
 }

@@ -23,6 +23,7 @@ import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
 public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.viewHolder> {
     Context context;
     List<CategoryImplementor> arrayList;
+
     public CustomAdapterHome(Context context, List<CategoryImplementor> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
@@ -31,14 +32,15 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
     public CustomAdapterHome(Context context) {
         this.context = context;
     }
-    public void SetKategorije(List<KategorijaTransakcije>kategorijaTransakcijes){
-        List<CategoryImplementor>sveKategorije=new ArrayList<>();
-        for(KategorijaTransakcije kt: kategorijaTransakcijes){
+
+    public void SetKategorije(List<KategorijaTransakcije> kategorijaTransakcijes) {
+        List<CategoryImplementor> sveKategorije = new ArrayList<>();
+        for (KategorijaTransakcije kt : kategorijaTransakcijes) {
             sveKategorije.add(kt);
         }
-        ConcreteCategory dodajTransakciju=new ConcreteCategory("Add","ic_add");
+        ConcreteCategory dodajTransakciju = new ConcreteCategory("Add", "ic_add");
         sveKategorije.add(dodajTransakciju);
-        arrayList=sveKategorije;
+        arrayList = sveKategorije;
     }
 
     @Override
@@ -49,20 +51,19 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
 
     @Override
     public void onBindViewHolder(final CustomAdapterHome.viewHolder viewHolder, final int position) {
-        if(arrayList.get(position) instanceof KategorijaTransakcije){
+        if (arrayList.get(position) instanceof KategorijaTransakcije) {
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
             try {
                 viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon(context));
+            } catch (Exception e) {
+                Log.e("Kategorija greska", arrayList.get(position).getCategoryName() + " " + arrayList.get(position).getCategoryIcon(context));
             }
-            catch(Exception e){
-                Log.e("Kategorija greska",arrayList.get(position).getCategoryName()+" "+arrayList.get(position).getCategoryIcon(context));
-            }
-            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum(context,((KategorijaTransakcije)arrayList.get(position)))));
+            viewHolder.iconSum.setText(String.valueOf(arrayList.get(position).getCategorySum(context, ((KategorijaTransakcije) arrayList.get(position)))));
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    CategoryAddDialog categoryAddDialog=new CategoryAddDialog(context,((KategorijaTransakcije) arrayList.get(position)));
+                    CategoryAddDialog categoryAddDialog = new CategoryAddDialog(context, ((KategorijaTransakcije) arrayList.get(position)));
                     categoryAddDialog.setOnDialogCategoryResult(new OnDialogCategoryResult() {
                         @Override
                         public void finish() {
@@ -72,8 +73,7 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
                     categoryAddDialog.show();
                 }
             });
-        }
-        else{
+        } else {
             viewHolder.iconName.setText(arrayList.get(position).getCategoryName());
             viewHolder.icon.setImageResource(arrayList.get(position).getCategoryIcon(context));
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +94,12 @@ public class CustomAdapterHome extends RecyclerView.Adapter<CustomAdapterHome.vi
         ImageView icon;
         TextView iconName;
         TextView iconSum;
+
         public viewHolder(View itemView) {
             super(itemView);
             icon = (ImageView) itemView.findViewById(R.id.icon);
             iconName = (TextView) itemView.findViewById(R.id.nazivKategorije);
-            iconSum=(TextView) itemView.findViewById(R.id.iznosTransakcije);
+            iconSum = (TextView) itemView.findViewById(R.id.iznosTransakcije);
         }
     }
 }

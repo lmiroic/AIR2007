@@ -19,32 +19,33 @@ public class AnalizaViewModel extends ViewModel {
     private Context context;
     private MyDatabase baza;
 
-    private void OznaciIndex(){
+    private void OznaciIndex() {
         bottomNavigationView.setSelectedItemId(R.id.analiza);
     }
 
-    public void konstruktor(Context context, BottomNavigationView bottomNavigationView){
-        this.context=context;
-        this.baza=MyDatabase.getInstance(this.context);
+    public void konstruktor(Context context, BottomNavigationView bottomNavigationView) {
+        this.context = context;
+        this.baza = MyDatabase.getInstance(this.context);
         this.bottomNavigationView = bottomNavigationView;
         this.OznaciIndex();
     }
-    public void UpravljanjeNavigacijom(final FragmentManager fragmentManager){
+
+    public void UpravljanjeNavigacijom(final FragmentManager fragmentManager) {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getTitle().toString()){
+                switch (menuItem.getTitle().toString()) {
                     case "Računi":
-                        FragmentSwitcher.ShowFragment(FragmentName.RACUN,fragmentManager);
+                        FragmentSwitcher.ShowFragment(FragmentName.RACUN, fragmentManager);
                         break;
                     case "Kategorije":
-                        FragmentSwitcher.ShowFragment(FragmentName.HOME,fragmentManager);
+                        FragmentSwitcher.ShowFragment(FragmentName.HOME, fragmentManager);
                         break;
                     case "Transakcije":
-                        FragmentSwitcher.ShowFragment(FragmentName.TRANSAKCIJA,fragmentManager);
+                        FragmentSwitcher.ShowFragment(FragmentName.TRANSAKCIJA, fragmentManager);
                         break;
                     case "Analiza":
-                        FragmentSwitcher.ShowFragment(FragmentName.ANALIZA,fragmentManager);
+                        FragmentSwitcher.ShowFragment(FragmentName.ANALIZA, fragmentManager);
                         break;
 
 

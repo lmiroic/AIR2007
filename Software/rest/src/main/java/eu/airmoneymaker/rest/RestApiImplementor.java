@@ -2,21 +2,17 @@ package eu.airmoneymaker.rest;
 
 import java.util.List;
 
+import air.foi.hr.core.entiteti.Ciljevi;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
 import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
-import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
-import air.foi.hr.core.entiteti.Ciljevi;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 

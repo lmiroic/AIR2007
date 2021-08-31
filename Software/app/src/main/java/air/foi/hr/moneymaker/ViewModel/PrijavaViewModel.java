@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.List;
-import java.util.Objects;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.Ciljevi;
@@ -18,7 +17,6 @@ import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.Transakcija;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
-import air.foi.hr.moneymaker.modul.prijava.KlasicnaPrijava;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;

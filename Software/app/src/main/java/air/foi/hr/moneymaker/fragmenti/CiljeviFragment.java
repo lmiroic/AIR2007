@@ -32,7 +32,6 @@ import air.foi.hr.moneymaker.ViewModel.CiljeviViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterCiljevi;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.ciljevi.CiljeviAddDialog;
-import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import okhttp3.MediaType;
@@ -65,39 +64,41 @@ public class CiljeviFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_ciljevi,container,false);
+        view = inflater.inflate(R.layout.fragment_ciljevi, container, false);
         InicijalizacijaVarijabli();
         PostaviRecyclerView();
-        brisiCilj(recyclerView,adapter);
+        brisiCilj(recyclerView, adapter);
         return view;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void PostaviRecyclerView(){
-        recyclerView=view.findViewById(R.id.recyclerViewCiljeva);
-        adapter= new CustomAdapterCiljevi(getContext());
+    private void PostaviRecyclerView() {
+        recyclerView = view.findViewById(R.id.recyclerViewCiljeva);
+        adapter = new CustomAdapterCiljevi(getContext());
         viewModel.VratiCiljeveKorisnika().observe(this, new Observer<List<Ciljevi>>() {
             @Override
             public void onChanged(List<Ciljevi> ciljevis) {
-                adapter.arrayList=ciljevis;
-                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+                adapter.arrayList = ciljevis;
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adapter);
             }
         });
 
     }
-    private void InicijalizacijaVarijabli(){
-        ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
-        viewModel=new ViewModelProvider(this,factory).get(CiljeviViewModel.class);
+
+    private void InicijalizacijaVarijabli() {
+        ViewModelProvider.Factory factory = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
+        viewModel = new ViewModelProvider(this, factory).get(CiljeviViewModel.class);
         viewModel.konstruktor(getContext());
-        btnNatrag=view.findViewById(R.id.btnNatragCiljevi);
+        btnNatrag = view.findViewById(R.id.btnNatragCiljevi);
         btnNatrag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.POSTAVKE, getFragmentManager());
             }
         });
-        fabDodajCilj=view.findViewById(R.id.fabAddCiljevi);
+        fabDodajCilj = view.findViewById(R.id.fabAddCiljevi);
         fabDodajCilj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,8 +106,9 @@ public class CiljeviFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
-    private void dialogOpen(){
-        CiljeviAddDialog ciljeviAddDialog=new CiljeviAddDialog(getContext(),this);
+
+    private void dialogOpen() {
+        CiljeviAddDialog ciljeviAddDialog = new CiljeviAddDialog(getContext(), this);
         ciljeviAddDialog.SetOnDialogCiljeviResult(new OnDialogCiljeviResult() {
             @Override
             public void finish() {
@@ -136,11 +138,11 @@ public class CiljeviFragment extends Fragment implements View.OnClickListener {
                 customAdapterCiljevi.removeCiljAtPosition(viewHolder.getAdapterPosition());
                 Retrofit retrofit = RetrofitInstance.getInstance();
                 RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
-                RequestBody requestCiljId=RequestBody.create(MediaType.parse("plain/text"), String.valueOf(cilj.getId()));
+                RequestBody requestCiljId = RequestBody.create(MediaType.parse("plain/text"), String.valueOf(cilj.getId()));
                 restApiImplementor.ObrisiCilj(requestCiljId).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.e("Brisanje cilja","Uspjesno");
+                        Log.e("Brisanje cilja", "Uspjesno");
                     }
 
                     @Override

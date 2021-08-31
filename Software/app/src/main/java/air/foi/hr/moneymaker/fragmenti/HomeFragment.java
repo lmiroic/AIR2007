@@ -3,15 +3,6 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +10,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,27 +28,18 @@ import java.util.Locale;
 
 import air.foi.hr.core.database.MyDatabase;
 import air.foi.hr.core.entiteti.KategorijaTransakcije;
-import air.foi.hr.core.entiteti.Korisnik;
 import air.foi.hr.core.entiteti.Racun;
 import air.foi.hr.core.entiteti.TipTransakcije;
 import air.foi.hr.core.entiteti.Transakcija;
-import air.foi.hr.core.modul.kategorije.CategoryImplementor;
-import air.foi.hr.moneymaker.MainActivity;
-import air.foi.hr.moneymaker.R;
-import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
-import air.foi.hr.moneymaker.manager.CustomAdapterHome;
-import air.foi.hr.moneymaker.modul.kategorije.ConcreteCategory;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.ViewModel.HomeScreenViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterHome;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
-import air.foi.hr.moneymaker.modul.transakcije.ImageFilePath;
 import air.foi.hr.moneymaker.session.Sesija;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +59,6 @@ public class HomeFragment extends Fragment {
     Calendar datumPonavljajucegTroska = Calendar.getInstance();
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
     @Override

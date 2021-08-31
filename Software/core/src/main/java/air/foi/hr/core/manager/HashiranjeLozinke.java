@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashiranjeLozinke {
-    public static String HashirajLozinku(String lozinka){
+    public static String HashirajLozinku(String lozinka) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             byte[] messageDigest = md.digest(lozinka.getBytes());
@@ -16,8 +16,7 @@ public class HashiranjeLozinke {
             }
 
             return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

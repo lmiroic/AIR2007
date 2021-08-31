@@ -2,7 +2,6 @@ package air.foi.hr.moneymaker.manager;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,14 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
-import air.foi.hr.core.modul.kategorije.CategoryImplementor;
 import air.foi.hr.moneymaker.R;
 
 public class CustomAdapterKategorije extends RecyclerView.Adapter<CustomAdapterKategorije.viewHolder> {
     private Context context;
-    public List<CategoryAddModel>arrayList;
-    public int focusedItem=0;
+    public List<CategoryAddModel> arrayList;
+    public int focusedItem = 0;
 
 
     public CustomAdapterKategorije(Context context, List<CategoryAddModel> arrayList) {
@@ -46,11 +43,12 @@ public class CustomAdapterKategorije extends RecyclerView.Adapter<CustomAdapterK
         return arrayList.size();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
+    public class viewHolder extends RecyclerView.ViewHolder {
         ImageView ikonaKategorije;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            ikonaKategorije=(ImageView) itemView.findViewById(R.id.ikonaKat);
+            ikonaKategorije = (ImageView) itemView.findViewById(R.id.ikonaKat);
             ikonaKategorije.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

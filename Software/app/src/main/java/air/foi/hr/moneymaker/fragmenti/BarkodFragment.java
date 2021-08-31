@@ -3,15 +3,14 @@ package air.foi.hr.moneymaker.fragmenti;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -32,7 +31,6 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
     private BarcodeReader barcodeReader;
 
     public BarkodFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -58,13 +56,13 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
             public void run() {
                 new AlertDialog.Builder(getContext())
                         .setTitle("Sinkronizacija računa")
-                        .setMessage("Želite li sinkronizirati račune s navedenim računom " + scannedBarcode.displayValue+"?")
+                        .setMessage("Želite li sinkronizirati račune s navedenim računom " + scannedBarcode.displayValue + "?")
                         .setCancelable(true)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 SyncInitiator initiator = (SyncInitiator) getContext();
-                                if(initiator != null){
+                                if (initiator != null) {
                                     initiator.initiateSync(scannedBarcode.displayValue);
                                     FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
                                 }
@@ -89,7 +87,8 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
 
         final String codes = barcodes.stream()
                 .map(Object::toString)
-                .collect(Collectors.joining(", "));;
+                .collect(Collectors.joining(", "));
+        ;
 
         getActivity().runOnUiThread(new Runnable() {
             @Override

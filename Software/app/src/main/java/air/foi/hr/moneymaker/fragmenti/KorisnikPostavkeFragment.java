@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,53 +37,54 @@ public class KorisnikPostavkeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_korisnik_postavke, container, false);
+        view = inflater.inflate(R.layout.fragment_korisnik_postavke, container, false);
         InicijalizacijaVarijabli();
         return view;
 
     }
+
     private void InicijalizacijaVarijabli() {
-        btnSinkronizacija=view.findViewById(R.id.btnSinkronizacija);
+        btnSinkronizacija = view.findViewById(R.id.btnSinkronizacija);
         btnSinkronizacija.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.SINKRONIZACIJA,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.SINKRONIZACIJA, getFragmentManager());
             }
         });
 
-        btnPromjeniLozinku=view.findViewById(R.id.btnPromjeniLozinku);
+        btnPromjeniLozinku = view.findViewById(R.id.btnPromjeniLozinku);
         btnPromjeniLozinku.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_LOZINKE,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_LOZINKE, getFragmentManager());
             }
         });
 
-        btnPromjeniValutu=view.findViewById(R.id.btnPromijeniValutu);
+        btnPromjeniValutu = view.findViewById(R.id.btnPromijeniValutu);
         btnPromjeniValutu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_VALUTE,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.PROMJENA_VALUTE, getFragmentManager());
             }
         });
 
-        btnBack=view.findViewById(R.id.btnBack);
+        btnBack = view.findViewById(R.id.btnBack);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.HOME,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
             }
         });
 
-        btnCiljevi=view.findViewById(R.id.btnCiljevi);
+        btnCiljevi = view.findViewById(R.id.btnCiljevi);
         btnCiljevi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.CILJEVI,getFragmentManager());
+                FragmentSwitcher.ShowFragment(FragmentName.CILJEVI, getFragmentManager());
             }
         });
 
-        btnOdjava=view.findViewById(R.id.btnOdjava);
+        btnOdjava = view.findViewById(R.id.btnOdjava);
         btnOdjava.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,8 +98,8 @@ public class KorisnikPostavkeFragment extends Fragment {
         });
 
 
-        ViewModelProvider.Factory factory=ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
-        viewModel=new ViewModelProvider(this,factory).get(KorisnikPostavkeViewModel.class);
+        ViewModelProvider.Factory factory = ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication());
+        viewModel = new ViewModelProvider(this, factory).get(KorisnikPostavkeViewModel.class);
         viewModel.konstruktor(getContext());
 
     }

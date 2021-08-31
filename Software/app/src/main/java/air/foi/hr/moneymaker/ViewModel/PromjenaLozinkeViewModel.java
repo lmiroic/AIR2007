@@ -7,18 +7,11 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 
-import java.util.List;
-
 import air.foi.hr.core.database.MyDatabase;
-
-import air.foi.hr.core.entiteti.Valuta;
 import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.manager.HashiranjeLozinke;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.session.Sesija;
-import eu.airmoneymaker.rest.HNBApiImplementor;
-import eu.airmoneymaker.rest.HNBApiInstance;
-import eu.airmoneymaker.rest.HNBValute;
 import eu.airmoneymaker.rest.RestApiImplementor;
 import eu.airmoneymaker.rest.RetrofitInstance;
 import okhttp3.MediaType;
@@ -33,17 +26,16 @@ public class PromjenaLozinkeViewModel extends ViewModel {
     private MyDatabase baza;
 
 
-    public void konstruktor(Context context){
-        this.context=context;
-        this.baza=MyDatabase.getInstance(this.context);
+    public void konstruktor(Context context) {
+        this.context = context;
+        this.baza = MyDatabase.getInstance(this.context);
     }
 
-    public void PromjeniLozinku(int id, String novaLozinka, String novaLozinkaPonovljena, String staraLozinka, final FragmentManager fragmentManager){
-        if(novaLozinka!=""&&novaLozinkaPonovljena!=""&&staraLozinka!="") {
+    public void PromjeniLozinku(int id, String novaLozinka, String novaLozinkaPonovljena, String staraLozinka, final FragmentManager fragmentManager) {
+        if (novaLozinka != "" && novaLozinkaPonovljena != "" && staraLozinka != "") {
             if (!novaLozinka.equals(novaLozinkaPonovljena)) {
                 PrikaziObavijest("Nova lozinka se ne podudara sa ponovljenom!");
-            }
-            else {
+            } else {
                 String lokalnaStaraLozinka = Sesija.getInstance().getKorisnik().getLozinka();
                 String hashStareLozinke;
                 final String hashLozinka;
@@ -71,17 +63,16 @@ public class PromjenaLozinkeViewModel extends ViewModel {
                             Log.e("Korisnik", "Neuspješna promjena lozinke");
                         }
                     });
-                }
-                else {
+                } else {
                     PrikaziObavijest("Unesena stara lozinka nije ispravna!");
                 }
             }
+        } else {
+            PrikaziObavijest("Niste unijeli sve parametre!");
         }
-        else{
-                PrikaziObavijest("Niste unijeli sve parametre!");
-            }
     }
-    private void PrikaziObavijest(String poruka){
-        Toast.makeText(context,poruka,Toast.LENGTH_LONG).show();
+
+    private void PrikaziObavijest(String poruka) {
+        Toast.makeText(context, poruka, Toast.LENGTH_LONG).show();
     }
 }

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -67,14 +64,13 @@ public class CustomAdapterCiljevi extends RecyclerView.Adapter<CustomAdapterCilj
                 progress += t.getIznos();
             }
         }
-        if(progress<arrayList.get(position).getIznos()){
+        if (progress < arrayList.get(position).getIznos()) {
             holder.nazivCilja.setText(arrayList.get(position).getNaziv());
             holder.iznos.setMax((int) arrayList.get(position).getIznos());
             holder.iznos.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
             holder.iznos.setProgress(progress);
-        }
-        else{
-            holder.nazivCilja.setText(arrayList.get(position).getNaziv()+" OSTVAREN!!");
+        } else {
+            holder.nazivCilja.setText(arrayList.get(position).getNaziv() + " OSTVAREN!!");
             holder.iznos.setMax((int) arrayList.get(position).getIznos());
             holder.iznos.setProgressTintList(ColorStateList.valueOf(Color.RED));
             holder.iznos.setProgress(progress);
