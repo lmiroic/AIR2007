@@ -2,6 +2,7 @@ package air.foi.hr.moneymaker.fragmenti;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,15 @@ import air.foi.hr.moneymaker.ViewModel.CiljeviViewModel;
 import air.foi.hr.moneymaker.manager.CustomAdapterCiljevi;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
 import air.foi.hr.moneymaker.modul.ciljevi.CiljeviAddDialog;
+import air.foi.hr.moneymaker.session.Sesija;
+import eu.airmoneymaker.rest.RestApiImplementor;
+import eu.airmoneymaker.rest.RetrofitInstance;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class CiljeviFragment extends Fragment implements View.OnClickListener {
 
@@ -124,7 +134,22 @@ public class CiljeviFragment extends Fragment implements View.OnClickListener {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 final Ciljevi cilj = customAdapterCiljevi.getCiljAtPosition(viewHolder.getAdapterPosition());
                 customAdapterCiljevi.removeCiljAtPosition(viewHolder.getAdapterPosition());
+                Retrofit retrofit = RetrofitInstance.getInstance();
+                RestApiImplementor restApiImplementor = retrofit.create(RestApiImplementor.class);
+                RequestBody requestCiljId=RequestBody.create(MediaType.parse("plain/text"), String.valueOf(cilj.getId()));
+                restApiImplementor.ObrisiCilj(requestCiljId).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.e("Brisanje cilja","Uspjesno");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
                 MyDatabase.getInstance(getContext()).getCiljeviDAO().IzbrisiCilj(cilj);
+
                 Snackbar.make(recyclerView, "Izbrisan je cilj " + cilj.getNaziv(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         }).attachToRecyclerView(recyclerView);

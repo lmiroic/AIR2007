@@ -1,10 +1,13 @@
 package air.foi.hr.moneymaker.manager;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -64,9 +67,19 @@ public class CustomAdapterCiljevi extends RecyclerView.Adapter<CustomAdapterCilj
                 progress += t.getIznos();
             }
         }
-        holder.nazivCilja.setText(arrayList.get(position).getNaziv());
-        holder.iznos.setMax((int) arrayList.get(position).getIznos());
-        holder.iznos.setProgress(progress);
+        if(progress<arrayList.get(position).getIznos()){
+            holder.nazivCilja.setText(arrayList.get(position).getNaziv());
+            holder.iznos.setMax((int) arrayList.get(position).getIznos());
+            holder.iznos.setProgressTintList(ColorStateList.valueOf(Color.GREEN));
+            holder.iznos.setProgress(progress);
+        }
+        else{
+            holder.nazivCilja.setText(arrayList.get(position).getNaziv()+" OSTVAREN!!");
+            holder.iznos.setMax((int) arrayList.get(position).getIznos());
+            holder.iznos.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            holder.iznos.setProgress(progress);
+        }
+
 
     }
 
