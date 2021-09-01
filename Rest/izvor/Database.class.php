@@ -3,9 +3,9 @@
 class Database {
 
     const server = "localhost";
-    const korisnik = "root";
-    const lozinka = "";
-    const baza = "MoneyMaker";
+    const korisnik = "juricami_luka";
+    const lozinka = "domovec";
+    const baza = "juricami_airmoney_api";
 
     private $veza = null;
     private $greska = '';

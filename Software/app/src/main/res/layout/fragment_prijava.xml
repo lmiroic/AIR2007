@@ -5,25 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/sign_in_button"
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
         android:layout_width="230dp"
         android:layout_height="41dp"
-        android:layout_marginBottom="72dp"
-        android:text="Google Sign in"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="12dp"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 
-
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:hint="Lozinka"
         android:layout_width="230dp"
         android:layout_height="41dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
+        android:hint="Lozinka"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,9 +33,31 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:id="@+id/btnRegistrirajSe"
+        android:layout_width="230dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="72dp"
+        android:text="Registracija"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="230dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="16dp"
+        android:text="Google Sign in"
+        app:layout_constraintBottom_toTopOf="@+id/btnRegistrirajSe"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/btnLogin"
         android:layout_width="230dp"
-        android:layout_height="42dp"
+        android:layout_height="41dp"
         android:layout_marginBottom="16dp"
         android:text="Prijavi se"
         app:layout_constraintBottom_toTopOf="@+id/sign_in_button"
@@ -41,16 +65,4 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextTextEmailAddress"
-        android:hint="Email"
-        android:layout_width="230dp"
-        android:layout_height="41dp"
-        android:layout_marginBottom="12dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

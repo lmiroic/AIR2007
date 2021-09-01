@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/textView"
+        style="?android:attr/spinnerItemStyle"
+        android:layout_width="360dp"
+        android:layout_height="46dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="January"
+        android:textAlignment="inherit"/>
+

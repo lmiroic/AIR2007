@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="53dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:background="#00474242"
+            android:backgroundTint="#020202"
+            android:foregroundTint="#020202"
+            android:scaleType="fitCenter"
+            android:tint="#000000"
+            tools:srcCompat="@drawable/ic_backv2" />
+
+        <Button
+            android:id="@+id/btnPromjeniLozinku"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Promjeni lozinku" />
+
+        <Button
+            android:id="@+id/btnPromijeniValutu"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Promijeni valutu" />
+
+        <Button
+            android:id="@+id/btnCiljevi"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:text="Ciljevi" />
+
+        <Button
+            android:id="@+id/btnSinkronizacija"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Sinkronizacija" />
+
+        <Button
+            android:id="@+id/btnOdjava"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Odjava" />
+
+    </LinearLayout>
+
+</RelativeLayout>

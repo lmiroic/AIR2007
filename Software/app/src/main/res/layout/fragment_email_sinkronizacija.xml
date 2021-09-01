@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragmenti.EmailSinkronizacijaFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dp"
+        android:text="Email sinkronizacija"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/tvEmailAdresaSinkronizacije"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email adresa:"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/etEmailAdresaSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/btnCtaEmailSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sinkroniziraj" />
+
+    <Button
+        android:id="@+id/btnNatragEmailSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Natrag" />
+</LinearLayout>

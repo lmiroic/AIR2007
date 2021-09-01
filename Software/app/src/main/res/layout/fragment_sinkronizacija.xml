@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context=".fragmenti.SinkronizacijaFragment">
+
+    <TextView
+        android:id="@+id/tvNazivFragmenta"
+        android:layout_width="match_parent"
+        android:layout_height="77dp"
+        android:paddingTop="40dp"
+        android:text="Sinkronizacija korisničkih računa"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/ivQrCode"
+        android:layout_width="match_parent"
+        android:layout_height="238dp"
+        tools:src="@tools:sample/avatars" />
+
+    <Button
+        android:id="@+id/btnQrCodeSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingTop="10dp"
+        android:text="QR kod sync" />
+
+    <Button
+        android:id="@+id/btnEmailSync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Email sync" />
+
+    <Button
+        android:id="@+id/btnNatragSinkronizacija"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Natrag" />
+
+
+</LinearLayout>
