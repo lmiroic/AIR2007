@@ -13,6 +13,9 @@ function provjeriVrijednost(){
 function provjeriNaziv(){
     return (isset($_POST["naziv"]))?true:false;
 }
+function provjeriKorisnika(){
+    return (isset($_POST["korisnik_id"]))?true:false;
+}
 function provjeriPocetnoStanje(){
     return (isset($_POST["pocetno_stanje"]))?true:false;
 }
@@ -23,10 +26,13 @@ function provjeriIkonu(){
     return (isset($_POST["ikona"]))?true:false;
 }
 function provjeriPostojanostPodatakaNovogRacuna(){
-    return (provjeriNaziv()&&provjeriPocetnoStanje()&&provjeriValutu()&&provjeriIkonu())?true:false;
+    return (provjeriNaziv()&&provjeriPocetnoStanje()&&provjeriValutu()&&provjeriIkonu()&&provjeriKorisnika())?true:false;
 }
 function provjeriPostojanostPodatakaAzuriranogRacuna(){
     return (provjeriID()&&provjeriAtribut()&&provjeriVrijednost())?true:false;
+}
+function provjeriPostojanostPodatakaAzuriranogRacunaKorisnika(){
+    return (provjeriNaziv()&&provjeriPocetnoStanje()&&provjeriValutu()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriID())?true:false;
 }
 function kreirajRedakRacuna(){
     $redakRacuna;
@@ -34,6 +40,7 @@ function kreirajRedakRacuna(){
     $redakRacuna["pocetno_stanje"]=$_POST["pocetno_stanje"];
     $redakRacuna["valuta"]=$_POST["valuta"];
     $redakRacuna["ikona"]=$_POST["ikona"];
+    $redakRacuna["korisnik_id"]=$_POST["korisnik_id"];
     return $redakRacuna;
 }
 

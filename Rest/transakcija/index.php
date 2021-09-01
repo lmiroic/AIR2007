@@ -46,9 +46,12 @@ function provjeriIntervalPonavljanja(){
 function provjeriKategorijuTransakcije(){
     return (isset($_POST["kategorijaTransakcije"]))?true:false;
 }
+function provjeriPlacenTrosak(){
+    return (isset($_POST["placenTrosak"]))?true:false;
+}
 
 function provjeriPostojanostPodatakaNoveTransakcije(){
-    return (provjeriIznos()&&provjeriDatum()&&provjeriRacunTerecenja()&&provjeriRacunPrijenosa()&&provjeriTipTransakcije()&&provjeriMemo()&&provjeriOpis()&&provjeriPonavljajuciTrosak()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriIntervalPonavljanja()&&provjeriKategorijuTransakcije())?true:false;
+    return (provjeriIznos()&&provjeriDatum()&&provjeriRacunTerecenja()&&provjeriRacunPrijenosa()&&provjeriTipTransakcije()&&provjeriMemo()&&provjeriOpis()&&provjeriPonavljajuciTrosak()&&provjeriIkonu()&&provjeriKorisnika()&&provjeriIntervalPonavljanja()&&provjeriKategorijuTransakcije()&&provjeriPlacenTrosak())?true:false;
 }
 function provjeriPostojanostPodatakaAzuriraneTransakcije(){
     return (provjeriID()&&provjeriAtribut()&&provjeriVrijednost())?true:false;
@@ -67,6 +70,7 @@ function kreirajRedakTransakcije(){
     $redakTransakcije["korisnik"]=$_POST["korisnik"];
     $redakTransakcije["intervalPonavljanja"]=$_POST["intervalPonavljanja"];
     $redakTransakcije["kategorijaTransakcije"]=$_POST["kategorijaTransakcije"];
+    $redakTransakcije["placenTrosak"]=$_POST["placenTrosak"];
     return $redakTransakcije;
 }
 ?>

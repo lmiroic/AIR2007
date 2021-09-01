@@ -40,8 +40,8 @@ if(isset($_GET["query"])&&$_GET["query"]=="selectOneRacun"&&isset($_GET["id"]))
 if(isset($_GET["query"])&&$_GET["query"]=="selectRacuneKorisnika"&&isset($_GET["korisnik_id"]))
 {
     $sviRacuniKorisnika=array();
-    $korisnik_id=$_GET["korisnik_id"];
-    $DohvatIzBaze=$baza->selectDB("SELECT * from racun where korisnik_id=$korisnik_id");
+    $id=$_GET["korisnik_id"];
+    $DohvatIzBaze=$baza->selectDB("SELECT * from racun where korisnik_id={'$korisnik_id'}");
     while($redak=mysqli_fetch_array($DohvatIzBaze))
     {
         $r=new Racun($redak,true);
@@ -59,7 +59,7 @@ if(isset($_GET["query"])&&$_GET["query"]=="update"&&provjeriPostojanostPodatakaA
     $upit = "UPDATE racun SET $atribut='{$vrijednost}' WHERE id=$identifikator";
     $baza->updateDB($upit);
 }
-if(isset($_GET["query"])&&$_GET["query"]=="updateRacun"&&provjeriPostojanostPodatakaAzuriranogRacunaKorisnika()){
+if(isset($_GET["query"])&&$_GET["query"]=="updateRacun"&&provjeriPostojanostPodatakaAzuriranogRacuna()){
 
     $id = $_POST["id"];
     $naziv = $_POST["naziv"];
@@ -67,7 +67,7 @@ if(isset($_GET["query"])&&$_GET["query"]=="updateRacun"&&provjeriPostojanostPoda
     $valuta = $_POST["valuta"];
     $ikona = $_POST["ikona"];
     $korisnik_id = $_POST["korisnik_id"];
-    $upit = "UPDATE racun SET naziv='$naziv',pocetno_stanje=$pocetno_stanje,valuta='$valuta',ikona='$ikona',korisnik_id=$korisnik_id WHERE id=$id";
+    $upit = "UPDATE racun SET '$naziv'='{$naziv}','$pocetno_stanje'='{$pocetno_stanje}','$valuta'='{$valuta}','$ikona'='{$ikona}','$korisnik_id'='{$korisnik_id}' WHERE id=$id";
     $baza->updateDB($upit);
 }
 if(isset($_GET["query"])&&$_GET["query"]=="delete"&&provjeriID()){

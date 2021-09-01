@@ -13,6 +13,7 @@ class Transakcija{
     public $korisnik;
     public $intervalPonavljanja;
     public $kategorijaTransakcije;
+    public $placenTrosak;
 
     function __construct($redak,$identifikator=false){
         if($identifikator){
@@ -30,14 +31,15 @@ class Transakcija{
         $this->korisnik=$redak["korisnik"];
         $this->intervalPonavljanja=$redak["intervalPonavljanja"];
         $this->kategorijaTransakcije=$redak["kategorijaTransakcije"];
+        $this->placenTrosak=$redak["placenTrosak"];
     }
     function getJson()
     {        
         if($this->id!=""){
-            return array("id"=>$this->id,"iznos"=>$this->iznos,"datum"=>$this->datum,"racunTerecenja"=>$this->racunTerecenja,"racunPrijenosa"=>$this->racunPrijenosa,"tipTransakcije"=>$this->tipTransakcije,"memo"=>$this->memo,"opis"=>$this->opis,"ponavljajuciTrosak"=>$this->ponavljajuciTrosak,"ikona"=>$this->ikona,"korisnik"=>$this->korisnik,"intervalPonavljanja"=>$this->intervalPonavljanja,"kategorijaTransakcije"=>$this->kategorijaTransakcije);
+            return array("id"=>$this->id,"iznos"=>$this->iznos,"datum"=>$this->datum,"racunTerecenja"=>$this->racunTerecenja,"racunPrijenosa"=>$this->racunPrijenosa,"tipTransakcije"=>$this->tipTransakcije,"memo"=>$this->memo,"opis"=>$this->opis,"ponavljajuciTrosak"=>$this->ponavljajuciTrosak,"ikona"=>$this->ikona,"korisnik"=>$this->korisnik,"intervalPonavljanja"=>$this->intervalPonavljanja,"kategorijaTransakcije"=>$this->kategorijaTransakcije,"placenTrosak"=>$this->placenTrosak);
         }
         else{
-            return array("iznos"=>$this->iznos,"datum"=>$this->datum,"racunTerecenja"=>$this->racunTerecenja,"racunPrijenosa"=>$this->racunPrijenosa,"tipTransakcije"=>$this->tipTransakcije,"memo"=>$this->memo,"opis"=>$this->opis,"ponavljajuciTrosak"=>$this->ponavljajuciTrosak,"ikona"=>$this->ikona,"korisnik"=>$this->korisnik,"intervalPonavljanja"=>$this->intervalPonavljanja,"kategorijaTransakcije"=>$this->kategorijaTransakcije);
+            return array("iznos"=>$this->iznos,"datum"=>$this->datum,"racunTerecenja"=>$this->racunTerecenja,"racunPrijenosa"=>$this->racunPrijenosa,"tipTransakcije"=>$this->tipTransakcije,"memo"=>$this->memo,"opis"=>$this->opis,"ponavljajuciTrosak"=>$this->ponavljajuciTrosak,"ikona"=>$this->ikona,"korisnik"=>$this->korisnik,"intervalPonavljanja"=>$this->intervalPonavljanja,"kategorijaTransakcije"=>$this->kategorijaTransakcije,"placenTrosak"=>$this->placenTrosak);
         }        
     }
 }
