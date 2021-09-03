@@ -13,7 +13,8 @@ public enum FragmentName {
     PROMJENA_VALUTE(10),
     CILJEVI(11),
     BARCODE_READER(12),
-    SINKRONIZACIJA(13);
+    SINKRONIZACIJA(13),
+    EMAIL_SINKRONIZACIJA(14);
 
 
     private FragmentName(int i) {

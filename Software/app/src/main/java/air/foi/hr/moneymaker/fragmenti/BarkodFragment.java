@@ -22,15 +22,23 @@ import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
 import air.foi.hr.core.modul.transakcije.SyncInitiator;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.session.ISyncRacuna;
+import air.foi.hr.moneymaker.session.OnEnteredEmail;
 import info.androidhive.barcode.BarcodeReader;
 
-public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeReaderListener, ISinkronizacijaRacuna {
+public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeReaderListener, ISyncRacuna {
 
     private View view;
     private Barcode scannedBarcode;
     private BarcodeReader barcodeReader;
+    private String fragmentTag;
+
 
     public BarkodFragment() {
+    }
+
+    public BarkodFragment(String fragmentTag) {
+        this.fragmentTag = fragmentTag;
     }
 
     @Override
@@ -61,18 +69,16 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                SyncInitiator initiator = (SyncInitiator) getContext();
-                                if (initiator != null) {
-                                    initiator.initiateSync(scannedBarcode.displayValue);
-                                    FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
-                                }
+                                OnEnteredEmail sync = getEmailManager();
+                                sync.syncEmailAddress(scannedBarcode.displayValue);
+                                getFragmentManager().popBackStack();
 
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                FragmentSwitcher.ShowFragment(FragmentName.HOME, getFragmentManager());
+                                getFragmentManager().popBackStack();
                             }
                         }).show();
             }
@@ -117,4 +123,14 @@ public class BarkodFragment extends Fragment implements BarcodeReader.BarcodeRea
     public Fragment getFragment() {
         return this;
     }
+
+    @Override
+    public String dohvatiTag() {
+        return getTag();
+    }
+
+    private OnEnteredEmail getEmailManager() {
+        return (OnEnteredEmail) getFragmentManager().findFragmentByTag(fragmentTag);
+    }
+
 }

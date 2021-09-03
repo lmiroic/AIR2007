@@ -21,16 +21,19 @@ import air.foi.hr.core.manager.FragmentName;
 import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.session.ISyncRacuna;
+import air.foi.hr.moneymaker.session.OnEnteredEmail;
 import air.foi.hr.moneymaker.session.Sesija;
+import air.foi.hr.moneymaker.session.SinkronizacijaBazePodataka;
 
-public class SinkronizacijaFragment extends Fragment {
+public class SinkronizacijaFragment extends Fragment implements OnEnteredEmail {
 
     private View view;
     private ImageView qrCodeImage;
     private Button btnQrCodeSync;
     private Button btnEmailSync;
     private Button btnNatragSync;
-    private ISinkronizacijaRacuna sinkronizacijaRacuna;
+    private ISyncRacuna syncRacuna;
 
 
     public SinkronizacijaFragment() {
@@ -40,8 +43,6 @@ public class SinkronizacijaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -77,8 +78,11 @@ public class SinkronizacijaFragment extends Fragment {
         btnQrCodeSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sinkronizacijaRacuna = new BarkodFragment();
-                switchFragments(sinkronizacijaRacuna.getFragment());
+                syncRacuna = new BarkodFragment(FragmentSwitcher.SINKRONIZACIJA_FRAGMENT);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fmMain, syncRacuna.getFragment(), syncRacuna.dohvatiTag())
+                        .addToBackStack(syncRacuna.dohvatiTag())
+                        .commit();
             }
         });
     }
@@ -87,8 +91,11 @@ public class SinkronizacijaFragment extends Fragment {
         btnEmailSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sinkronizacijaRacuna = new EmailSinkronizacijaFragment();
-                switchFragments(sinkronizacijaRacuna.getFragment());
+                syncRacuna = new EmailSinkronizacijaFragment(FragmentSwitcher.SINKRONIZACIJA_FRAGMENT);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fmMain, syncRacuna.getFragment(), syncRacuna.dohvatiTag())
+                        .addToBackStack(syncRacuna.dohvatiTag())
+                        .commit();
             }
         });
     }
@@ -106,9 +113,9 @@ public class SinkronizacijaFragment extends Fragment {
         });
     }
 
-    private void switchFragments(Fragment fragment) {
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.fmMain, fragment).commit();
+    @Override
+    public void syncEmailAddress(String email) {
+        SinkronizacijaBazePodataka sbp = new SinkronizacijaBazePodataka(getContext());
+        sbp.sinkroniziraj(email);
     }
-
 }

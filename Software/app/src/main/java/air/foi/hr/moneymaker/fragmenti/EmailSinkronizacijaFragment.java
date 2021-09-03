@@ -14,15 +14,21 @@ import air.foi.hr.core.modul.transakcije.ISinkronizacijaRacuna;
 import air.foi.hr.core.modul.transakcije.SyncInitiator;
 import air.foi.hr.moneymaker.R;
 import air.foi.hr.moneymaker.manager.FragmentSwitcher;
+import air.foi.hr.moneymaker.session.ISyncRacuna;
+import air.foi.hr.moneymaker.session.OnEnteredEmail;
 
-public class EmailSinkronizacijaFragment extends Fragment implements ISinkronizacijaRacuna {
+public class EmailSinkronizacijaFragment extends Fragment implements ISyncRacuna {
 
     private View view;
     private EditText emailAdress;
     private Button ctaSync;
-    private Button btnBackEmailSync;
+    private String fragmentTag;
 
     public EmailSinkronizacijaFragment() {
+    }
+
+    public EmailSinkronizacijaFragment(String fragmentTag) {
+        this.fragmentTag = fragmentTag;
     }
 
 
@@ -45,24 +51,21 @@ public class EmailSinkronizacijaFragment extends Fragment implements ISinkroniza
         return this;
     }
 
+    @Override
+    public String dohvatiTag() {
+        return getTag();
+    }
+
     private void init() {
         this.emailAdress = view.findViewById(R.id.etEmailAdresaSync);
-        this.btnBackEmailSync = view.findViewById(R.id.btnNatragEmailSync);
-        this.btnBackEmailSync.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentSwitcher.ShowFragment(FragmentName.SINKRONIZACIJA, getFragmentManager());
-            }
-        });
         this.ctaSync = view.findViewById(R.id.btnCtaEmailSync);
         this.ctaSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkEmailContent(emailAdress.getText().toString())) {
-                    SyncInitiator initiator = (SyncInitiator) getContext();
-                    if (initiator != null) {
-                        initiator.initiateSync(emailAdress.getText().toString());
-                    }
+                    OnEnteredEmail sync = getEmailManager();
+                    sync.syncEmailAddress(emailAdress.getText().toString());
+                    getFragmentManager().popBackStack();
                 }
             }
         });
@@ -70,6 +73,10 @@ public class EmailSinkronizacijaFragment extends Fragment implements ISinkroniza
 
     private boolean checkEmailContent(final String email) {
         return email != null && email != "";
+    }
+
+    private OnEnteredEmail getEmailManager() {
+        return (OnEnteredEmail) getFragmentManager().findFragmentByTag(fragmentTag);
     }
 
 }
